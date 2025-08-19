@@ -452,8 +452,8 @@ const Index = () => {
                   alt: 'Emergency assistance icon'
                 },
                 {
-                  title: 'MONTHLY WELLNESS CONSULTATION',
-                  subtitle: 'Diet, physiotherapy and mental well-being',
+                  title: 'Home Services',
+                  subtitle: 'Diagnostic test, medicine delivery, care & ICU at Home',
                   icon: '/medicine.svg', // Add your wellness consultation icon
                   alt: 'Wellness consultation icon'
                 },
