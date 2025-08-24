@@ -320,6 +320,8 @@ const Index = () => {
                 WebkitMaskImage:
                   'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 20%)',
                 transform: `scale(${0.8 + (coupleImageProgress * 0.2)})`,
+                borderBottom: '3px solid #1f2937',
+                boxShadow: '0 8px 25px rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.3)',
               }}
             />
           </div>
