@@ -284,9 +284,19 @@ const Index = () => {
             >
               GET STARTED
             </Button>
-            <Button variant="outline" className="border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50 px-8 py-4 text-lg font-semibold rounded-xl">
-              View Services
-            </Button>
+                         <Button 
+               onClick={() => {
+                 // Scroll to services section
+                 const servicesSection = document.querySelector('[data-section="services"]');
+                 if (servicesSection) {
+                   servicesSection.scrollIntoView({ behavior: 'smooth' });
+                 }
+               }}
+               variant="outline" 
+               className="border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50 px-8 py-4 text-lg font-semibold rounded-xl"
+             >
+               View Services
+             </Button>
           </div>
         </div>
 
@@ -728,7 +738,7 @@ const Index = () => {
       </section>
 
 		{/* Value Added Services Section */}
-		<section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-16 md:py-24">
+		<section data-section="services" className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-16 md:py-24">
 			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
 				{/* Section Header */}
 				<div className="text-center mb-8">
@@ -936,11 +946,7 @@ const Index = () => {
 															</div>
 														) : null;
 													})()}
-													{parseInt(selectedDuration) >= 6 && (
-														<p className="text-xs font-medium text-emerald-600 mt-2">
-															{parseInt(selectedDuration) === 12 ? '+30 days free' : '+15 days free'}
-														</p>
-													)}
+													{/* Free days offer removed */}
 												</div>
 											) : (
 												<div>
@@ -975,11 +981,7 @@ const Index = () => {
 															</div>
 														) : null;
 													})()}
-													{parseInt(selectedDuration) >= 6 && (
-														<p className="text-xs font-medium text-emerald-600 mt-2">
-															{parseInt(selectedDuration) === 12 ? '+30 days free' : '+15 days free'}
-														</p>
-													)}
+													{/* Free days offer removed */}
 												</div>
 											)}
 										</div>
