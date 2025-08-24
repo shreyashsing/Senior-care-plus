@@ -3,8 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Play, Plus, Check, Monitor, Home, Building2, Phone, Car, Plane, Droplets, Pill, Calendar, RefreshCw, Clock, Heart, Brain, Dumbbell, UtensilsCrossed, UserCheck, Stethoscope, Ambulance, TestTube, Truck, Shield, Users, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import Lottie from 'lottie-react';
 import medicalAnimationData from '../../public/Medical Healthcare.json';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
+  const navigate = useNavigate();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [coupleImageProgress, setCoupleImageProgress] = useState(0);
   const [cardsProgress, setCardsProgress] = useState(0);
@@ -13,6 +15,11 @@ const Index = () => {
     agency: false,
     hospital: false
   });
+  const [selectedPlan, setSelectedPlan] = useState('single');
+  const [selectedDuration, setSelectedDuration] = useState('');
+  const [showPricing, setShowPricing] = useState(false);
+  const [showCTA, setShowCTA] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     let ticking = false;
@@ -59,6 +66,18 @@ const Index = () => {
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showDropdown && !(event.target as Element).closest('.dropdown-container')) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showDropdown]);
 
   return (
     <>
@@ -141,7 +160,7 @@ const Index = () => {
 
             <ul className="mt-4 space-y-2 text-sm text-gray-700">
               {[
-                'Serving Surat & nearby areas',
+                'Serving Surat & Navi Mumbai areas',
                 'Medical + Lifestyle Care',
                 '24×7 Helpline',
               ].map((text, idx) => (
@@ -157,7 +176,18 @@ const Index = () => {
             <div className="mt-8 space-y-6">
               {/* Modern CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="group relative bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 hover:from-emerald-700 hover:via-green-700 hover:to-emerald-800 text-white px-8 py-4 text-lg font-bold rounded-2xl shadow-2xl hover:shadow-emerald-500/25 transform hover:-translate-y-1 transition-all duration-300 ease-out overflow-hidden">
+                <Button 
+                  onClick={() => navigate('/register', { 
+                    state: { 
+                      planInfo: { 
+                        type: 'single', 
+                        duration: '1', 
+                        price: 3000 
+                      } 
+                    } 
+                  })}
+                  className="group relative bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 hover:from-emerald-700 hover:via-green-700 hover:to-emerald-800 text-white px-8 py-4 text-lg font-bold rounded-2xl shadow-2xl hover:shadow-emerald-500/25 transform hover:-translate-y-1 transition-all duration-300 ease-out overflow-hidden"
+                >
                   <span className="relative z-10 flex items-center gap-2">
                     <span>REGISTER NOW</span>
                     <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,14 +197,7 @@ const Index = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                 </Button>
                 
-                <Button variant="outline" className="group bg-white/80 backdrop-blur-sm border-2 border-emerald-300/50 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-400 px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-out">
-                  <span className="flex items-center gap-2">
-                    <span>Learn More</span>
-                    <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </span>
-              </Button>
+
             </div>
 
               {/* Modern Tagline Card */}
@@ -247,7 +270,18 @@ const Index = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200">
+            <Button 
+              onClick={() => navigate('/register', { 
+                state: { 
+                  planInfo: { 
+                    type: 'single', 
+                    duration: '1', 
+                    price: 3000 
+                  } 
+                } 
+              })}
+              className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
+            >
               GET STARTED
             </Button>
             <Button variant="outline" className="border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50 px-8 py-4 text-lg font-semibold rounded-xl">
@@ -427,11 +461,11 @@ const Index = () => {
           <div className="w-[100%] md:w-[94%] lg:w-[90%] mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-8">
               {[
-                {
-                  title: 'MONTHLY WELLNESS CONSULTATION',
-                  subtitle: 'Diet, physiotherapy and mental well-being',
-                  icon: '/brain.svg', // Add your wellness consultation icon
-                  alt: 'Welwellness-consultation-iconlness consultation icon'
+				{
+                  title: 'ONLINE WELLNESS ACTIVITIES',
+                  subtitle: 'Yoga, meditation, health webinars',
+                  icon: '/yoga.svg', // Add your wellness activities icon
+                  alt: 'Wellness activities icon'
                 },
                 {
                   title: '24 X 7 MEDICAL SUPPORT',
@@ -457,12 +491,12 @@ const Index = () => {
                   icon: '/medicine.svg', // Add your wellness consultation icon
                   alt: 'Wellness consultation icon'
                 },
-                {
-                  title: 'ONLINE WELLNESS ACTIVITIES',
-                  subtitle: 'Yoga, meditation, health webinars',
-                  icon: '/yoga.svg', // Add your wellness activities icon
-                  alt: 'Wellness activities icon'
-                },
+				{
+					title: '2ND OPINION WITH SENIOR DOCTORS',
+					subtitle: 'Expert medical consultation and second opinions',
+					icon: '/brain.svg', // Add your second opinion icon
+					alt: 'Second opinion icon'
+				}  
               ].map((item, idx) => (
                 <div
                   key={idx}
@@ -673,10 +707,10 @@ const Index = () => {
 					{/* Right cards */}
 					<div className="space-y-5 md:space-y-6">
 						{[
-							'Daily doctor check-ins during hospital stays',
-							'Health updates to family via call/WhatsApp',
-							'In-person hospital visits by our care team.',
-							'Ambulance arrangement & home doctor visits (chargeable)',
+							'Ambulance arrangement & home doctor visits',
+							'Seamless hospital admission',
+							'Daily health updates',
+							'Recovering care after discharge for 1 week',
 						].map((text, idx) => (
 							<div key={idx} className="group relative rounded-2xl bg-emerald-600 text-white shadow-[0_12px_30px_rgba(0,0,0,0.15)] ring-1 ring-black/10 px-5 md:px-6 py-5 md:py-6 flex items-center gap-5">
 								<div className="relative shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white flex items-center justify-center">
@@ -693,36 +727,30 @@ const Index = () => {
         </div>
       </section>
 
-		{/* Constant Care CTA Section (full-bleed) */}
-		<section className="relative w-full overflow-hidden">
-			<img
-				src="/multigenerational-men-demonstrating-unity.jpg"
-				alt="Family unity across generations"
-				className="block w-[120%] h-[420px] md:h-[560px] object-cover"
-				style={{ transform: 'translateX(20%)' }}
-			/>
-			{/* Green left panel that blends into the image */}
-			<div
-				className="absolute inset-0 z-10 pointer-events-none"
-				style={{
-					background:
-						'linear-gradient(to right, rgba(6,95,70,1) 0%, rgba(6,95,70,1) 28%, rgba(6,95,70,0.85) 45%, rgba(6,95,70,0.45) 62%, rgba(6,95,70,0.0) 78%)',
-				}}
-			/>
-			{/* Content */}
-			<div className="absolute inset-y-0 left-0 z-20 flex items-center">
-				<div className="px-6 md:px-10 lg:px-16 max-w-3xl text-white">
-					<h3 className="text-3xl md:text-5xl font-extrabold tracking-wide mb-4 md:mb-6">
-						YOUR PARENTS’ HEALTH,
-						<br /> OUR CONSTANT CARE
-					</h3>
-					<p className="text-sm md:text-base text-emerald-50/90 max-w-xl mb-6">
-						Stay connected to your parents' health with round-the-clock support, expert medical care, and reliable emergency assistance.
-					</p>
-					<Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-6 py-6 text-base shadow-md">
-						START CARE TODAY
-					</Button>
-          </div>
+		{/* Value Added Services Section */}
+		<section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-16 md:py-24">
+			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
+				{/* Section Header */}
+				<div className="text-center mb-8">
+				<div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-semibold mb-6">
+						<span className="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+						Services
+					</div>
+					<h2 className="font-black tracking-tight text-gray-900 leading-tight text-4xl sm:text-5xl lg:text-6xl mb-6">
+						VALUE ADDED <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-600">SERVICES</span>
+					</h2>
+				</div>
+
+								{/* Image */}
+				<div className="flex justify-center">
+					<div className="w-full max-w-7xl">
+						<img
+							src="/curve value added service.png"
+							alt="Value Added Services"
+							className="w-full h-auto rounded-3xl"
+						/>
+					</div>
+				</div>
         </div>
       </section>
 
@@ -757,79 +785,262 @@ const Index = () => {
 
 				<h3 className="text-center text-3xl md:text-5xl font-extrabold tracking-wide text-gray-800 mb-10 md:mb-14">CHOOSE A PLAN</h3>
 
-				{/* Pricing cards */}
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-					{/* Senior Plan */}
-					<div className="rounded-2xl bg-emerald-700/80 text-white p-7 md:p-8 shadow-[0_10px_25px_rgba(0,0,0,0.15)] transition-all duration-300 will-change-transform hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(0,0,0,0.2)]">
-						<p className="text-center text-xl md:text-2xl font-extrabold tracking-wider uppercase">Senior<br />Plan</p>
-						<p className="text-center text-emerald-50/90 mt-1">1–2 Parents</p>
-						<div className="text-center mt-6">
-							<p className="text-2xl md:text-3xl font-extrabold">INR 3,000</p>
-							<p className="text-xs text-emerald-50/80">a month</p>
-						</div>
-						<ul className="mt-6 space-y-3 text-sm md:text-base">
-							{[
-								'Monthly wellness consultation',
-								'24×7 medical support',
-								'Medicine delivery',
-								'Nursing / Wardboy (agency)',
-							].map((b, i) => (
-								<li key={i} className="flex items-start gap-2"><Check className="w-4 h-4 mt-1 text-emerald-300" /> <span>{b}</span></li>
-							))}
-						</ul>
-						<div className="mt-7">
-							<Button className="w-full bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl py-6">GET STARTED</Button>
-          </div>
-        </div>
+				{/* Progressive Pricing Card */}
+				<div className="flex justify-center">
+					<div className="w-full max-w-lg">
+						<div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-gray-50 to-emerald-50/30 p-6 md:p-8 shadow-[0_25px_50px_rgba(0,0,0,0.08)] border border-gray-100/50 transition-all duration-500 will-change-transform hover:-translate-y-2 hover:shadow-[0_35px_70px_rgba(0,0,0,0.12)] min-h-[620px]">
+							{/* Background Decorative Elements */}
+							<div className="absolute inset-0 opacity-30">
+								<div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
+								<div className="absolute bottom-0 left-0 w-24 h-24 bg-green-300 rounded-full blur-2xl"></div>
+							</div>
+							{/* Step 1: Plan Selection */}
+							<div className="relative text-center mb-8">
+								<div className="inline-flex bg-gradient-to-r from-gray-100 to-emerald-100 rounded-3xl p-2 shadow-inner">
+									<button
+										onClick={() => {
+											setSelectedPlan('single');
+											// Keep the selected duration when switching plans
+											// setSelectedDuration('');
+											// setShowPricing(false);
+											// setShowCTA(false);
+										}}
+										className={`relative px-8 py-4 rounded-2xl font-bold transition-all duration-500 transform hover:scale-105 ${
+											selectedPlan === 'single' 
+												? 'bg-white text-emerald-700 shadow-lg shadow-emerald-500/20' 
+												: 'text-gray-600 hover:text-emerald-600 hover:bg-white/50'
+										}`}
+									>
+										{selectedPlan === 'single' && (
+											<div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-2xl blur-xl"></div>
+										)}
+										<span className="relative z-10">Single Parent</span>
+									</button>
+									<button
+										onClick={() => {
+											setSelectedPlan('couple');
+											// Keep the selected duration when switching plans
+											// setSelectedDuration('');
+											// setShowPricing(false);
+											// setShowCTA(false);
+										}}
+										className={`relative px-8 py-4 rounded-2xl font-bold transition-all duration-500 transform hover:scale-105 ${
+											selectedPlan === 'couple' 
+												? 'bg-white text-emerald-700 shadow-lg shadow-emerald-500/20' 
+												: 'text-gray-600 hover:text-emerald-600 hover:bg-white/50'
+										}`}
+									>
+										{selectedPlan === 'couple' && (
+											<div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-2xl blur-xl"></div>
+										)}
+										<span className="relative z-10">Both Parents</span>
+									</button>
+								</div>
+							</div>
 
-					{/* Recommended Plan */}
-					<div className="rounded-2xl bg-emerald-700 text-white p-7 md:p-8 ring-4 ring-emerald-400 shadow-[0_12px_30px_rgba(0,0,0,0.18)] md:scale-[1.03] md:z-10 transition-all duration-300 will-change-transform hover:-translate-y-1 md:hover:scale-[1.05] hover:shadow-[0_18px_40px_rgba(0,0,0,0.22)]">
-						<p className="text-center text-xl md:text-2xl font-extrabold tracking-wider uppercase">Recommended<br />Plan</p>
-						<p className="text-center text-emerald-50/90 mt-1">5 Members</p>
-						<div className="text-center mt-6">
-							<p className="text-2xl md:text-3xl font-extrabold">INR 6,000</p>
-							<p className="text-xs text-emerald-50/80">a month</p>
-						</div>
-						<ul className="mt-6 space-y-3 text-sm md:text-base">
-							{[
-								'Monthly wellness consultation',
-								'24×7 medical support',
-								'Medicine delivery',
-								'Nursing / Wardboy (agency)',
-								'Blood test, ICU setup at home',
-							].map((b, i) => (
-								<li key={i} className="flex items-start gap-2"><Check className="w-4 h-4 mt-1 text-emerald-300" /> <span>{b}</span></li>
-							))}
-						</ul>
-						<div className="mt-7">
-							<Button className="w-full bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl py-6">GET STARTED</Button>
-          </div>
-        </div>
+							{/* Step 2: Duration Selection */}
+							{selectedPlan && (
+								<div className="relative text-center mb-8 animate-in slide-in-from-top-4 duration-500">
+									<p className="text-xl font-bold text-gray-800 mb-6">Select Plan Duration</p>
+									<div className="relative inline-block dropdown-container">
+										<button
+											onClick={() => setShowDropdown(!showDropdown)}
+											className="relative w-80 px-8 py-5 bg-white border-2 border-gray-200 rounded-2xl text-gray-800 font-bold text-lg text-center focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all duration-300 hover:border-emerald-400 hover:shadow-lg hover:shadow-emerald-500/25 cursor-pointer shadow-sm flex items-center justify-between"
+										>
+											<span className={selectedDuration ? 'text-gray-800' : 'text-gray-400'}>
+												{selectedDuration ? `${selectedDuration} Month${parseInt(selectedDuration) > 1 ? 's' : ''}` : 'Choose duration...'}
+											</span>
+											<div className={`transition-transform duration-300 ${showDropdown ? 'rotate-180' : ''}`}>
+												<svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+												</svg>
+											</div>
+										</button>
+										
+										{/* Custom Dropdown Menu */}
+										{showDropdown && (
+											<div className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-emerald-200 rounded-2xl shadow-2xl overflow-hidden z-10 animate-in slide-in-from-top-2 duration-300">
+												{[
+													{ value: '', label: 'Choose duration...' },
+													{ value: '1', label: '1 Month' },
+													{ value: '6', label: '6 Months' },
+													{ value: '12', label: '12 Months' }
+												].map((option, index) => (
+													<button
+														key={index}
+														onClick={() => {
+															setSelectedDuration(option.value);
+															setShowDropdown(false);
+															setShowPricing(true);
+															setShowCTA(false);
+														}}
+														className={`w-full px-6 py-4 text-left transition-all duration-200 hover:bg-emerald-50 ${
+															selectedDuration === option.value 
+																? 'bg-emerald-100 text-emerald-700 font-semibold' 
+																: 'text-gray-700 hover:text-emerald-600'
+														} ${
+															index === 0 ? 'border-b border-gray-100' : ''
+														}`}
+													>
+														{option.label}
+													</button>
+												))}
+											</div>
+										)}
+									</div>
+								</div>
+							)}
 
-					{/* Customize Plan */}
-					<div className="rounded-2xl bg-emerald-700/80 text-white p-7 md:p-8 shadow-[0_10px_25px_rgba(0,0,0,0.15)] transition-all duration-300 will-change-transform hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(0,0,0,0.2)]">
-						<p className="text-center text-xl md:text-2xl font-extrabold tracking-wider uppercase">Customize<br />Plan</p>
-						<p className="text-center text-emerald-50/90 mt-1">up to 8 Members</p>
-						<div className="text-center mt-6">
-							<p className="text-2xl md:text-3xl font-extrabold">Custom</p>
-							<p className="text-xs text-emerald-50/80">as per needs</p>
+							{/* Step 3: Pricing Display */}
+							{showPricing && selectedDuration && (
+								<div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500 pb-8">
+									{/* Plan Pricing with Discount */}
+									<div className="relative bg-gradient-to-r from-white to-emerald-50/50 rounded-2xl p-6 ring-1 ring-emerald-200/30 shadow-lg">
+										<div className="absolute top-3 right-3">
+											<div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+										</div>
+										<div className="text-center">
+											<p className="text-xs font-semibold text-emerald-600 mb-2 uppercase tracking-wider">
+												{parseInt(selectedDuration) === 1 ? 'Offer' : 'Special Offer'}
+											</p>
+											{selectedPlan === 'single' ? (
+												<div>
+													{/* Price Display */}
+													<p className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+														INR {(() => {
+															const duration = parseInt(selectedDuration);
+															if (duration === 1) return '3,000';
+															if (duration === 6) return '16,500';
+															if (duration === 12) return '30,000';
+															return (3000 * duration).toLocaleString();
+														})()}
+													</p>
+													{/* Original Price - Crossed Out - Only show for discounted plans */}
+													{parseInt(selectedDuration) > 1 && (
+														<p className="text-lg text-gray-500 line-through mt-1">
+															INR {(() => {
+																const duration = parseInt(selectedDuration);
+																if (duration === 6) return '18,000';
+																if (duration === 12) return '36,000';
+																return (3000 * duration).toLocaleString();
+															})()}
+														</p>
+													)}
+													{/* Savings Badge - Only show when there are savings */}
+													{(() => {
+														const duration = parseInt(selectedDuration);
+														const savings = duration === 6 ? 1500 : duration === 12 ? 6000 : 0;
+														return savings > 0 ? (
+															<div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mt-2">
+																Save ₹{savings.toLocaleString()}
+															</div>
+														) : null;
+													})()}
+													{parseInt(selectedDuration) >= 6 && (
+														<p className="text-xs font-medium text-emerald-600 mt-2">
+															{parseInt(selectedDuration) === 12 ? '+30 days free' : '+15 days free'}
+														</p>
+													)}
+												</div>
+											) : (
+												<div>
+													{/* Price Display */}
+													<p className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+														INR {(() => {
+															const duration = parseInt(selectedDuration);
+															if (duration === 1) return '5,000';
+															if (duration === 6) return '28,000';
+															if (duration === 12) return '54,000';
+															return (5000 * duration).toLocaleString();
+														})()}
+													</p>
+													{/* Original Price - Crossed Out - Only show for discounted plans */}
+													{parseInt(selectedDuration) > 1 && (
+														<p className="text-lg text-gray-500 line-through mt-1">
+															INR {(() => {
+																const duration = parseInt(selectedDuration);
+																if (duration === 6) return '30,000';
+																if (duration === 12) return '60,000';
+																return (5000 * duration).toLocaleString();
+															})()}
+														</p>
+													)}
+													{/* Savings Badge - Only show when there are savings */}
+													{(() => {
+														const duration = parseInt(selectedDuration);
+														const savings = duration === 6 ? 2000 : duration === 12 ? 6000 : 0;
+														return savings > 0 ? (
+															<div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mt-2">
+																Save ₹{savings.toLocaleString()}
+															</div>
+														) : null;
+													})()}
+													{parseInt(selectedDuration) >= 6 && (
+														<p className="text-xs font-medium text-emerald-600 mt-2">
+															{parseInt(selectedDuration) === 12 ? '+30 days free' : '+15 days free'}
+														</p>
+													)}
+												</div>
+											)}
+										</div>
+									</div>
+
+
+
+
+
+
+									{/* Final CTA Button */}
+									{showPricing && selectedDuration && (
+										<div className="mt-8">
+											<Button 
+												onClick={() => navigate('/register', { 
+													state: { 
+														planInfo: { 
+															type: selectedPlan, 
+															duration: selectedDuration, 
+															price: (() => {
+																const duration = parseInt(selectedDuration);
+																if (selectedPlan === 'single') {
+																																	if (duration === 1) return 3000;
+																if (duration === 6) return 16500;
+																if (duration === 12) return 30000;
+																return 3000 * duration;
+																} else {
+																	if (duration === 1) return 5000;
+																	if (duration === 6) return 28000;
+																	if (duration === 12) return 54000;
+																	return 5000 * duration;
+																}
+															})()
+														} 
+													} 
+												})}
+												className="relative w-full bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 hover:from-emerald-700 hover:via-green-700 hover:to-emerald-800 text-white rounded-2xl py-6 text-xl font-black shadow-2xl hover:shadow-emerald-500/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 overflow-hidden group"
+											>
+												<div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+												<span className="relative z-10">CHOOSE THIS PLAN</span>
+											</Button>
+										</div>
+									)}
+								</div>
+							)}
+
+							{/* Initial Instructions */}
+							{!selectedPlan && (
+								<div className="text-center text-gray-500 animate-pulse">
+									<p className="text-lg">Please select your plan type to continue</p>
+								</div>
+							)}
+
+							{selectedPlan && !selectedDuration && (
+								<div className="text-center text-gray-500 animate-pulse">
+									<p className="text-lg">Please select your plan duration to see pricing</p>
+								</div>
+							)}
 						</div>
-						<ul className="mt-6 space-y-3 text-sm md:text-base">
-							{[
-								'Monthly wellness consultation',
-								'24×7 medical support',
-								'Medicine delivery',
-								'Nursing / Wardboy (agency)',
-								'Blood test, ICU setup at home',
-							].map((b, i) => (
-								<li key={i} className="flex items-start gap-2"><Check className="w-4 h-4 mt-1 text-emerald-300" /> <span>{b}</span></li>
-							))}
-						</ul>
-						<div className="mt-7">
-							<Button className="w-full bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl py-6">GET STARTED</Button>
-              </div>
-              </div>
-            </div>
+					</div>
+				</div>
 
 				<p className="mt-8 text-center text-xs text-gray-700">* EMI / Package options available inside plans. Visit your required plan for more info.</p>
 				<div className="mt-3 flex justify-center">
@@ -841,302 +1052,7 @@ const Index = () => {
         </div>
 		</section>
 
-		{/* List of Services Section */}
-		<section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-16 md:py-24">
-			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
-				{/* Section Header */}
-				<div className="text-center mb-16">
-					<div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-semibold mb-6">
-						<span className="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
-						Comprehensive Care Services
-					</div>
-					
-					<h2 className="font-black tracking-tight text-gray-900 leading-tight text-4xl sm:text-5xl lg:text-6xl mb-6">
-						VALUE ADDED
-						<br />
-						<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-600">SERVICES</span>
-					</h2>
-					
-					<p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-						From online consultations to comprehensive home care, we provide a complete spectrum of senior care services designed for your family's needs.
-					</p>
-				</div>
-
-				{/* Services Grid */}
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
-					{/* Online Services */}
-					<div className="group relative">
-						<div className="relative bg-white rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_50px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-emerald-100/50 min-h-[500px]">
-							{/* Header Badge */}
-							<div className="absolute top-6 left-6 z-10">
-								<div className="bg-gradient-to-r from-emerald-600 to-green-600 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
-									Online Services
-								</div>
-							</div>
-							
-							{/* Content */}
-							<div className="p-8 pt-20 flex flex-col h-full">
-								<div className="flex-1 space-y-4">
-									{[
-										{ service: 'Physiotherapy consult', frequency: 'once a week', icon: Dumbbell },
-										{ service: 'Dieticians consult', frequency: 'once in fortnight', icon: UtensilsCrossed },
-										{ service: 'Mindfulness session', frequency: 'once a week', icon: Brain },
-										{ service: 'Yoga', frequency: 'daily', icon: Heart }
-									].map((item, idx) => (
-										<div key={idx} className="flex items-center gap-4 p-4 bg-emerald-50/50 rounded-2xl hover:bg-emerald-100/70 transition-colors duration-300">
-											<div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
-												<item.icon className="w-5 h-5" />
-											</div>
-											<div className="flex-1">
-												<p className="font-semibold text-gray-800 text-sm">{item.service}</p>
-												<p className="text-emerald-600 text-xs font-medium">{item.frequency}</p>
-											</div>
-										</div>
-									))}
-									
-									{/* 24x7 Availability */}
-									<div className="mt-6 bg-gradient-to-r from-emerald-600 to-green-600 p-4 rounded-2xl text-white">
-										<div className="flex items-center gap-3">
-											<div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-												<Clock className="w-5 h-5 text-white" />
-											</div>
-											<div>
-												<p className="font-bold text-sm">24 x 7 Availability</p>
-												<p className="text-emerald-100 text-xs">Online emergency services</p>
-											</div>
-										</div>
-									</div>
-								</div>
-								
-								{/* Dropdown Button */}
-								<div className="mt-6 text-center">
-									<button
-										onClick={() => setExpandedCards(prev => ({ ...prev, online: !prev.online }))}
-										className="flex items-center gap-2 mx-auto px-6 py-3 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-									>
-										<span>{expandedCards.online ? 'Show Less' : 'View More'}</span>
-										{expandedCards.online ? (
-											<ChevronUp className="w-4 h-4" />
-										) : (
-											<ChevronDown className="w-4 h-4" />
-										)}
-									</button>
-								</div>
-								
-								{/* Expanded Content */}
-								{expandedCards.online && (
-									<div className="mt-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
-										<div className="flex items-center gap-4 p-4 bg-emerald-50/50 rounded-2xl">
-											<div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
-												<Monitor className="w-5 h-5" />
-											</div>
-											<div className="flex-1">
-												<p className="font-semibold text-gray-800 text-sm">Online Consultation</p>
-												<p className="text-emerald-600 text-xs font-medium">24/7 access</p>
-											</div>
-										</div>
-										<div className="flex items-center gap-4 p-4 bg-emerald-50/50 rounded-2xl">
-											<div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
-												<Phone className="w-5 h-5" />
-											</div>
-											<div className="flex-1">
-												<p className="font-semibold text-gray-800 text-sm">Emergency Support</p>
-												<p className="text-emerald-600 text-xs font-medium">Instant response</p>
-											</div>
-										</div>
-									</div>
-								)}
-							</div>
-							
-							{/* Bottom Border Animation */}
-							<div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-green-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left"></div>
-						</div>
-					</div>
-
-					{/* Through Agency Services */}
-					<div className="group relative">
-						<div className="relative bg-white rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_50px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-emerald-100/50 min-h-[500px]">
-							{/* Header Badge */}
-							<div className="absolute top-6 left-6 z-10">
-								<div className="bg-gradient-to-r from-emerald-600 to-green-600 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
-									Through Agency
-								</div>
-							</div>
-							
-							{/* Content */}
-							<div className="p-8 pt-20 flex flex-col h-full">
-								<div className="flex-1 space-y-4">
-									{[
-										{ service: 'Home care', icon: Home },
-										{ service: 'Home ICU', icon: Building2 },
-										{ service: 'Home physiotherapy', icon: Dumbbell },
-										{ service: 'Home dr visit', icon: Stethoscope },
-										{ service: 'Ambulance', icon: Ambulance },
-										{ service: 'Air ambulance', icon: Plane },
-										{ service: 'Blood and urine test', icon: TestTube },
-										{ service: 'Medicines refill at home', icon: Pill }
-									].map((item, idx) => (
-										<div key={idx} className="flex items-center gap-4 p-3 bg-emerald-50/50 rounded-xl hover:bg-emerald-100/70 transition-colors duration-300">
-											<div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600">
-												<item.icon className="w-4 h-4" />
-											</div>
-											<div className="flex-1">
-												<p className="font-semibold text-gray-800 text-sm">{item.service}</p>
-											</div>
-										</div>
-									))}
-									
-									{/* Special Offers */}
-									<div className="mt-6 space-y-3">
-										<div className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 p-4 rounded-2xl border border-emerald-200/50">
-											<div className="flex items-center gap-3 mb-3">
-												<div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
-													<Shield className="w-4 h-4 text-white" />
-												</div>
-												<p className="text-emerald-700 font-semibold text-sm">Special Offers</p>
-											</div>
-											<ul className="space-y-1 text-xs text-emerald-600">
-												<li className="flex items-center gap-2">
-													<Check className="w-3 h-3 text-emerald-500" />
-													If amount ₹500 or more - Free home collection
-												</li>
-												<li className="flex items-center gap-2">
-													<Check className="w-3 h-3 text-emerald-500" />
-													10% discount on services
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								
-								{/* Dropdown Button */}
-								<div className="mt-6 text-center">
-									<button
-										onClick={() => setExpandedCards(prev => ({ ...prev, agency: !prev.agency }))}
-										className="flex items-center gap-2 mx-auto px-6 py-3 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-									>
-										<span>{expandedCards.agency ? 'Show Less' : 'View More'}</span>
-										{expandedCards.agency ? (
-											<ChevronUp className="w-4 h-4" />
-										) : (
-											<ChevronDown className="w-4 h-4" />
-										)}
-									</button>
-								</div>
-								
-								{/* Expanded Content */}
-								{expandedCards.agency && (
-									<div className="mt-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
-										<div className="flex items-center gap-4 p-3 bg-emerald-50/50 rounded-xl">
-											<div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600">
-												<Truck className="w-4 h-4" />
-											</div>
-											<div className="flex-1">
-												<p className="font-semibold text-gray-800 text-sm">Medical Equipment Delivery</p>
-											</div>
-										</div>
-										<div className="flex items-center gap-4 p-3 bg-emerald-50/50 rounded-xl">
-											<div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600">
-												<Users className="w-4 h-4" />
-											</div>
-											<div className="flex-1">
-												<p className="font-semibold text-gray-800 text-sm">Professional Care Staff</p>
-											</div>
-										</div>
-									</div>
-								)}
-							</div>
-							
-							{/* Bottom Border Animation */}
-							<div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-green-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left"></div>
-						</div>
-					</div>
-
-					{/* Hospital Admission Services */}
-					<div className="group relative">
-						<div className="relative bg-white rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_50px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-emerald-100/50 min-h-[500px]">
-							{/* Header Badge */}
-							<div className="absolute top-6 left-6 z-10">
-								<div className="bg-gradient-to-r from-emerald-600 to-green-600 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
-									Hospital Admission
-								</div>
-							</div>
-							
-							{/* Content */}
-							<div className="p-8 pt-20 flex flex-col h-full">
-								<div className="flex-1 space-y-4">
-									{[
-										{ service: 'Surat, Mumbai or Navi Mumbai', icon: MapPin },
-										{ service: 'Seamless admission facility', icon: Check },
-										{ service: 'Ambulance pick up', icon: Ambulance },
-										{ service: 'Your preferred hospital and doctor', icon: Stethoscope },
-										{ service: 'Daily health update to family', icon: Phone },
-										{ service: 'One week follow up after discharge', icon: RefreshCw }
-									].map((item, idx) => (
-										<div key={idx} className="flex items-center gap-4 p-3 bg-emerald-50/50 rounded-xl hover:bg-emerald-100/70 transition-colors duration-300">
-											<div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600">
-												<item.icon className="w-4 h-4" />
-											</div>
-											<div className="flex-1">
-												<p className="font-semibold text-gray-800 text-sm">{item.service}</p>
-											</div>
-										</div>
-									))}
-								</div>
-								
-								{/* Dropdown Button */}
-								<div className="mt-6 text-center">
-									<button
-										onClick={() => setExpandedCards(prev => ({ ...prev, hospital: !prev.hospital }))}
-										className="flex items-center gap-2 mx-auto px-6 py-3 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-									>
-										<span>{expandedCards.hospital ? 'Show Less' : 'View More'}</span>
-										{expandedCards.hospital ? (
-											<ChevronUp className="w-4 h-4" />
-										) : (
-											<ChevronDown className="w-4 h-4" />
-										)}
-									</button>
-								</div>
-								
-								{/* Expanded Content */}
-								{expandedCards.hospital && (
-									<div className="mt-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
-										<div className="flex items-center gap-4 p-3 bg-emerald-50/50 rounded-xl">
-											<div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600">
-												<Calendar className="w-4 h-4" />
-											</div>
-											<div className="flex-1">
-												<p className="font-semibold text-gray-800 text-sm">Appointment Scheduling</p>
-											</div>
-										</div>
-										<div className="flex items-center gap-4 p-3 bg-emerald-50/50 rounded-xl">
-											<div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600">
-												<Phone className="w-4 h-4" />
-											</div>
-											<div className="flex-1">
-												<p className="font-semibold text-gray-800 text-sm">Family Communication</p>
-											</div>
-										</div>
-									</div>
-								)}
-							</div>
-							
-							{/* Bottom Border Animation */}
-							<div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-green-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left"></div>
-						</div>
-					</div>
-				</div>
-
-				{/* Bottom CTA */}
-				<div className="text-center mt-16">
-					<div className="inline-flex items-center gap-3 bg-white px-8 py-4 rounded-2xl shadow-lg border border-emerald-200/50">
-						<span className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></span>
-						<p className="text-emerald-700 font-semibold">All services available 24/7 with instant support</p>
-          </div>
-          </div>
-        </div>
-		</section>
+				
 
 			{/* Optional Add-on Devices Section */}
 			<section className="relative bg-gradient-to-b from-gray-50 to-white py-16 md:py-24">
