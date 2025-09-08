@@ -201,7 +201,7 @@ const Index = () => {
             </div>
 
               {/* Modern Tagline Card */}
-              <div className="relative group">
+              {/* <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-green-500/5 to-emerald-500/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
                 <div className="relative bg-white/80 backdrop-blur-md rounded-3xl p-6 border border-white/30 shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 transform hover:-translate-y-1">
                   <div className="flex items-start gap-4">
@@ -221,7 +221,7 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -237,10 +237,6 @@ const Index = () => {
                   transform: `translateY(${scrollProgress * -15}px) scale(${0.9 + (scrollProgress * 0.1)})`,
                 }}
               />
-              
-
-              
-
             </div>
             </div>
           </div>
@@ -359,7 +355,7 @@ const Index = () => {
                   {/* Top Badge */}
                   <div className="absolute top-4 left-4">
                     <div className="bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
-                      Care Support
+					On-call support
                 </div>
                 </div>
                   
@@ -401,14 +397,14 @@ const Index = () => {
                   {/* Top Badge */}
                   <div className="absolute top-4 left-4">
                     <div className="bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
-                      Health Care
+					Extensive Care
                 </div>
                 </div>
                   
                   {/* Text Content Overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
                     <h3 className="text-white font-bold text-lg md:text-xl leading-tight mb-3">
-                      Remote Health Management
+					Regular Health Updates
                     </h3>
                     <p className="text-white/90 text-sm md:text-base leading-relaxed">
                       Managing health and emergencies from afar can be challenging without proper support systems.
@@ -621,7 +617,7 @@ const Index = () => {
 							{/* Content */}
 							<div className="px-8 pb-8 text-center">
 								<h3 className="text-2xl md:text-3xl font-black uppercase tracking-wide text-gray-800 mb-4">
-									Meet Your Care Manager
+								Connect with your care manager
 								</h3>
 								<p className="text-gray-600 text-base md:text-lg leading-relaxed">
 									Connect with your dedicated care manager who becomes your single point of contact for all health needs.
@@ -665,10 +661,10 @@ const Index = () => {
 							{/* Content */}
 							<div className="px-8 pb-8 text-center">
 								<h3 className="text-2xl md:text-3xl font-black uppercase tracking-wide text-gray-800 mb-4">
-									Stay Connected
+								Stress-free healthy living
 								</h3>
 								<p className="text-gray-600 text-base md:text-lg leading-relaxed">
-									Receive regular updates, hospital visit reports, and emergency assistance whenever you need it.
+									Receive regular updates and emergency assistance whenever you need it.
 								</p>
 								
 								{/* Feature List */}
@@ -699,72 +695,7 @@ const Index = () => {
       </section>
 
 		{/* Critical Moments Section */}
-		    <section className="relative bg-gradient-to-br from-green-50 to-emerald-50 pt-12 md:pt-16 pb-24">
-			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
-                <h3 className="text-center text-3xl md:text-5xl font-extrabold tracking-wide text-gray-800 mb-20 md:mb-28">
-					ALWAYS HERE IN CRITICAL MOMENTS
-				</h3>
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-stretch">
-					{/* Left image */}
-					<div className="h-[260px] md:h-[520px]">
-						<div className="h-full rounded-3xl overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.15)] ring-1 ring-black/10">
-							<img
-								src="/small-hand-giving-handshake-large-hand.jpg"
-								alt="Helping hands"
-								className="w-full h-full object-cover"
-							/>
-                  </div>
-                </div>
-
-					{/* Right cards */}
-					<div className="space-y-5 md:space-y-6">
-						{[
-							'Ambulance arrangement & home doctor visits',
-							'Seamless hospital admission',
-							'Daily health updates',
-							'Recovering care after discharge for 1 week',
-						].map((text, idx) => (
-							<div key={idx} className="group relative rounded-2xl bg-emerald-600 text-white shadow-[0_12px_30px_rgba(0,0,0,0.15)] ring-1 ring-black/10 px-5 md:px-6 py-5 md:py-6 flex items-center gap-5">
-								<div className="relative shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white flex items-center justify-center">
-									<Plus className="absolute w-7 h-7 md:w-8 md:h-8 text-emerald-600 transition-all duration-300 ease-out opacity-100 scale-100 group-hover:opacity-0 group-hover:scale-50" />
-									<Check className="absolute w-7 h-7 md:w-8 md:h-8 text-emerald-600 transition-all duration-300 ease-out opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100" />
-                  </div>
-								<p className="font-extrabold tracking-wide text-sm md:text-lg leading-snug">
-									{text}
-								</p>
-                  </div>
-						))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-		{/* Value Added Services Section */}
-		<section data-section="services" className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-16 md:py-24">
-			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
-				{/* Section Header */}
-				<div className="text-center mb-8">
-				<div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-semibold mb-6">
-						<span className="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
-						Services
-					</div>
-					<h2 className="font-black tracking-tight text-gray-900 leading-tight text-4xl sm:text-5xl lg:text-6xl mb-6">
-						VALUE ADDED <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-600">SERVICES</span>
-					</h2>
-				</div>
-
-								{/* Image */}
-				<div className="flex justify-center">
-					<div className="w-full max-w-7xl">
-						<img
-							src="/curve value added service.png"
-							alt="Value Added Services"
-							className="w-full h-auto rounded-3xl"
-						/>
-					</div>
-				</div>
-        </div>
-      </section>
+		
 
 		{/* Pricing Section */}
 		    <section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-14 md:py-20">
