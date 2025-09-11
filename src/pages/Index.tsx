@@ -80,7 +80,7 @@ const Index = () => {
 
   return (
     <>
-      {/* Transparent Navbar */}
+      {/* Semi-transparent Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
           <div className="flex items-center justify-between h-16 md:h-20">
@@ -97,7 +97,7 @@ const Index = () => {
             <div className="hidden md:flex items-center space-x-8">
               <a
                 href="#home"
-                className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
                 onClick={(e) => {
                   e.preventDefault();
                   document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' });
@@ -107,32 +107,30 @@ const Index = () => {
               </a>
               <a
                 href="#services"
-                className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
                 onClick={(e) => {
                   e.preventDefault();
-                  document.querySelector('[data-section="services"]')?.scrollIntoView({ behavior: 'smooth' });
+                  document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
                 Services
               </a>
               <a
                 href="#how-it-works"
-                className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
                 onClick={(e) => {
                   e.preventDefault();
-                  const howItWorksSection = document.querySelector('section:nth-of-type(3)');
-                  howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
+                  document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
                 How It Works
               </a>
               <a
                 href="#pricing"
-                className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
                 onClick={(e) => {
                   e.preventDefault();
-                  const pricingSection = document.querySelector('section:nth-of-type(4)');
-                  pricingSection?.scrollIntoView({ behavior: 'smooth' });
+                  document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
                 Pricing
@@ -168,11 +166,11 @@ const Index = () => {
 
           {/* Mobile Menu */}
           {showMobileMenu && (
-            <div className="md:hidden bg-white/10 backdrop-blur-md rounded-lg mt-2 p-4 border border-white/20">
+            <div className="md:hidden bg-white/90 backdrop-blur-md rounded-lg mt-2 p-4 border border-gray-200/60 shadow-lg">
               <div className="flex flex-col space-y-4">
                 <a
                   href="#home"
-                  className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
                   onClick={(e) => {
                     e.preventDefault();
                     setShowMobileMenu(false);
@@ -183,35 +181,33 @@ const Index = () => {
                 </a>
                 <a
                   href="#services"
-                  className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
                   onClick={(e) => {
                     e.preventDefault();
                     setShowMobileMenu(false);
-                    document.querySelector('[data-section="services"]')?.scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                 >
                   Services
                 </a>
                 <a
                   href="#how-it-works"
-                  className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
                   onClick={(e) => {
                     e.preventDefault();
                     setShowMobileMenu(false);
-                    const howItWorksSection = document.querySelector('section:nth-of-type(3)');
-                    howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                 >
                   How It Works
                 </a>
                 <a
                   href="#pricing"
-                  className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
                   onClick={(e) => {
                     e.preventDefault();
                     setShowMobileMenu(false);
-                    const pricingSection = document.querySelector('section:nth-of-type(4)');
-                    pricingSection?.scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                 >
                   Pricing
@@ -604,7 +600,7 @@ const Index = () => {
                 },
                 {
                   title: 'Home Services',
-                  subtitle: 'Diagnostic test, medicine delivery, care & ICU at Home',
+                  subtitle: 'Diagnostic test, medicine delivery, care & ICU at Home',
                   icon: '/Home Services.png', // Add your wellness consultation icon
                   alt: 'Wellness consultation icon'
                 },
@@ -638,7 +634,7 @@ const Index = () => {
       </section>
 
 		{/* How It Works Section */}
-		<section className="relative bg-gradient-to-br from-green-50 to-emerald-50 pt-20 md:pt-28 pb-32">
+		<section id="how-it-works" className="relative bg-gradient-to-br from-green-50 to-emerald-50 pt-20 md:pt-28 pb-32 scroll-mt-20">
 			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
 				{/* Enhanced Section Header */}
 				<div className="text-center mb-16 md:mb-20">
@@ -661,8 +657,8 @@ const Index = () => {
 				{/* Enhanced Process Cards */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
 					{/* Step 1: Share Details */}
-					<div className="group relative">
-						<div className="relative bg-gradient-to-br from-emerald-100 via-green-50 to-teal-100 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-emerald-200/40 min-h-[380px] md:min-h-[420px]">
+					<div className="group relative h-full">
+						<div className="relative bg-gradient-to-br from-emerald-100 via-green-50 to-teal-100 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-emerald-200/40 h-full flex flex-col">
 							{/* Step Number Badge */}
 							<div className="absolute top-6 right-6 z-10">
 								<div className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
@@ -680,11 +676,11 @@ const Index = () => {
               </div>
 
 							{/* Content */}
-							<div className="px-8 pb-8 text-center">
+							<div className="px-8 pb-8 text-center flex-1 flex flex-col">
 								<h3 className="text-2xl md:text-3xl font-black uppercase tracking-wide text-gray-800 mb-4">
 									Share Details
 								</h3>
-								<p className="text-gray-600 text-base md:text-lg leading-relaxed">
+								<p className="text-gray-600 text-base md:text-lg leading-relaxed flex-1">
 									Provide your parent's health information, emergency contacts & preferences through our secure platform.
 								</p>
 								
@@ -705,8 +701,8 @@ const Index = () => {
 					</div>
 
 					{/* Step 2: Meet Care Manager */}
-					<div className="group relative">
-						<div className="relative bg-gradient-to-br from-emerald-100 via-green-50 to-teal-100 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-emerald-200/40 min-h-[380px] md:min-h-[420px]">
+					<div className="group relative h-full">
+						<div className="relative bg-gradient-to-br from-emerald-100 via-green-50 to-teal-100 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-emerald-200/40 h-full flex flex-col">
 							{/* Step Number Badge */}
 							<div className="absolute top-6 right-6 z-10">
 								<div className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
@@ -724,11 +720,11 @@ const Index = () => {
 							</div>
 							
 							{/* Content */}
-							<div className="px-8 pb-8 text-center">
+							<div className="px-8 pb-8 text-center flex-1 flex flex-col">
 								<h3 className="text-2xl md:text-3xl font-black uppercase tracking-wide text-gray-800 mb-4">
 								Connect with your care manager
 								</h3>
-								<p className="text-gray-600 text-base md:text-lg leading-relaxed">
+								<p className="text-gray-600 text-base md:text-lg leading-relaxed flex-1">
 									Connect with your dedicated care manager who becomes your single point of contact for all health needs.
 								</p>
 								
@@ -749,8 +745,8 @@ const Index = () => {
 					</div>
 
 					{/* Step 3: Stay Connected */}
-					<div className="group relative">
-						<div className="relative bg-gradient-to-br from-emerald-100 via-green-50 to-teal-100 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-emerald-200/40 min-h-[380px] md:min-h-[420px]">
+					<div className="group relative h-full">
+						<div className="relative bg-gradient-to-br from-emerald-100 via-green-50 to-teal-100 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-emerald-200/40 h-full flex flex-col">
 							{/* Step Number Badge */}
 							<div className="absolute top-6 right-6 z-10">
 								<div className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
@@ -762,17 +758,18 @@ const Index = () => {
 							<div className="relative mx-auto w-28 h-28 md:w-32 md:h-32 rounded-full bg-white/90 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.08)] flex items-center justify-center mb-8 mt-8 group-hover:scale-110 transition-transform duration-500">
 								<div className="w-16 h-16 md:w-18 md:h-18 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
 									<svg className="w-8 h-8 md:w-9 md:h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
 									</svg>
 								</div>
 							</div>
 							
 							{/* Content */}
-							<div className="px-8 pb-8 text-center">
+							<div className="px-8 pb-8 text-center flex-1 flex flex-col">
 								<h3 className="text-2xl md:text-3xl font-black uppercase tracking-wide text-gray-800 mb-4">
 								Stress-free healthy living
 								</h3>
-								<p className="text-gray-600 text-base md:text-lg leading-relaxed">
+								<p className="text-gray-600 text-base md:text-lg leading-relaxed flex-1">
 									Receive regular updates and emergency assistance whenever you need it.
 								</p>
 								
@@ -804,7 +801,7 @@ const Index = () => {
       </section>
 
 		{/* Services Curve Section (new) */}
-		<section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-10 md:py-16 overflow-hidden">
+		<section id="services" className="relative bg-gradient-to-br from-green-50 to-emerald-50 pt-20 md:pt-24 pb-10 md:pb-16 overflow-hidden scroll-mt-20">
 			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
 				<div className="text-center mb-8 md:mb-12">
 					<div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-semibold mb-4">
@@ -830,7 +827,7 @@ const Index = () => {
 			
 
 		{/* Pricing Section */}
-		    <section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-14 md:py-20">
+		    <section id="pricing" className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-14 md:py-20">
 			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
 				{/* Top mini features */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-10 md:mb-14">
