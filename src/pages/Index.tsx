@@ -804,7 +804,7 @@ const Index = () => {
       </section>
 
 		{/* Services Curve Section (new) */}
-		<section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-10 md:py-16">
+		<section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-10 md:py-16 overflow-hidden">
 			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
 				<div className="text-center mb-8 md:mb-12">
 					<div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-semibold mb-4">
@@ -816,18 +816,18 @@ const Index = () => {
 					</h2>
 				</div>
 
-				<div className="relative overflow-visible">
+				<div className="relative">
 					<img
 						src="/curve design final.png"
 						alt="Services overview curve design"
-						className="w-full h-auto object-contain max-w-[2200px] mx-auto scale-[1.15] sm:scale-100 origin-center"
+						className="w-full h-auto object-contain origin-center scale-[1.2] sm:scale-100"
 					/>
-          </div>
-        </div>
-      </section>
+				</div>
+			</div>
+		</section>
 
 		{/* Critical Moments Section */}
-		
+			
 
 		{/* Pricing Section */}
 		    <section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-14 md:py-20">
