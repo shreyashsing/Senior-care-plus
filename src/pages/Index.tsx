@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Play, Plus, Check, Monitor, Home, Building2, Phone, Car, Plane, Droplets, Pill, Calendar, RefreshCw, Clock, Heart, Brain, Dumbbell, UtensilsCrossed, UserCheck, Stethoscope, Ambulance, TestTube, Truck, Shield, Users, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
-import Lottie from 'lottie-react';
-import medicalAnimationData from '../../public/Medical Healthcare.json';
 import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
@@ -20,6 +18,7 @@ const Index = () => {
   const [showPricing, setShowPricing] = useState(false);
   const [showCTA, setShowCTA] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   useEffect(() => {
     let ticking = false;
@@ -81,94 +80,214 @@ const Index = () => {
 
   return (
     <>
-        <section className="relative overflow-hidden bg-gradient-to-br from-green-50 to-emerald-50">
-          {/* Decorative Wave Effect - Diagonal (Middle Position) */}
-          <div className="absolute inset-0 z-0 overflow-hidden">
-            <div className="absolute inset-0 w-full h-full">
-              <svg className="w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#10b981" stopOpacity="0.15"/>
-                    <stop offset="50%" stopColor="#059669" stopOpacity="0.12"/>
-                    <stop offset="100%" stopColor="#047857" stopOpacity="0.18"/>
-                  </linearGradient>
-                </defs>
-                <path 
-                  d="M0,700 Q300,500 600,400 Q900,300 1200,100" 
-                  stroke="url(#waveGradient)"
-                  strokeWidth="8"
-                  fill="none"
-                  className="animate-pulse"
-                  style={{animationDuration: '6s'}}
-                />
-                <path 
-                  d="M0,650 Q350,450 700,350 Q1050,250 1200,50" 
-                  stroke="url(#waveGradient)"
-                  strokeWidth="6"
-                  fill="none"
-                  opacity="0.6"
-                  className="animate-pulse"
-                  style={{animationDuration: '8s', animationDelay: '1s'}}
-                />
-                <path 
-                  d="M0,600 Q400,400 800,300 Q1200,200 1200,0" 
-                  stroke="url(#waveGradient)"
-                  strokeWidth="4"
-                  fill="none"
-                  opacity="0.4"
-                  className="animate-pulse"
-                  style={{animationDuration: '10s', animationDelay: '2s'}}
-                />
+      {/* Transparent Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20 transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
+          <div className="flex items-center justify-between h-16 md:h-20">
+            {/* Logo */}
+            <div className="flex items-center">
+              <img
+                src="/logo.svg"
+                alt="Senior Care Logo"
+                className="w-10 h-10 md:w-12 md:h-12"
+              />
+            </div>
+
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center space-x-8">
+              <a
+                href="#home"
+                className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Home
+              </a>
+              <a
+                href="#services"
+                className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.querySelector('[data-section="services"]')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Services
+              </a>
+              <a
+                href="#how-it-works"
+                className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const howItWorksSection = document.querySelector('section:nth-of-type(3)');
+                  howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                How It Works
+              </a>
+              <a
+                href="#pricing"
+                className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const pricingSection = document.querySelector('section:nth-of-type(4)');
+                  pricingSection?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Pricing
+              </a>
+              <Button
+                onClick={() => navigate('/register', { 
+                  state: { 
+                    planInfo: { 
+                      type: 'single', 
+                      duration: '1', 
+                      price: 3000 
+                    } 
+                  } 
+                })}
+                className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
+              >
+                Get Started
+              </Button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="text-white hover:text-emerald-400 transition-colors duration-300"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
+              </button>
             </div>
           </div>
 
-          {/* Senior Logo - Top Right Corner of Hero Section */}
-          <div className="absolute top-6 right-6 md:top-8 md:right-8 lg:top-10 lg:right-10 z-30">
+          {/* Mobile Menu */}
+          {showMobileMenu && (
+            <div className="md:hidden bg-white/10 backdrop-blur-md rounded-lg mt-2 p-4 border border-white/20">
+              <div className="flex flex-col space-y-4">
+                <a
+                  href="#home"
+                  className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowMobileMenu(false);
+                    document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  Home
+                </a>
+                <a
+                  href="#services"
+                  className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowMobileMenu(false);
+                    document.querySelector('[data-section="services"]')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  Services
+                </a>
+                <a
+                  href="#how-it-works"
+                  className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowMobileMenu(false);
+                    const howItWorksSection = document.querySelector('section:nth-of-type(3)');
+                    howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  How It Works
+                </a>
+                <a
+                  href="#pricing"
+                  className="text-white hover:text-emerald-400 transition-colors duration-300 font-medium"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowMobileMenu(false);
+                    const pricingSection = document.querySelector('section:nth-of-type(4)');
+                    pricingSection?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  Pricing
+                </a>
+                <Button
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    navigate('/register', { 
+                      state: { 
+                        planInfo: { 
+                          type: 'single', 
+                          duration: '1', 
+                          price: 3000 
+                        } 
+                      } 
+                    });
+                  }}
+                  className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105 w-full"
+                >
+                  Get Started
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+
+        <section id="home" className="relative overflow-hidden min-h-screen">
+          {/* Family Background Image */}
+          <div className="absolute inset-0 z-0">
             <img
-              src="/logo.svg"
-              alt="Senior Care Logo"
-              className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 transition-all duration-300 ease-out hover:scale-110"
-              style={{
-                filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))',
-              }}
+              src="/Family.png"
+              alt="Multi-generational family walking together"
+              className="w-full h-full object-cover"
             />
+            {/* Overlay for better text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20"></div>
+            {/* Additional gradient overlay for better contrast */}
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-transparent to-green-900/20"></div>
           </div>
+
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center py-12 md:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center py-12 md:py-16 pt-20 md:pt-24">
           {/* Left copy */}
           <div className="max-w-2xl">
             <div className="space-y-2 mb-4">
-              <div className="inline-flex items-center px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm font-semibold mb-3">
-                <span className="w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
+              <div className="inline-flex items-center px-3 py-1 bg-white/20 backdrop-blur-sm text-white border border-white/30 rounded-full text-sm font-semibold mb-3">
+                <span className="w-2 h-2 bg-emerald-400 rounded-full mr-2"></span>
                 Trusted Senior Care Services
               </div>
               
-              <h1 className="leading-none font-black tracking-tight text-gray-900">
-                <span className="block text-3xl sm:text-4xl lg:text-5xl xl:text-6xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">SENIOR</span>
-                <span className="block text-3xl sm:text-4xl lg:text-5xl xl:text-6xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-                  CARE <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-600">+</span>
+              <h1 className="leading-none font-black tracking-tight text-white">
+                <span className="block text-3xl sm:text-4xl lg:text-5xl xl:text-6xl bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">SENIOR</span>
+                <span className="block text-3xl sm:text-4xl lg:text-5xl xl:text-6xl bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+                  CARE <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-400">+</span>
                 </span>
             </h1>
               
-              <p className="text-sm sm:text-base text-gray-600 max-w-lg leading-relaxed">
+              <p className="text-sm sm:text-base text-gray-200 max-w-lg leading-relaxed">
                 Professional healthcare services designed specifically for seniors, ensuring comfort, dignity, and peace of mind.
               </p>
             </div>
 
-            <ul className="mt-4 space-y-2 text-sm text-gray-700">
+            <ul className="mt-4 space-y-2 text-sm text-gray-200">
               {[
                 'Serving Surat & Navi Mumbai areas',
                 'Medical + Lifestyle Care',
                 '24×7 Helpline',
               ].map((text, idx) => (
                 <li key={idx} className="flex items-center gap-2 group">
-                  <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-r from-emerald-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                  <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-r from-emerald-400 to-green-400 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                     <Play className="h-3 w-3 text-white" />
                   </div>
-                  <span className="font-medium">{text}</span>
+                  <span className="font-medium text-white">{text}</span>
                 </li>
               ))}
             </ul>
@@ -225,19 +344,9 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Right side - Medical Healthcare Animation */}
-                      <div className="flex items-center justify-start -ml-16">
-              <div className="relative w-full">
-                <Lottie
-                animationData={medicalAnimationData}
-                loop={true}
-                autoplay={true}
-                className="transition-all duration-1000 ease-out w-full max-w-[900px] h-auto max-h-[700px] sm:w-[600px] sm:h-[500px] md:w-[700px] md:h-[550px] lg:w-[800px] lg:h-[600px] xl:w-[900px] xl:h-[700px]"
-                style={{
-                  transform: `translateY(${scrollProgress * -15}px) scale(${0.9 + (scrollProgress * 0.1)})`,
-                }}
-              />
-            </div>
+          {/* Right side - Empty space to show more of the family background */}
+          <div className="hidden lg:block">
+            {/* This space allows the family background image to show through */}
             </div>
           </div>
         </div>
@@ -308,7 +417,7 @@ const Index = () => {
             }}
           >
             <img
-              src="/couple-2.jpg"
+              src="/COUPLE-1.png"
               alt="Retired couple using laptop on a sofa"
               className="w-full h-[340px] sm:h-[380px] md:h-[440px] object-cover transition-all duration-1000 ease-out"
               style={{
@@ -345,7 +454,7 @@ const Index = () => {
                 {/* Image Container */}
                 <div className="relative h-[12rem] md:h-[22rem] overflow-hidden">
                   <img
-                    src="/side-view-old-man-sitting-bench.jpg"
+                    src="/calling.png"
                     alt="Elderly man sitting on park bench"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -362,7 +471,7 @@ const Index = () => {
                   {/* Text Content Overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
                     <h3 className="text-white font-bold text-lg md:text-xl leading-tight mb-3">
-                      Independent Living Support
+					Trusted On-Call Help
                     </h3>
                     <p className="text-white/90 text-sm md:text-base leading-relaxed">
                       Many seniors live independently but still value extra care and assistance for peace of mind.
@@ -387,7 +496,7 @@ const Index = () => {
                 {/* Image Container */}
                 <div className="relative h-[12rem] md:h-[22rem] overflow-hidden">
                   <img
-                    src="/16970.jpg"
+                    src="/CARE (2).png"
                     alt="Elderly man sitting on park bench"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -429,7 +538,7 @@ const Index = () => {
                 {/* Image Container */}
                 <div className="relative h-[12rem] md:h-[22rem] overflow-hidden">
                   <img
-                    src="/nurse.jpg"
+                    src="/Family-support.png"
                     alt="Elderly man sitting on park bench"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -464,7 +573,7 @@ const Index = () => {
       </section>
 
       {/* Features: 6 Cards */}
-      <section className="relative bg-gradient-to-br from-green-50 to-emerald-50 pt-[45rem] md:pt-72 pb-20">
+      <section data-section="services" className="relative bg-gradient-to-br from-green-50 to-emerald-50 pt-[45rem] md:pt-72 pb-20">
         <div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
           <div className="w-[100%] md:w-[94%] lg:w-[90%] mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-8">
@@ -472,37 +581,37 @@ const Index = () => {
 				{
                   title: 'ONLINE WELLNESS ACTIVITIES',
                   subtitle: 'Yoga, meditation, health webinars',
-                  icon: '/yoga.svg', // Add your wellness activities icon
+                  icon: '/online wellness activites.png', // Add your wellness activities icon
                   alt: 'Wellness activities icon'
                 },
                 {
                   title: '24 X 7 MEDICAL SUPPORT',
                   subtitle: 'Instant access to doctors, anytime',
-                  icon: '/24x7.svg', // Add your medical support icon
+                  icon: '/headphone 247 support.png', // Add your medical support icon
                   alt: 'Medical support icon'
                 },
                 {
                   title: 'HOSPITAL COORDINATION',
                   subtitle: 'Smooth appointments and admissions',
-                  icon: '/hospital.svg', // Add your hospital coordination icon
+                  icon: '/HOSPITAL COORDINATION.png', // Add your hospital coordination icon
                   alt: 'Hospital coordination icon'
                 },
                 {
                   title: 'EMERGENCY ASSISTANCE',
                   subtitle: 'On-call help for urgent situations',
-                  icon: '/emergency.svg', // Add your emergency assistance icon
+                  icon: '/EMERGENCY ASSISTANCE.png', // Add your emergency assistance icon
                   alt: 'Emergency assistance icon'
                 },
                 {
                   title: 'Home Services',
                   subtitle: 'Diagnostic test, medicine delivery, care & ICU at Home',
-                  icon: '/medicine.svg', // Add your wellness consultation icon
+                  icon: '/Home Services.png', // Add your wellness consultation icon
                   alt: 'Wellness consultation icon'
                 },
 				{
 					title: '2ND OPINION WITH SENIOR DOCTORS',
 					subtitle: 'Expert medical consultation and second opinions',
-					icon: '/brain.svg', // Add your second opinion icon
+					icon: '/2nd opinion with doc.png', // Add your second opinion icon
 					alt: 'Second opinion icon'
 				}  
               ].map((item, idx) => (
@@ -694,8 +803,31 @@ const Index = () => {
         </div>
       </section>
 
+		{/* Services Curve Section (new) */}
+		<section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-10 md:py-16">
+			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
+				<div className="text-center mb-8 md:mb-12">
+					<div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-semibold mb-4">
+						<span className="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+						Our Services
+					</div>
+					<h2 className="font-black tracking-tight text-gray-900 leading-tight text-3xl sm:text-4xl">
+						WHAT WE OFFER
+					</h2>
+				</div>
+
+				<div className="relative">
+					<img
+						src="/curve design final.png"
+						alt="Services overview curve design"
+						className="w-full h-auto object-contain"
+					/>
+				</div>
+			</div>
+		</section>
+
 		{/* Critical Moments Section */}
-		
+			
 
 		{/* Pricing Section */}
 		    <section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-14 md:py-20">
@@ -1014,11 +1146,11 @@ const Index = () => {
 							},
 							{
 								image: '/71lvXvLg2WL.jpg',
-								name: 'NEBULIZER'
+								name: 'BP MACHINE'
 							},
 							{
 								image: '/71s886S0AaL.jpg',
-								name: 'BP MACHINE'
+								name: 'NEBULIZER'
 							},
 							{
 								image: '/finger-pulsoximeter-mit-oled-anzeige-spo2-puls-monitor-4.jpg',
@@ -1197,7 +1329,7 @@ const Index = () => {
 						<div className="flex flex-col md:flex-row justify-between items-center gap-4">
 							{/* Copyright */}
 							<div className="text-gray-400 text-sm">
-								© 2024 Senior Care Plus. All rights reserved.
+								© 2025 Senior Care Plus. All rights reserved.
 							</div>
 							
 							{/* Additional Links */}
