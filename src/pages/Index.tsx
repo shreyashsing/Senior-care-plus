@@ -820,7 +820,7 @@ const Index = () => {
 					<img
 						src="/curve design final.png"
 						alt="Services overview curve design"
-						className="w-full h-auto object-contain origin-center scale-[1.2] sm:scale-100"
+						className="w-full h-auto object-contain origin-center scale-[1.2] sm:scale-100 translate-x-2 sm:translate-x-0"
 					/>
 				</div>
 			</div>
