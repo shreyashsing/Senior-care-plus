@@ -816,18 +816,18 @@ const Index = () => {
 					</h2>
 				</div>
 
-				<div className="relative">
+				<div className="relative overflow-visible">
 					<img
 						src="/curve design final.png"
 						alt="Services overview curve design"
-						className="w-full h-auto object-contain"
+						className="w-full h-auto object-contain max-w-[2200px] mx-auto scale-[1.15] sm:scale-100 origin-center"
 					/>
-				</div>
-			</div>
-		</section>
+          </div>
+        </div>
+      </section>
 
 		{/* Critical Moments Section */}
-			
+		
 
 		{/* Pricing Section */}
 		    <section className="relative bg-gradient-to-br from-green-50 to-emerald-50 py-14 md:py-20">
