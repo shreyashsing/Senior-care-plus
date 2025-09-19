@@ -7,13 +7,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, FileText, AlertTriangle, Users, User, ChevronDown, ArrowRight, ArrowLeft as ArrowLeftIcon } from 'lucide-react';
+import { ArrowLeft, FileText, AlertTriangle, Users, User, ChevronDown, ArrowRight, ArrowLeft as ArrowLeftIcon, CheckCircle } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
 import { Toaster } from '@/components/ui/toaster';
-
-// Google Apps Script Web App URL (replace with your deployed URL)
-const APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzMNbHgcKgxg6jVHyUYZX7DwtMdPmaumQJSYzSRlZejhf3_JI00VqNLGF5VtPii1huM/exec';
+import { createPatient, createCarePlan } from '../lib/patientService';
 
 interface FormData {
   // Personal Information
@@ -89,105 +87,28 @@ interface FormErrors {
   otherPastCondition?: string;
 }
 
-// Build FormData payload for Apps Script (supports single and both parents)
-function buildAppsScriptFormData(args: {
-  planType: string;
-  duration: string;
-  price: number;
-  timestamp: string;
-  memberData: FormData | FormData[];
-}) {
-  // Use browser FormData explicitly to avoid name clash with our interface
-  const form = new (globalThis as any).FormData();
-
-  const isCouple = Array.isArray(args.memberData);
-  const members = isCouple ? (args.memberData as FormData[]) : [args.memberData as FormData];
-
-  // Strip file objects from member JSON before sending
-  const membersWithoutFiles = members.map((m, idx) => ({
-    name: m.name,
-    dateOfBirth: m.dateOfBirth,
-    sex: m.sex,
-    houseNo: m.houseNo,
-    buildingName: m.buildingName,
-    landmark: m.landmark,
-    city: m.city,
-    district: m.district,
-    pinCode: m.pinCode,
-    selfCellNumber: m.selfCellNumber,
-    emergencyContactNo: m.emergencyContactNo,
-    emergencyNameAndRelation: m.emergencyNameAndRelation,
-    emailId: m.emailId,
-    dietPreference: m.dietPreference,
-    tobaccoType: m.tobaccoType,
-    tobaccoYears: m.tobaccoYears,
-    alcoholFrequency: m.alcoholFrequency,
-    medicineAllergy: m.medicineAllergy,
-    foodAllergy: m.foodAllergy,
-    otherAllergy: m.otherAllergy,
-    hospitalAdmission: m.hospitalAdmission,
-    surgery: m.surgery,
-    pastConditions: m.pastConditions,
-    currentCondition: m.currentCondition,
-    currentMedication: m.currentMedication,
-    otherPastCondition: m.otherPastCondition,
-    hospitalName: m.hospitalName,
-    doctorName: m.doctorName,
-    doctorContact: m.doctorContact,
-    preferredHospital: m.preferredHospital,
-    nearbyHospitals: m.nearbyHospitals,
-    hasInsurance: m.hasInsurance,
-    insuranceCompany: m.insuranceCompany,
-    tpaName: m.tpaName,
-    policyNumber: m.policyNumber,
-    amountCovered: m.amountCovered,
-    roomEntitled: m.roomEntitled,
-    disclaimerAccepted: m.disclaimerAccepted,
-    // file URL placeholders that Apps Script will fill after Drive upload
-    photoUrl: '',
-    dischargeCardUrl: '',
-    prescriptionUrl: '',
-    surgeryDocumentsUrl: '',
-    policyCardUrl: ''
-  }));
-
-  form.append('planType', args.planType);
-  form.append('duration', args.duration);
-  form.append('price', String(args.price));
-  form.append('timestamp', args.timestamp);
-  form.append('parentCount', String(members.length));
-  form.append('memberData', JSON.stringify(membersWithoutFiles));
-
-  // Append files for each member with predictable keys
-  members.forEach((m, idx) => {
-    if (m.photo) form.append(`file_${idx}_photo`, m.photo);
-    if (m.dischargeCard) form.append(`file_${idx}_dischargeCard`, m.dischargeCard);
-    if (m.prescription) form.append(`file_${idx}_prescription`, m.prescription);
-    if (m.surgeryDocuments) form.append(`file_${idx}_surgeryDocuments`, m.surgeryDocuments);
-    if (m.policyCard) form.append(`file_${idx}_policyCard`, m.policyCard);
-  });
-
-  return form;
-}
-
 const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
   // Get plan info from location state or use defaults
-  const planInfo = location.state?.planInfo || null;
+  const initialPlanInfo = location.state?.planInfo || null;
   
-  const [selectedPlan, setSelectedPlan] = useState<string>(planInfo?.type || '');
-  const [selectedDuration, setSelectedDuration] = useState<string>(planInfo?.duration || '');
-  const [showPlanSelection, setShowPlanSelection] = useState<boolean>(!planInfo);
+  // State for current plan info (can be updated when plan is selected)
+  const [currentPlanInfo, setCurrentPlanInfo] = useState(initialPlanInfo);
   
-  // Initialize selectedPlan and selectedDuration from planInfo if available
+  const [selectedPlan, setSelectedPlan] = useState<string>(initialPlanInfo?.type || '');
+  const [selectedDuration, setSelectedDuration] = useState<string>(initialPlanInfo?.duration || '');
+  const [showPlanSelection, setShowPlanSelection] = useState<boolean>(!initialPlanInfo);
+  const [planJustSelected, setPlanJustSelected] = useState<boolean>(false);
+  
+  // Initialize selectedPlan and selectedDuration from initialPlanInfo if available
   useEffect(() => {
-    if (planInfo) {
-      setSelectedPlan(planInfo.type);
-      setSelectedDuration(planInfo.duration);
+    if (initialPlanInfo) {
+      setSelectedPlan(initialPlanInfo.type);
+      setSelectedDuration(initialPlanInfo.duration);
     }
-  }, [planInfo]);
+  }, [initialPlanInfo]);
   const [expandedSections, setExpandedSections] = useState({
     optional: false
   });
@@ -207,13 +128,14 @@ const Register = () => {
   useEffect(() => {
     const storedPlanInfo = sessionStorage.getItem('selectedPlanInfo');
     
-    if (storedPlanInfo && !planInfo) {
+    if (storedPlanInfo && !initialPlanInfo) {
       const parsedPlanInfo = JSON.parse(storedPlanInfo);
       setSelectedPlan(parsedPlanInfo.type);
       setSelectedDuration(parsedPlanInfo.duration);
+      setCurrentPlanInfo(parsedPlanInfo);
       setShowPlanSelection(false);
     }
-  }, [planInfo]);
+  }, [initialPlanInfo]);
 
   // Past medical conditions options
   const pastConditions = [
@@ -446,9 +368,9 @@ const Register = () => {
       const parsedPlanInfo = JSON.parse(storedPlanInfo);
       finalPlanType = parsedPlanInfo.type;
       finalDuration = parsedPlanInfo.duration;
-    } else if (planInfo && !showPlanSelection) {
-      finalPlanType = planInfo.type;
-      finalDuration = planInfo.duration;
+    } else if (currentPlanInfo && !showPlanSelection) {
+      finalPlanType = currentPlanInfo.type;
+      finalDuration = currentPlanInfo.duration;
     } else {
       finalPlanType = selectedPlan;
       finalDuration = selectedDuration;
@@ -519,46 +441,60 @@ const Register = () => {
         }
       })();
 
-      // Prepare registration data (json + files via multipart)
-      const payload = {
-        planType: finalPlanType,
-        duration: finalDuration,
-        price: price,
-        memberData: finalPlanType === 'couple' ? [parent1FormData, parent2FormData] : formData,
-        timestamp: new Date().toISOString()
-      };
+      // Create care plan first
+      const planId = await createCarePlan(finalPlanType as 'single' | 'couple', finalDuration, price);
 
-      const formPayload = buildAppsScriptFormData(payload);
+      // Prepare patient data array
+      const patientDataArray = finalPlanType === 'couple' 
+        ? [
+            { ...parent1FormData, planId },
+            { ...parent2FormData, planId }
+          ]
+        : [{ ...formData, planId }];
 
-      // Send to Apps Script Web App
-      const resp = await fetch(APPS_SCRIPT_WEB_APP_URL, {
-        method: 'POST',
-        body: formPayload
-      });
-
-      const result = await resp.json().catch(() => ({ ok: false }));
-      if (!resp.ok || !result?.ok) {
-        throw new Error(result?.error || `HTTP ${resp.status}`);
+      // Create patient records and get Senior Care IDs
+      const registeredPatients = [];
+      
+      for (const patientData of patientDataArray) {
+        const seniorCareId = await createPatient(patientData);
+        registeredPatients.push({
+          seniorCareId,
+          name: patientData.name,
+          dateOfBirth: patientData.dateOfBirth,
+          sex: patientData.sex,
+          phoneNumber: patientData.selfCellNumber
+        });
       }
 
       // Success toast
       toast({
-        title: "Registration Submitted!",
-        description: `Your ${finalPlanType === 'single' ? 'Single Parent' : 'Both Parents'} plan for ${finalDuration} month${parseInt(finalDuration) > 1 ? 's' : ''} has been submitted.`,
+        title: "Registration Successful! 🎉",
+        description: `Welcome to SeniorCare Plus! Your E-card${registeredPatients.length > 1 ? 's have' : ' has'} been generated.`,
         variant: "default",
       });
 
-      // Clear stored plan info and redirect to home
+      // Clear stored plan info
       sessionStorage.removeItem('selectedPlanInfo');
+
+      // Navigate to success page with registration data
       setTimeout(() => {
-        navigate('/');
-      }, 2000);
+        navigate('/registration-success', {
+          state: {
+            registrationData: {
+              patients: registeredPatients,
+              planType: finalPlanType,
+              duration: finalDuration,
+              price: price
+            }
+          }
+        });
+      }, 1500);
 
     } catch (error) {
       console.error('Registration error:', error);
       toast({
         title: "Registration Failed",
-        description: "There was an error processing your registration. Please try again.",
+        description: error instanceof Error ? error.message : "There was an error processing your registration. Please try again.",
         variant: "destructive",
       });
     }
@@ -610,20 +546,32 @@ const Register = () => {
           
           {/* Plan Selection Interface */}
           <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-emerald-100">
-            {planInfo && !showPlanSelection ? (
+            {currentPlanInfo && !showPlanSelection ? (
               // Show selected plan when coming from home page
               <div>
-                <h2 className="text-xl font-semibold text-emerald-700 mb-4">Selected Plan</h2>
-                <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-200">
-                  <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 mb-4">
+                  <CheckCircle className="h-6 w-6 text-emerald-600" />
+                  <h2 className="text-xl font-semibold text-emerald-700">Selected Plan</h2>
+                </div>
+                <div className={`bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl p-6 border-2 border-emerald-200 relative overflow-hidden transition-all duration-500 ${
+                  planJustSelected ? 'ring-4 ring-emerald-300 ring-opacity-75 animate-pulse' : ''
+                }`}>
+                  {/* Success indicator */}
+                  <div className="absolute top-3 right-3">
+                    <div className="bg-emerald-600 text-white p-2 rounded-full">
+                      <CheckCircle className="h-4 w-4" />
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between pr-12">
                     <div>
-                      <h3 className="font-semibold text-emerald-800">
-                        {planInfo.type === 'single' ? 'Single Parent' : 'Both Parents'} - {planInfo.duration} Month{parseInt(planInfo.duration) > 1 ? 's' : ''}
+                      <h3 className="font-bold text-emerald-800 text-lg">
+                        {currentPlanInfo.type === 'single' ? 'Single Parent' : 'Both Parents'} - {currentPlanInfo.duration} Month{parseInt(currentPlanInfo.duration) > 1 ? 's' : ''}
                       </h3>
-                      <p className="text-emerald-600 font-medium">
-                        INR {planInfo.price?.toLocaleString() || (() => {
-                          const duration = parseInt(planInfo.duration);
-                          if (planInfo.type === 'single') {
+                      <p className="text-emerald-700 font-semibold text-xl">
+                        INR {currentPlanInfo.price?.toLocaleString() || (() => {
+                          const duration = parseInt(currentPlanInfo.duration);
+                          if (currentPlanInfo.type === 'single') {
                             if (duration === 1) return '3,000';
                             if (duration === 6) return '16,500';
                             if (duration === 12) return '30,000';
@@ -638,11 +586,11 @@ const Register = () => {
                       </p>
                     </div>
                     <div className="text-right">
-                      {parseInt(planInfo.duration) > 1 && (
+                      {parseInt(currentPlanInfo.duration) > 1 && (
                         <div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mb-2">
                           Save ₹{(() => {
-                            const duration = parseInt(planInfo.duration);
-                            if (planInfo.type === 'single') {
+                            const duration = parseInt(currentPlanInfo.duration);
+                            if (currentPlanInfo.type === 'single') {
                               if (duration === 6) return '1,500';
                               if (duration === 12) return '6,000';
                               return '0';
@@ -654,8 +602,8 @@ const Register = () => {
                           })()}
                         </div>
                       )}
-                      <p className="text-xs text-gray-500">
-                        {parseInt(planInfo.duration) === 1 ? 'No discount' : 'Discounted price'}
+                      <p className="text-xs text-emerald-600">
+                        {parseInt(currentPlanInfo.duration) === 1 ? 'No discount' : 'Discounted price'}
                       </p>
                     </div>
                   </div>
@@ -804,6 +752,24 @@ const Register = () => {
                           };
                           // Store the selected plan in sessionStorage for persistence
                           sessionStorage.setItem('selectedPlanInfo', JSON.stringify(updatedPlanInfo));
+                          
+                          // Update the current plan info state
+                          setCurrentPlanInfo(updatedPlanInfo);
+                          
+                          // Set the plan just selected state for visual feedback
+                          setPlanJustSelected(true);
+                          
+                          // Show success toast
+                          toast({
+                            title: "Plan Selected! ✅",
+                            description: `${selectedPlan === 'single' ? 'Single Parent' : 'Both Parents'} plan for ${selectedDuration} month${parseInt(selectedDuration) > 1 ? 's' : ''} has been selected.`,
+                            duration: 3000,
+                          });
+                          
+                          // Reset the success state after 3 seconds
+                          setTimeout(() => {
+                            setPlanJustSelected(false);
+                          }, 3000);
                         }}
                         className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105"
                       >

@@ -19,6 +19,78 @@ const Index = () => {
   const [showCTA, setShowCTA] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [selectedPhase, setSelectedPhase] = useState(1);
+
+  // Offers content for each phase
+  const phaseContent = {
+    1: {
+      title: "Pre-Hospitalization Offerings",
+      offers: [
+        {
+          title: "Top Doctor Consultations",
+          description: "Book appointments with the best doctors in your city for expert medical advice and quick access."
+        },
+        {
+          title: "Hospitalization Advice",
+          description: "Get professional guidance to decide if hospitalization is necessary for your condition."
+        },
+        {
+          title: "Hospital Selection",
+          description: "Choose the right hospital based on specialties, reviews, and convenience for your needs."
+        },
+        {
+          title: "Ambulance Support",
+          description: "24/7 ambulance services with free pick-up and drop-off to your chosen hospital."
+        }
+      ]
+    },
+    2: {
+      title: "During Hospitalization Offerings",
+      offers: [
+        {
+          title: "In-Hospital Support",
+          description: "Continuous support from your case manager for test coordination, medication, and family updates."
+        },
+        {
+          title: "Smooth Admission",
+          description: "Effortless hospital check-in with pre-filled forms, insurance verification, and no waiting."
+        },
+        {
+          title: "Early Discharge",
+          description: "Fast-track your discharge and arrange post-hospital care for a quicker recovery."
+        },
+        {
+          title: "Second Medical Opinion",
+          description: "Get a second opinion from top specialists to ensure the best treatment plan."
+        },
+        {
+          title: "Pre-Approved Claims",
+          description: "Pre-approve your insurance claims for a smooth, hassle-free hospital experience."
+        }
+      ]
+    },
+    3: {
+      title: "Post-Hospitalization Offerings",
+      offers: [
+        {
+          title: "Recovery Support",
+          description: "Comprehensive post-discharge care including medication management and follow-up appointments."
+        },
+        {
+          title: "Home Care Services",
+          description: "Professional nursing and medical care services delivered at your home."
+        },
+        {
+          title: "Rehabilitation Programs",
+          description: "Structured physiotherapy and recovery programs to restore your health and mobility."
+        },
+        {
+          title: "24/7 Emergency Support",
+          description: "Round-the-clock emergency assistance and immediate medical consultation when needed."
+        }
+      ]
+    }
+  };
 
   useEffect(() => {
     let ticking = false;
@@ -105,6 +177,12 @@ const Index = () => {
               >
                 Home
               </a>
+              <button
+                onClick={() => navigate('/about')}
+                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
+              >
+                About Us
+              </button>
               <a
                 href="#services"
                 className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
@@ -136,18 +214,10 @@ const Index = () => {
                 Pricing
               </a>
               <Button
-                onClick={() => navigate('/register', { 
-                  state: { 
-                    planInfo: { 
-                      type: 'single', 
-                      duration: '1', 
-                      price: 3000 
-                    } 
-                  } 
-                })}
+                onClick={() => navigate('/login')}
                 className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
               >
-                Get Started
+                Login
               </Button>
             </div>
 
@@ -179,6 +249,15 @@ const Index = () => {
                 >
                   Home
                 </a>
+                <button
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    navigate('/about');
+                  }}
+                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
+                >
+                  About Us
+                </button>
                 <a
                   href="#services"
                   className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
@@ -215,19 +294,11 @@ const Index = () => {
                 <Button
                   onClick={() => {
                     setShowMobileMenu(false);
-                    navigate('/register', { 
-                      state: { 
-                        planInfo: { 
-                          type: 'single', 
-                          duration: '1', 
-                          price: 3000 
-                        } 
-                      } 
-                    });
+                    navigate('/login');
                   }}
                   className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105 w-full"
                 >
-                  Get Started
+                  Login
                 </Button>
               </div>
             </div>
@@ -372,15 +443,7 @@ const Index = () => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
-              onClick={() => navigate('/register', { 
-                state: { 
-                  planInfo: { 
-                    type: 'single', 
-                    duration: '1', 
-                    price: 3000 
-                  } 
-                } 
-              })}
+              onClick={() => navigate('/signup')}
               className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
             >
               GET STARTED
@@ -819,6 +882,116 @@ const Index = () => {
 						alt="Services overview curve design"
 						className="w-full h-auto object-contain origin-center scale-[1.2] sm:scale-100 translate-x-2 sm:translate-x-0"
 					/>
+				</div>
+			</div>
+		</section>
+
+		{/* Offers Section */}
+		<section className="relative bg-gradient-to-br from-gray-50 to-white py-16 md:py-24 overflow-hidden">
+			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+					{/* Left Side - Offers Content */}
+					<div className="order-2 lg:order-1">
+						<div className="mb-8">
+							<div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-semibold mb-4">
+								<span className="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+								Our Offerings
+							</div>
+							<h2 className="font-black tracking-tight text-gray-900 leading-tight text-3xl sm:text-4xl mb-6">
+								{phaseContent[selectedPhase].title}
+							</h2>
+						</div>
+
+						{/* Offers Grid */}
+						<div className="space-y-4">
+							{phaseContent[selectedPhase].offers.map((offer, index) => (
+								<div 
+									key={index}
+									className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 group"
+								>
+									<div className="flex items-start gap-4">
+										<div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+											<Check className="w-6 h-6 text-white" />
+										</div>
+										<div className="flex-1">
+											<h3 className="font-bold text-gray-900 text-lg mb-2 group-hover:text-emerald-700 transition-colors duration-300">
+												{offer.title}
+											</h3>
+											<p className="text-gray-600 text-sm leading-relaxed">
+												{offer.description}
+											</p>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+					</div>
+
+					{/* Right Side - Image with Phase Buttons */}
+					<div className="order-1 lg:order-2 relative">
+						<div className="relative">
+							{/* Main Image Container */}
+							<div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50 aspect-[4/3] shadow-2xl">
+								<img
+									src="/post.png"
+									alt="Healthcare offerings"
+									className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+								/>
+								
+								{/* Decorative Elements */}
+								<div className="absolute top-6 right-6 w-8 h-8 bg-emerald-400 rounded-full opacity-80"></div>
+								<div className="absolute bottom-8 right-8 w-6 h-6 bg-emerald-300 rounded-full opacity-60"></div>
+							</div>
+							
+							{/* Phase Buttons - Positioned outside the image container but over the image */}
+							<div className="absolute left-0 top-0 bottom-0 flex flex-col justify-center">
+								{/* Phase 1 Button */}
+								<div className="relative mb-6" style={{ transform: 'translateX(-50%)' }}>
+									<button
+										onClick={() => setSelectedPhase(1)}
+										className={`relative w-20 h-20 md:w-24 md:h-24 rounded-3xl border-4 border-white shadow-2xl transition-all duration-300 transform hover:scale-110 flex flex-col items-center justify-center font-black text-sm z-10 ${
+											selectedPhase === 1
+												? 'bg-emerald-600 text-white scale-110 shadow-emerald-500/50'
+												: 'bg-white text-gray-700 hover:bg-emerald-50'
+										}`}
+									>
+										<span className="text-xs font-bold leading-none">PHASE</span>
+										<span className="text-2xl md:text-3xl font-black leading-none">1</span>
+									</button>
+								</div>
+
+								{/* Phase 2 Button */}
+								<div className="relative mb-6" style={{ transform: 'translateX(-50%)' }}>
+									<button
+										onClick={() => setSelectedPhase(2)}
+										className={`relative w-20 h-20 md:w-24 md:h-24 rounded-3xl border-4 border-white shadow-2xl transition-all duration-300 transform hover:scale-110 flex flex-col items-center justify-center font-black text-sm z-10 ${
+											selectedPhase === 2
+												? 'bg-emerald-600 text-white scale-110 shadow-emerald-500/50'
+												: 'bg-white text-gray-700 hover:bg-emerald-50'
+										}`}
+									>
+										<span className="text-xs font-bold leading-none">PHASE</span>
+										<span className="text-2xl md:text-3xl font-black leading-none">2</span>
+									</button>
+								</div>
+
+								{/* Phase 3 Button */}
+								<div className="relative" style={{ transform: 'translateX(-50%)' }}>
+									<button
+										onClick={() => setSelectedPhase(3)}
+										className={`relative w-20 h-20 md:w-24 md:h-24 rounded-3xl border-4 border-white shadow-2xl transition-all duration-300 transform hover:scale-110 flex flex-col items-center justify-center font-black text-sm z-10 ${
+											selectedPhase === 3
+												? 'bg-emerald-600 text-white scale-110 shadow-emerald-500/50'
+												: 'bg-white text-gray-700 hover:bg-emerald-50'
+										}`}
+									>
+										<span className="text-xs font-bold leading-none">PHASE</span>
+										<span className="text-2xl md:text-3xl font-black leading-none">3</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>
@@ -1340,6 +1513,12 @@ const Index = () => {
 								<a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors duration-300">
 									Cookie Policy
 								</a>
+								<button 
+									onClick={() => navigate('/admin/login')}
+									className="text-gray-400 hover:text-emerald-400 transition-colors duration-300"
+								>
+									Admin Portal
+								</button>
 							</div>
 						</div>
 					</div>
