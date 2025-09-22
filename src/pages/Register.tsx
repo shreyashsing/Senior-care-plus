@@ -480,8 +480,9 @@ const Register = () => {
           patientData: patientDataArray
         },
         // Payment success callback
-        () => {
+        (patientIds?: string[]) => {
           console.log('✅ Payment successful');
+          console.log('✅ Created patient IDs:', patientIds);
           setIsSubmitting(false); // Reset loading state
           
           // Clear stored plan info
@@ -490,7 +491,18 @@ const Register = () => {
           // Navigate to success page with patient data
           navigate('/registration-success', {
             state: {
-              registrationData: patientDataArray
+              registrationData: {
+                patients: patientDataArray.map((patient, index) => ({
+                  seniorCareId: patientIds?.[index] || 'Generated',
+                  name: patient.name,
+                  dateOfBirth: patient.dateOfBirth,
+                  sex: patient.sex,
+                  phoneNumber: patient.selfCellNumber
+                })),
+                planType: finalPlanType,
+                duration: finalDuration,
+                price: price
+              }
             }
           });
           

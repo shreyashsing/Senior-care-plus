@@ -116,7 +116,7 @@ export class RazorpayPaymentService {
   static async initializePayment(
     order: PaymentOrder,
     paymentPatientData: PaymentPatientData,
-    onSuccess?: () => void,
+    onSuccess?: (patientIds?: string[]) => void,
     onError?: (error: any) => void
   ): Promise<void> {
     try {
@@ -140,12 +140,12 @@ export class RazorpayPaymentService {
           try {
             await this.verifyPayment(response, order.order_id)
             
+            let patientIds: string[] = []
+            
             if (paymentPatientData.patientData?.length > 0) {
               console.log('🔍 Payment handler - patientData array:', JSON.stringify(paymentPatientData.patientData, null, 2));
               
               // Create patients individually since createPatient expects single patient object
-              const patientIds: string[] = []
-              
               for (const patientData of paymentPatientData.patientData) {
                 console.log('🔍 Processing individual patient:', JSON.stringify(patientData, null, 2));
                 const patientId = await createPatient(patientData)
@@ -164,7 +164,7 @@ export class RazorpayPaymentService {
               }
             }
 
-            onSuccess?.()
+            onSuccess?.(patientIds)
           } catch (error) {
             onError?.(error)
           }
