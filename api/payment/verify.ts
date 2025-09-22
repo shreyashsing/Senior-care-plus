@@ -39,7 +39,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { data, error } = await supabase
       .from('payment_orders')
       .update({
-        status: 'completed',
+        status: 'paid', // Use 'paid' status as per database constraint
         razorpay_payment_id,
         razorpay_signature,
         completed_at: new Date().toISOString()
