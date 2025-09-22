@@ -8,6 +8,8 @@ import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import Index from "./pages/Index";
 import Register from "./pages/Register";
 import AboutUs from "./pages/AboutUs";
+import Partners from "./pages/Partners";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import { LoginPage } from "./pages/LoginPage";
 import { SignupPage } from "./pages/SignupPage";
@@ -18,6 +20,8 @@ import { RegistrationSuccessPage } from "./pages/RegistrationSuccessPage";
 import { AdminLogin } from "./pages/admin/AdminLogin";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { PatientDetailPage } from "./pages/admin/PatientDetailPage";
+import HospitalPartnerManagement from "./pages/admin/HospitalPartnerManagement";
+import ContactManagement from "./pages/admin/ContactManagement";
 import { RequireAdminAuth } from "./components/admin/RequireAdminAuth";
 
 const queryClient = new QueryClient();
@@ -33,6 +37,8 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<AboutUs />} />
+              <Route path="/partners" element={<Partners />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="/register" element={<Register />} />
               <Route path="/registration-success" element={<RegistrationSuccessPage />} />
               <Route path="/login" element={<LoginPage />} />
@@ -48,6 +54,22 @@ const App = () => (
                 element={
                   <RequireAdminAuth>
                     <AdminDashboard />
+                  </RequireAdminAuth>
+                } 
+              />
+              <Route 
+                path="/admin/hospital-partners" 
+                element={
+                  <RequireAdminAuth>
+                    <HospitalPartnerManagement />
+                  </RequireAdminAuth>
+                } 
+              />
+              <Route 
+                path="/admin/contacts" 
+                element={
+                  <RequireAdminAuth>
+                    <ContactManagement />
                   </RequireAdminAuth>
                 } 
               />

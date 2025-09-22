@@ -65,6 +65,7 @@ import {
 
 export function AdminDashboard() {
   const { toast } = useToast()
+  const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('overview')
   const [loading, setLoading] = useState(true)
@@ -250,7 +251,12 @@ export function AdminDashboard() {
               <button
                 key={item.id}
                 onClick={() => {
-                  setActiveSection(item.id)
+                  if (item.id === 'partners') {
+                    // Navigate to the dedicated Hospital Partner Management page
+                    navigate('/admin/hospital-partners')
+                  } else {
+                    setActiveSection(item.id)
+                  }
                   setSidebarOpen(false)
                 }}
                 className={`w-full flex items-center px-3 py-3 text-left rounded-lg transition-colors ${
@@ -327,12 +333,6 @@ export function AdminDashboard() {
               partners={partners}
               onFiltersChange={handleAppointmentFiltersChange}
               onAppointmentUpdate={loadAppointments}
-            />
-          )}
-          {activeSection === 'partners' && (
-            <PartnersSection 
-              partners={partners} 
-              onPartnerUpdate={loadPartners}
             />
           )}
         </main>

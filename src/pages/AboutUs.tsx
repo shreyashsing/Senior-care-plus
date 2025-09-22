@@ -51,6 +51,18 @@ const AboutUs = () => {
               >
                 About Us
               </button>
+              <button
+                onClick={() => navigate('/partners')}
+                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
+              >
+                Partners
+              </button>
+              <button
+                onClick={() => navigate('/contact')}
+                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
+              >
+                Contact
+              </button>
               <a
                 href="/#services"
                 className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"

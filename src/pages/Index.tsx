@@ -183,6 +183,18 @@ const Index = () => {
               >
                 About Us
               </button>
+              <button
+                onClick={() => navigate('/partners')}
+                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
+              >
+                Partners
+              </button>
+              <button
+                onClick={() => navigate('/contact')}
+                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
+              >
+                Contact
+              </button>
               <a
                 href="#services"
                 className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
@@ -257,6 +269,24 @@ const Index = () => {
                   className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
                 >
                   About Us
+                </button>
+                <button
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    navigate('/partners');
+                  }}
+                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
+                >
+                  Partners
+                </button>
+                <button
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    navigate('/contact');
+                  }}
+                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
+                >
+                  Contact
                 </button>
                 <a
                   href="#services"

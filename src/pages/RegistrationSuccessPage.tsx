@@ -28,7 +28,12 @@ export function RegistrationSuccessPage() {
     return null
   }
 
-  const { patients, planType, duration, price } = registrationData
+  const { 
+    patients = [], 
+    planType = 'single', 
+    duration = '12', 
+    price = 0 
+  } = registrationData
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50 py-8">
@@ -46,7 +51,7 @@ export function RegistrationSuccessPage() {
           </p>
           <div className="bg-emerald-100 inline-block px-6 py-2 rounded-full">
             <p className="text-emerald-800 font-semibold">
-              {planType === 'single' ? 'Single Parent' : 'Both Parents'} Plan - {duration} Month{parseInt(duration) > 1 ? 's' : ''} | ₹{price.toLocaleString()}
+              {planType === 'single' ? 'Single Parent' : 'Both Parents'} Plan - {duration} Month{parseInt(duration || '1') > 1 ? 's' : ''} | ₹{Number(price || 0).toLocaleString()}
             </p>
           </div>
         </div>

@@ -8,7 +8,7 @@ interface RequireAdminAuthProps {
 }
 
 export function RequireAdminAuth({ children, requiredPermissions = [] }: RequireAdminAuthProps) {
-  const { admin, isAuthenticated, isLoading } = useAdminAuth()
+  const { adminProfile, isAuthenticated, isLoading } = useAdminAuth()
   const location = useLocation()
 
   if (isLoading) {
@@ -25,9 +25,9 @@ export function RequireAdminAuth({ children, requiredPermissions = [] }: Require
   }
 
   // Check if admin has required permissions
-  if (requiredPermissions.length > 0 && admin) {
+  if (requiredPermissions.length > 0 && adminProfile) {
     const hasPermission = requiredPermissions.every(permission => 
-      admin.permissions.includes(permission)
+      adminProfile.permissions.includes(permission)
     )
 
     if (!hasPermission) {

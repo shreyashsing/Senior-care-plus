@@ -29,10 +29,9 @@ if (!urlPattern.test(supabaseUrl)) {
 // Create a single supabase client for interacting with your database
 export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
-    flowType: 'pkce' // Use PKCE flow for better security
+    autoRefreshToken: false,
+    persistSession: false,
+    detectSessionInUrl: false
   },
   global: {
     headers: {

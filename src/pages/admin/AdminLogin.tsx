@@ -47,7 +47,10 @@ export function AdminLogin() {
     }
 
     try {
+      console.log('🔍 Attempting login with username:', formData.username)
       const success = await login(formData.username, formData.password)
+      
+      console.log('🔍 Login result:', success)
       
       if (success) {
         toast({
@@ -55,9 +58,11 @@ export function AdminLogin() {
           description: "Welcome to the admin dashboard",
         })
       } else {
-        setError('Invalid username or password')
+        setError('Invalid username or password. Please check your credentials.')
+        console.log('❌ Login failed - invalid credentials or user not found')
       }
     } catch (error) {
+      console.error('❌ Login error:', error)
       setError('An error occurred during login. Please try again.')
     } finally {
       setIsLoading(false)
@@ -103,6 +108,7 @@ export function AdminLogin() {
                   value={formData.username}
                   onChange={handleInputChange}
                   placeholder="Enter your username"
+                  autoComplete="username"
                   required
                   disabled={isLoading}
                 />
@@ -118,6 +124,7 @@ export function AdminLogin() {
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder="Enter your password"
+                    autoComplete="current-password"
                     required
                     disabled={isLoading}
                   />

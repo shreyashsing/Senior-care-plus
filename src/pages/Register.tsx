@@ -12,6 +12,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { createPatient, createCarePlan } from '../lib/patientService';
+import { RazorpayService } from '../lib/razorpayService';
 
 interface FormData {
   // Personal Information
@@ -123,6 +124,7 @@ const Register = () => {
   // For Single Parent: use the original form data
   const [formData, setFormData] = useState<FormData>(createEmptyFormData());
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false); // Add loading state
 
   // Check for selected plan in sessionStorage when component mounts
   useEffect(() => {
@@ -360,71 +362,79 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Check for stored plan info first, then fall back to other sources
-    const storedPlanInfo = sessionStorage.getItem('selectedPlanInfo');
-    let finalPlanType, finalDuration;
+    if (isSubmitting) return; // Prevent double submission
     
-    if (storedPlanInfo) {
-      const parsedPlanInfo = JSON.parse(storedPlanInfo);
-      finalPlanType = parsedPlanInfo.type;
-      finalDuration = parsedPlanInfo.duration;
-    } else if (currentPlanInfo && !showPlanSelection) {
-      finalPlanType = currentPlanInfo.type;
-      finalDuration = currentPlanInfo.duration;
-    } else {
-      finalPlanType = selectedPlan;
-      finalDuration = selectedDuration;
-    }
+    setIsSubmitting(true);
     
-    // Validate that a plan is selected
-    if (!finalPlanType || !finalDuration) {
-      toast({
-        title: "Plan Selection Required",
-        description: "Please select a plan and duration before submitting the form.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // For Both Parents, validate both forms
-    if (finalPlanType === 'couple') {
-      // Validate Parent 1 (disclaimer not required)
-      const parent1Valid = validateFormData(parent1FormData, false);
-      if (!parent1Valid) {
-        setCurrentParentIndex(0);
-        toast({
-          title: "Parent 1 Form Incomplete",
-          description: "Please complete Parent 1's information before submitting.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Validate Parent 2 (disclaimer required)
-      const parent2Valid = validateFormData(parent2FormData, true);
-      if (!parent2Valid) {
-        setCurrentParentIndex(1);
-        toast({
-          title: "Parent 2 Form Incomplete",
-          description: "Please complete Parent 2's information and accept the disclaimer before submitting.",
-          variant: "destructive",
-        });
-        return;
-      }
-    } else {
-      // For Single Parent, validate the single form (disclaimer required)
-      const singleValid = validateFormData(formData, true);
-      if (!singleValid) {
-        toast({
-          title: "Form Incomplete",
-          description: "Please fill in all required fields and accept the disclaimer.",
-          variant: "destructive",
-        });
-        return;
-      }
-    }
-
     try {
+      // Check for stored plan info first, then fall back to other sources
+      const storedPlanInfo = sessionStorage.getItem('selectedPlanInfo');
+      let finalPlanType, finalDuration;
+      
+      if (storedPlanInfo) {
+        const parsedPlanInfo = JSON.parse(storedPlanInfo);
+        finalPlanType = parsedPlanInfo.type;
+        finalDuration = parsedPlanInfo.duration;
+      } else if (currentPlanInfo && !showPlanSelection) {
+        finalPlanType = currentPlanInfo.type;
+        finalDuration = currentPlanInfo.duration;
+      } else {
+        finalPlanType = selectedPlan;
+        finalDuration = selectedDuration;
+      }
+      
+      // Validate that a plan is selected
+      if (!finalPlanType || !finalDuration) {
+        toast({
+          title: "Plan Selection Required",
+          description: "Please select a plan and duration before submitting the form.",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // For Both Parents, validate both forms
+      if (finalPlanType === 'couple') {
+        // Validate Parent 1 (disclaimer not required)
+        const parent1Valid = validateFormData(parent1FormData, false);
+        if (!parent1Valid) {
+          setCurrentParentIndex(0);
+          toast({
+            title: "Parent 1 Form Incomplete",
+            description: "Please complete Parent 1's information before submitting.",
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+
+        // Validate Parent 2 (disclaimer required)
+        const parent2Valid = validateFormData(parent2FormData, true);
+        if (!parent2Valid) {
+          setCurrentParentIndex(1);
+          toast({
+            title: "Parent 2 Form Incomplete",
+            description: "Please complete Parent 2's information and accept the disclaimer before submitting.",
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+      } else {
+        // For Single Parent, validate the single form (disclaimer required)
+        const singleValid = validateFormData(formData, true);
+        if (!singleValid) {
+          toast({
+            title: "Form Incomplete",
+            description: "Please fill in all required fields and accept the disclaimer.",
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       // Calculate price based on selected plan and duration
       const price = (() => {
         const duration = parseInt(finalDuration);
@@ -441,57 +451,74 @@ const Register = () => {
         }
       })();
 
-      // Create care plan first
-      const planId = await createCarePlan(finalPlanType as 'single' | 'couple', finalDuration, price);
-
-      // Prepare patient data array
+      // Prepare patient data array for payment
       const patientDataArray = finalPlanType === 'couple' 
-        ? [
-            { ...parent1FormData, planId },
-            { ...parent2FormData, planId }
-          ]
-        : [{ ...formData, planId }];
+        ? [parent1FormData, parent2FormData]
+        : [formData];
 
-      // Create patient records and get Senior Care IDs
-      const registeredPatients = [];
-      
-      for (const patientData of patientDataArray) {
-        const seniorCareId = await createPatient(patientData);
-        registeredPatients.push({
-          seniorCareId,
-          name: patientData.name,
-          dateOfBirth: patientData.dateOfBirth,
-          sex: patientData.sex,
-          phoneNumber: patientData.selfCellNumber
-        });
-      }
+      console.log('🚀 Creating payment order...');
 
-      // Success toast
-      toast({
-        title: "Registration Successful! 🎉",
-        description: `Welcome to SeniorCare Plus! Your E-card${registeredPatients.length > 1 ? 's have' : ' has'} been generated.`,
-        variant: "default",
-      });
+      // Create payment order instead of directly creating patients
+      const paymentOrder = await RazorpayService.createOrder(
+        price,
+        finalPlanType,
+        finalDuration,
+        patientDataArray
+      );
 
-      // Clear stored plan info
-      sessionStorage.removeItem('selectedPlanInfo');
+      console.log('✅ Payment order created:', paymentOrder);
+      console.log('🎯 Initializing payment with Razorpay...');
 
-      // Navigate to success page with registration data
-      setTimeout(() => {
-        navigate('/registration-success', {
-          state: {
-            registrationData: {
-              patients: registeredPatients,
-              planType: finalPlanType,
-              duration: finalDuration,
-              price: price
+      // Initialize payment with Razorpay
+      await RazorpayService.initializePayment(
+        paymentOrder,
+        {
+          planType: finalPlanType,
+          fullName: patientDataArray[0].name,
+          email: patientDataArray[0].emailId,
+          phone: patientDataArray[0].selfCellNumber,
+          patientData: patientDataArray
+        },
+        // Payment success callback
+        (response) => {
+          console.log('✅ Payment successful:', response);
+          setIsSubmitting(false); // Reset loading state
+          
+          // Clear stored plan info
+          sessionStorage.removeItem('selectedPlanInfo');
+          
+          // Navigate to success page with registration data
+          navigate('/registration-success', {
+            state: {
+              registrationData: response.registrationData
             }
-          }
-        });
-      }, 1500);
+          });
+          
+          toast({
+            title: "Payment Successful! 🎉",
+            description: "Your registration is complete. E-card has been generated.",
+            variant: "default",
+          });
+        },
+        // Payment failure callback
+        (error) => {
+          console.error('❌ Payment failed:', error);
+          setIsSubmitting(false);
+          
+          toast({
+            title: "Payment Failed",
+            description: error.message || "Payment was cancelled or failed. Please try again.",
+            variant: "destructive",
+          });
+        }
+      );
+
+      console.log('🎯 Payment initialization complete');
 
     } catch (error) {
       console.error('Registration error:', error);
+      setIsSubmitting(false);
+      
       toast({
         title: "Registration Failed",
         description: error instanceof Error ? error.message : "There was an error processing your registration. Please try again.",
@@ -1466,14 +1493,14 @@ const Register = () => {
                     </Button>
                     <Button
                       type="submit"
-                      disabled={!parent2FormData.disclaimerAccepted}
+                      disabled={!parent2FormData.disclaimerAccepted || isSubmitting}
                       className={`px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 ${
-                        parent2FormData.disclaimerAccepted
+                        parent2FormData.disclaimerAccepted && !isSubmitting
                           ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl'
                           : 'bg-gray-400 text-gray-200 cursor-not-allowed shadow-lg'
                       }`}
                     >
-                      Submit Both Parents
+                      {isSubmitting ? 'Processing Payment...' : 'Submit Both Parents'}
                     </Button>
                     {!parent2FormData.disclaimerAccepted && (
                       <p className="text-amber-600 text-sm mt-2 text-center">
@@ -1486,6 +1513,19 @@ const Register = () => {
             ) : (
               // Single Parent: Show regular submit button
               <>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-shrink-0">
+                      <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="text-blue-800 font-semibold">Payment Required</h4>
+                      <p className="text-blue-700 text-sm">Your registration will be completed after successful payment. Your e-card will be generated once payment is confirmed.</p>
+                    </div>
+                  </div>
+                </div>
                 <Button
                   type="submit"
                   disabled={!formData.disclaimerAccepted}
@@ -1495,11 +1535,11 @@ const Register = () => {
                       : 'bg-gray-400 text-gray-200 cursor-not-allowed shadow-lg'
                   }`}
                 >
-                  Submit Registration
+                  Make Payment
                 </Button>
                 {!formData.disclaimerAccepted && (
                   <p className="text-amber-600 text-sm mt-2 text-center">
-                    Please accept the disclaimer above to submit your registration
+                    Please accept the disclaimer above to proceed with payment
                   </p>
                 )}
               </>
