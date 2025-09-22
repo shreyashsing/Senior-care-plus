@@ -141,9 +141,15 @@ export class RazorpayPaymentService {
             await this.verifyPayment(response, order.order_id)
             
             if (paymentPatientData.patientData?.length > 0) {
-              const patientIds = await createPatient(paymentPatientData.patientData)
+              // Create patients individually since createPatient expects single patient object
+              const patientIds: string[] = []
               
-              if (patientIds?.length > 0) {
+              for (const patientData of paymentPatientData.patientData) {
+                const patientId = await createPatient(patientData)
+                patientIds.push(patientId)
+              }
+              
+              if (patientIds.length > 0) {
                 // Determine plan type based on number of patients or planType
                 const planType = paymentPatientData.planType.toLowerCase().includes('couple') ? 'couple' : 'single'
                 
