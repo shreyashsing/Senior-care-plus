@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { 
   Heart, Phone, Download, BookOpen, Users, MapPin, Shield, Clock, 
   Stethoscope, Home, HeartHandshake, UserCheck, Star, Target, 
   Lightbulb, Compass, Award, Zap, Globe, HandHeart, UserPlus,
-  CheckCircle, ArrowRight, Mail, MessageCircle, Calendar
+  CheckCircle, ArrowRight, Mail, MessageCircle, Calendar, TrendingUp, 
+  Palette, User
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -117,6 +119,142 @@ const AboutUs = () => {
 
           {/* Decorative Line */}
           <div className="w-32 h-1 bg-gradient-to-r from-emerald-500 to-green-500 mx-auto mb-16 rounded-full"></div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="py-20 bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-64 h-64 bg-emerald-400/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-20 w-80 h-80 bg-green-400/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-emerald-300/10 to-green-300/10 rounded-full blur-3xl"></div>
+          
+          {/* Additional floating elements for more visual interest */}
+          <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-emerald-400/8 rounded-full blur-2xl animate-pulse delay-700"></div>
+          <div className="absolute bottom-1/4 left-1/4 w-40 h-40 bg-green-400/8 rounded-full blur-2xl animate-pulse delay-1000"></div>
+          <div className="absolute top-3/4 right-1/3 w-24 h-24 bg-emerald-400/8 rounded-full blur-2xl animate-pulse delay-500"></div>
+          
+          {/* Subtle grid pattern */}
+          <div className="absolute inset-0 opacity-[0.015]" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='1'%3E%3Cpath d='M0 0h100v1H0zM0 0v100h1V0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }} />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Enhanced Header Section */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center px-6 py-3 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium mb-6 border border-emerald-200 shadow-sm">
+              <span className="w-3 h-3 bg-emerald-500 rounded-full mr-3 animate-pulse"></span>
+              Our Team
+            </div>
+            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+              Meet Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700">Leadership</span>
+            </h2>
+            <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-6">
+              Healthcare + Technology + Empathy - Our diverse team combines decades of healthcare expertise with cutting-edge technology
+            </p>
+            
+            {/* Decorative elements */}
+            <div className="flex justify-center items-center space-x-4 mb-8">
+              <div className="w-16 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent rounded-full"></div>
+              <div className="w-4 h-4 bg-emerald-500 rounded-full animate-pulse"></div>
+              <div className="w-16 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent rounded-full"></div>
+            </div>
+          </div>
+          
+          {/* Simple Horizontal Team Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Dr. Raghvendra Gupta",
+                role: "Chief Medical Strategist",
+                icon: <Stethoscope className="h-12 w-12 text-emerald-600" />,
+                description: "Former VP, Corporate Medical Services – Reliance Industries",
+                details: [
+                  "30+ years in hospital administration and clinical leadership",
+                  "Expert in medical strategy & operations",
+                  "Dedicated to patient care excellence"
+                ],
+                image: "/2.jpg"
+              },
+              {
+                name: "Arpit Maheshwari", 
+                role: "Strategy, Sales & Product Lead",
+                icon: <TrendingUp className="h-12 w-12 text-green-600" />,
+                description: "12 years in global tech companies",
+                details: [
+                  "Proven experience in scaling operations",
+                  "Drives strategic companies direction"
+                ],
+                image: "/Arpit Maheshwari.jpg"
+              },
+              {
+                name: "Manav Shah",
+                role: "Chief Product Designer", 
+                icon: <Palette className="h-12 w-12 text-emerald-600" />,
+                description: "Passionate about creating intuitive digital health experiences",
+                details: [
+                  "Focus on user-centric design",
+                  "Ensures intuitive product experience",
+                  "Innovates product features"
+                ],
+                image: "/1.jpg"
+              }
+            ].map((member, index) => (
+              <Card 
+                key={index} 
+                className="h-[500px] overflow-hidden transition-all duration-300 hover:shadow-xl group cursor-pointer"
+              >
+                {/* Background Image or Placeholder */}
+                <div className="relative h-full">
+                  {member.image ? (
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:blur-sm"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-b from-slate-300 via-slate-200 to-slate-100 flex items-center justify-center">
+                      <div className="text-center text-slate-500">
+                        <div className="w-24 h-24 mx-auto mb-4 bg-slate-200/80 rounded-full flex items-center justify-center backdrop-blur-sm border border-slate-300/60">
+                          <User className="w-12 h-12 text-slate-400" />
+                        </div>
+                        <div className="w-16 h-2 bg-slate-300/70 rounded-full mx-auto mb-3"></div>
+                        <div className="w-12 h-2 bg-slate-400/70 rounded-full mx-auto"></div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Gradient Overlay for Text Readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                  
+                  {/* Default Content (Name and Role) */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white transition-all duration-500 group-hover:opacity-0">
+                    <h3 className="text-2xl font-bold mb-2">{member.name}</h3>
+                    <p className="text-lg text-emerald-200 font-semibold">{member.role}</p>
+                  </div>
+                  
+                  {/* Hover Content (Full Information) */}
+                  <div className="absolute inset-0 p-6 flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
+                    <div className="text-white">
+                      <h3 className="text-2xl font-bold mb-3">{member.name}</h3>
+                      <p className="text-lg text-emerald-200 font-semibold mb-4">{member.role}</p>
+                      <p className="text-gray-200 mb-4 italic text-sm">{member.description}</p>
+                      <ul className="space-y-2">
+                        {member.details.map((detail, detailIndex) => (
+                          <li key={detailIndex} className="flex items-start">
+                            <div className="w-2 h-2 bg-emerald-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                            <span className="text-gray-100 text-sm">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 

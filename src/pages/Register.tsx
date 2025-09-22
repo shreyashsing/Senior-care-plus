@@ -103,6 +103,16 @@ const Register = () => {
   const [showPlanSelection, setShowPlanSelection] = useState<boolean>(!initialPlanInfo);
   const [planJustSelected, setPlanJustSelected] = useState<boolean>(false);
   
+  // Coupon state
+  const [couponCode, setCouponCode] = useState<string>('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
+  const [couponError, setCouponError] = useState<string>('');
+  
+  // Available coupons
+  const availableCoupons = {
+    'TEST999': { discount: 99.9, description: 'Test coupon - 99.9% off' }
+  };
+  
   // Initialize selectedPlan and selectedDuration from initialPlanInfo if available
   useEffect(() => {
     if (initialPlanInfo) {
@@ -126,16 +136,17 @@ const Register = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false); // Add loading state
 
-  // Check for selected plan in sessionStorage when component mounts
+  // Clear any stored plan info and ensure no default plan is selected
   useEffect(() => {
-    const storedPlanInfo = sessionStorage.getItem('selectedPlanInfo');
+    // Clear sessionStorage to prevent any previous plan selections
+    sessionStorage.removeItem('selectedPlanInfo');
     
-    if (storedPlanInfo && !initialPlanInfo) {
-      const parsedPlanInfo = JSON.parse(storedPlanInfo);
-      setSelectedPlan(parsedPlanInfo.type);
-      setSelectedDuration(parsedPlanInfo.duration);
-      setCurrentPlanInfo(parsedPlanInfo);
-      setShowPlanSelection(false);
+    // Reset plan selection state to ensure no defaults
+    if (!initialPlanInfo) {
+      setSelectedPlan('');
+      setSelectedDuration('');
+      setCurrentPlanInfo(null);
+      setShowPlanSelection(true);
     }
   }, [initialPlanInfo]);
 
@@ -359,6 +370,48 @@ const Register = () => {
     return Object.keys(errors).length === 0;
   };
 
+  // Coupon application functions
+  const applyCoupon = () => {
+    if (!couponCode.trim()) {
+      setCouponError('Please enter a coupon code');
+      return;
+    }
+
+    const upperCouponCode = couponCode.toUpperCase().trim();
+    const coupon = availableCoupons[upperCouponCode as keyof typeof availableCoupons];
+
+    if (!coupon) {
+      setCouponError('Invalid coupon code');
+      setAppliedCoupon(null);
+      return;
+    }
+
+    setAppliedCoupon({ code: upperCouponCode, discount: coupon.discount });
+    setCouponError('');
+    toast({
+      title: "Coupon Applied!",
+      description: `${coupon.discount}% discount applied successfully`,
+    });
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
+    setCouponError('');
+    toast({
+      title: "Coupon Removed",
+      description: "Discount has been removed",
+    });
+  };
+
+  // Calculate final price with coupon discount
+  const calculateFinalPrice = (originalPrice: number) => {
+    if (!appliedCoupon) return originalPrice;
+    const discountAmount = originalPrice * (appliedCoupon.discount / 100);
+    const finalPrice = originalPrice - discountAmount;
+    return Math.max(finalPrice, 1); // Minimum 1 rupee for payment processing
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -436,7 +489,7 @@ const Register = () => {
       }
 
       // Calculate price based on selected plan and duration
-      const price = (() => {
+      const originalPrice = (() => {
         const duration = parseInt(finalDuration);
         if (finalPlanType === 'single') {
           if (duration === 6) return 12000;
@@ -449,6 +502,15 @@ const Register = () => {
         }
       })();
 
+      // Apply coupon discount if available
+      const finalPrice = calculateFinalPrice(originalPrice);
+
+      console.log('💰 Original Price:', originalPrice);
+      if (appliedCoupon) {
+        console.log('🎫 Applied Coupon:', appliedCoupon.code, `- ${appliedCoupon.discount}% off`);
+        console.log('💸 Final Price after discount:', finalPrice);
+      }
+
       // Prepare patient data array for payment
       const patientDataArray = finalPlanType === 'couple' 
         ? [parent1FormData, parent2FormData]
@@ -458,7 +520,7 @@ const Register = () => {
 
       // Create payment order instead of directly creating patients
       const paymentOrder = await RazorpayPaymentService.createOrder(
-        price,
+        finalPrice,
         finalPlanType,
         finalDuration,
         patientDataArray
@@ -484,7 +546,7 @@ const Register = () => {
           console.log('✅ Created patient IDs:', patientIds);
           console.log('✅ Final plan type:', finalPlanType);
           console.log('✅ Final duration:', finalDuration);
-          console.log('✅ Price:', price);
+          console.log('✅ Final Price:', finalPrice);
           
           const registrationData = {
             patients: patientDataArray.map((patient, index) => ({
@@ -496,7 +558,7 @@ const Register = () => {
             })),
             planType: finalPlanType,
             duration: finalDuration,
-            price: price
+            price: finalPrice
           };
           
           console.log('✅ Navigation registration data:', JSON.stringify(registrationData, null, 2));
@@ -681,7 +743,14 @@ const Register = () => {
                         : 'bg-gray-100 text-gray-700 hover:bg-emerald-50 hover:border-emerald-300 border-2 border-transparent'
                     }`}
                   >
-                    <span className="relative z-10">Single Parent</span>
+                    <div className="relative z-10">
+                      <div>Single Parent</div>
+                      <div className={`text-sm font-normal mt-1 ${
+                        selectedPlan === 'single' ? 'text-emerald-100' : 'text-gray-500'
+                      }`}>
+                        +2 family member(below 60)*
+                      </div>
+                    </div>
                   </button>
                   <button
                     onClick={() => setSelectedPlan('couple')}
@@ -691,7 +760,14 @@ const Register = () => {
                         : 'bg-gray-100 text-gray-700 hover:bg-emerald-50 hover:border-emerald-300 border-2 border-transparent'
                     }`}
                   >
-                    <span className="relative z-10">Both Parents</span>
+                    <div className="relative z-10">
+                      <div>Both Parents</div>
+                      <div className={`text-sm font-normal mt-1 ${
+                        selectedPlan === 'couple' ? 'text-emerald-100' : 'text-gray-500'
+                      }`}>
+                        +4 family member(below 60)*
+                      </div>
+                    </div>
                   </button>
                 </div>
 
@@ -819,6 +895,123 @@ const Register = () => {
             )}
           </div>
         </div>
+
+        {/* Coupon Section */}
+        {!showPlanSelection && (selectedPlan && selectedDuration) && (
+          <div className="mb-8">
+            <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-bold">%</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-blue-800">Apply Coupon</h3>
+                </div>
+                
+                {!appliedCoupon ? (
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <Input
+                        type="text"
+                        placeholder="Enter coupon code"
+                        value={couponCode}
+                        onChange={(e) => {
+                          setCouponCode(e.target.value);
+                          setCouponError('');
+                        }}
+                        className="border-blue-200 focus:border-blue-400"
+                      />
+                      {couponError && (
+                        <p className="text-red-600 text-sm mt-1">{couponError}</p>
+                      )}
+                    </div>
+                    <Button
+                      onClick={applyCoupon}
+                      variant="outline"
+                      className="border-blue-300 text-blue-700 hover:bg-blue-50"
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="h-5 w-5 text-green-600" />
+                        <div>
+                          <p className="font-semibold text-green-800">
+                            Coupon "{appliedCoupon.code}" Applied!
+                          </p>
+                          <p className="text-sm text-green-600">
+                            {appliedCoupon.discount}% discount applied
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={removeCoupon}
+                        variant="outline"
+                        size="sm"
+                        className="border-red-300 text-red-700 hover:bg-red-50"
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                    
+                    {/* Price breakdown */}
+                    <div className="mt-4 pt-4 border-t border-green-200">
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Original Price:</span>
+                          <span className="line-through text-gray-500">
+                            ₹{(() => {
+                              const duration = parseInt(selectedDuration);
+                              if (selectedPlan === 'single') {
+                                if (duration === 6) return '12,000';
+                                if (duration === 12) return '20,000';
+                                return '12,000';
+                              } else {
+                                if (duration === 6) return '24,000';
+                                if (duration === 12) return '40,000';
+                                return '24,000';
+                              }
+                            })()}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-green-600 font-medium">Discount ({appliedCoupon.discount}%):</span>
+                          <span className="text-green-600 font-medium">
+                            -₹{(() => {
+                              const duration = parseInt(selectedDuration);
+                              const originalPrice = selectedPlan === 'single' 
+                                ? (duration === 6 ? 12000 : duration === 12 ? 20000 : 12000)
+                                : (duration === 6 ? 24000 : duration === 12 ? 40000 : 24000);
+                              const discount = originalPrice * (appliedCoupon.discount / 100);
+                              return discount.toLocaleString();
+                            })()}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-lg font-bold border-t pt-2">
+                          <span className="text-gray-800">Final Price:</span>
+                          <span className="text-emerald-600">
+                            ₹{(() => {
+                              const duration = parseInt(selectedDuration);
+                              const originalPrice = selectedPlan === 'single' 
+                                ? (duration === 6 ? 12000 : duration === 12 ? 20000 : 12000)
+                                : (duration === 6 ? 24000 : duration === 12 ? 40000 : 24000);
+                              const finalPrice = calculateFinalPrice(originalPrice);
+                              return finalPrice.toLocaleString();
+                            })()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Parent Navigation for Both Parents */}
         {selectedPlan === 'couple' && !showPlanSelection && (

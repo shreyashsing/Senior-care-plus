@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Play, Plus, Check, Monitor, Home, Building2, Phone, Car, Plane, Droplets, Pill, Calendar, RefreshCw, Clock, Heart, Brain, Dumbbell, UtensilsCrossed, UserCheck, Stethoscope, Ambulance, TestTube, Truck, Shield, Users, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '@/components/Navbar';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -18,13 +19,13 @@ const Index = () => {
   const [showPricing, setShowPricing] = useState(false);
   const [showCTA, setShowCTA] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState(1);
 
   // Offers content for each phase
   const phaseContent = {
     1: {
       title: "Pre-Hospitalization Offerings",
+      image: "/pre.webp", // Pre-hospitalization image
       offers: [
         {
           title: "Top Doctor Consultations",
@@ -46,6 +47,7 @@ const Index = () => {
     },
     2: {
       title: "During Hospitalization Offerings",
+      image: "/during.webp", // During hospitalization image
       offers: [
         {
           title: "In-Hospital Support",
@@ -64,13 +66,14 @@ const Index = () => {
           description: "Get a second opinion from top specialists to ensure the best treatment plan."
         },
         {
-          title: "Pre-Approved Claims",
-          description: "Pre-approve your insurance claims for a smooth, hassle-free hospital experience."
+          title: "Wellness",
+          description: "Wellness with yoga, mindfulness, consults, 24x7 doctors, check-ups, hospital support, family cover, and care discounts."
         }
       ]
     },
     3: {
       title: "Post-Hospitalization Offerings",
+      image: "/post.png", // Post-hospitalization image
       offers: [
         {
           title: "Recovery Support",
@@ -152,189 +155,8 @@ const Index = () => {
 
   return (
     <>
-      {/* Semi-transparent Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo */}
-            <div className="flex items-center">
-              <img
-                src="/logo.svg"
-                alt="Senior Care Logo"
-                className="w-10 h-10 md:w-12 md:h-12"
-              />
-            </div>
-
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-8">
-              <a
-                href="#home"
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Home
-              </a>
-              <button
-                onClick={() => navigate('/about')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                About Us
-              </button>
-              <button
-                onClick={() => navigate('/partners')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                Partners
-              </button>
-              <button
-                onClick={() => navigate('/contact')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                Contact
-              </button>
-              <a
-                href="#services"
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Services
-              </a>
-              <a
-                href="#how-it-works"
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                How It Works
-              </a>
-              <a
-                href="#pricing"
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Pricing
-              </a>
-              <Button
-                onClick={() => navigate('/login')}
-                className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-              >
-                Login
-              </Button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="text-white hover:text-emerald-400 transition-colors duration-300"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile Menu */}
-          {showMobileMenu && (
-            <div className="md:hidden bg-white/90 backdrop-blur-md rounded-lg mt-2 p-4 border border-gray-200/60 shadow-lg">
-              <div className="flex flex-col space-y-4">
-                <a
-                  href="#home"
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowMobileMenu(false);
-                    document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Home
-                </a>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/about');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  About Us
-                </button>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/partners');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  Partners
-                </button>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/contact');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  Contact
-                </button>
-                <a
-                  href="#services"
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowMobileMenu(false);
-                    document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Services
-                </a>
-                <a
-                  href="#how-it-works"
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowMobileMenu(false);
-                    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  How It Works
-                </a>
-                <a
-                  href="#pricing"
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowMobileMenu(false);
-                    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Pricing
-                </a>
-                <Button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/login');
-                  }}
-                  className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105 w-full"
-                >
-                  Login
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
+      {/* Navbar */}
+      <Navbar isHomePage={true} />
 
         <section id="home" className="relative overflow-hidden min-h-screen">
           {/* Family Background Image */}
@@ -393,15 +215,7 @@ const Index = () => {
               {/* Modern CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
-                  onClick={() => navigate('/register', { 
-                    state: { 
-                      planInfo: { 
-                        type: 'single', 
-                        duration: '6', 
-                        price: 15000 
-                      } 
-                    } 
-                  })}
+                  onClick={() => navigate('/register')}
                   className="group relative bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 hover:from-emerald-700 hover:via-green-700 hover:to-emerald-800 text-white px-8 py-4 text-lg font-bold rounded-2xl shadow-2xl hover:shadow-emerald-500/25 transform hover:-translate-y-1 transition-all duration-300 ease-out overflow-hidden"
                 >
                   <span className="relative z-10 flex items-center gap-2">
@@ -894,7 +708,7 @@ const Index = () => {
       </section>
 
 		{/* Services Curve Section (new) */}
-		<section id="services" className="relative bg-gradient-to-br from-green-50 to-emerald-50 pt-20 md:pt-24 pb-10 md:pb-16 overflow-hidden scroll-mt-20">
+		<section id="our-services" className="relative bg-gradient-to-br from-green-50 to-emerald-50 pt-20 md:pt-24 pb-10 md:pb-16 overflow-hidden scroll-mt-20">
 			<div className="w-[96%] md:w-[92%] lg:w-[88%] xl:w-[84%] mx-auto">
 				<div className="text-center mb-8 md:mb-12">
 					<div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-semibold mb-4">
@@ -963,9 +777,10 @@ const Index = () => {
 							{/* Main Image Container */}
 							<div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50 aspect-[4/3] shadow-2xl">
 								<img
-									src="/post.png"
-									alt="Healthcare offerings"
-									className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+									src={phaseContent[selectedPhase].image}
+									alt={`${phaseContent[selectedPhase].title} - Healthcare offerings`}
+									className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
+									key={selectedPhase} // Add key to force re-render on phase change
 								/>
 								
 								{/* Decorative Elements */}
@@ -1089,7 +904,14 @@ const Index = () => {
 										{selectedPlan === 'single' && (
 											<div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-2xl blur-xl"></div>
 										)}
-										<span className="relative z-10">Single Parent</span>
+										<div className="relative z-10">
+											<div>Single Parent</div>
+											<div className={`text-sm font-normal mt-1 ${
+												selectedPlan === 'single' ? 'text-emerald-600' : 'text-gray-400'
+											}`}>
+												+2 family member(below 60)*
+											</div>
+										</div>
 									</button>
 									<button
 										onClick={() => {
@@ -1108,7 +930,14 @@ const Index = () => {
 										{selectedPlan === 'couple' && (
 											<div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-2xl blur-xl"></div>
 										)}
-										<span className="relative z-10">Both Parents</span>
+										<div className="relative z-10">
+											<div>Both Parents</div>
+											<div className={`text-sm font-normal mt-1 ${
+												selectedPlan === 'couple' ? 'text-emerald-600' : 'text-gray-400'
+											}`}>
+												+4 family member(below 60)*
+											</div>
+										</div>
 									</button>
 								</div>
 							</div>
@@ -1254,26 +1083,7 @@ const Index = () => {
 									{showPricing && selectedDuration && (
 										<div className="mt-8">
 											<Button 
-												onClick={() => navigate('/register', { 
-													state: { 
-														planInfo: { 
-															type: selectedPlan, 
-															duration: selectedDuration, 
-															price: (() => {
-																const duration = parseInt(selectedDuration);
-																if (selectedPlan === 'single') {
-																if (duration === 6) return 12000;
-																if (duration === 12) return 20000;
-																return 12000; // Default to 6 months pricing
-																} else {
-																	if (duration === 6) return 24000;
-																	if (duration === 12) return 40000;
-																	return 24000; // Default to 6 months pricing
-																}
-															})()
-														} 
-													} 
-												})}
+												onClick={() => navigate('/register')}
 												className="relative w-full bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 hover:from-emerald-700 hover:via-green-700 hover:to-emerald-800 text-white rounded-2xl py-6 text-xl font-black shadow-2xl hover:shadow-emerald-500/25 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 overflow-hidden group"
 											>
 												<div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>

@@ -19,10 +19,10 @@ import {
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { ContactService, type CreateContact } from '@/lib/contactServiceNew'
+import Navbar from '@/components/Navbar'
 
 const Contact: React.FC = () => {
   const navigate = useNavigate()
-  const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -136,119 +136,7 @@ const Contact: React.FC = () => {
     return (
       <>
         {/* Navbar */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20 transition-all duration-300">
-          <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-            <div className="flex items-center justify-between h-16 md:h-20">
-              {/* Logo */}
-              <div className="flex items-center">
-                <img
-                  src="/logo.svg"
-                  alt="Senior Care Logo"
-                  className="w-10 h-10 md:w-12 md:h-12"
-                />
-              </div>
-
-              {/* Desktop Menu */}
-              <div className="hidden md:flex items-center space-x-8">
-                <button
-                  onClick={() => navigate('/')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  Home
-                </button>
-                <button
-                  onClick={() => navigate('/about')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  About Us
-                </button>
-                <button
-                  onClick={() => navigate('/partners')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  Partners
-                </button>
-                <button
-                  onClick={() => navigate('/contact')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  Contact
-                </button>
-                <Button
-                  onClick={() => navigate('/login')}
-                  className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-                >
-                  Login
-                </Button>
-              </div>
-
-              {/* Mobile Menu Button */}
-              <div className="md:hidden">
-                <button
-                  onClick={() => setShowMobileMenu(!showMobileMenu)}
-                  className="text-white hover:text-emerald-400 transition-colors duration-300"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Mobile Menu */}
-            {showMobileMenu && (
-              <div className="md:hidden bg-white/90 backdrop-blur-md rounded-lg mt-2 p-4 border border-gray-200/60 shadow-lg">
-                <div className="flex flex-col space-y-4">
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    Home
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/about');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    About Us
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/partners');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    Partners
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/contact');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    Contact
-                  </button>
-                  <Button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/login');
-                    }}
-                    className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-                  >
-                    Login
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-        </nav>
+        <Navbar />
 
         <div className="min-h-screen bg-gray-50 pt-16 md:pt-20">
           <div className="container mx-auto px-4 py-16">
@@ -374,119 +262,7 @@ const Contact: React.FC = () => {
   return (
     <>
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo */}
-            <div className="flex items-center">
-              <img
-                src="/logo.svg"
-                alt="Senior Care Logo"
-                className="w-10 h-10 md:w-12 md:h-12"
-              />
-            </div>
-
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-8">
-              <button
-                onClick={() => navigate('/')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                Home
-              </button>
-              <button
-                onClick={() => navigate('/about')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                About Us
-              </button>
-              <button
-                onClick={() => navigate('/partners')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                Partners
-              </button>
-              <button
-                onClick={() => navigate('/contact')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                Contact
-              </button>
-              <Button
-                onClick={() => navigate('/login')}
-                className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-              >
-                Login
-              </Button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="text-white hover:text-emerald-400 transition-colors duration-300"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile Menu */}
-          {showMobileMenu && (
-            <div className="md:hidden bg-white/90 backdrop-blur-md rounded-lg mt-2 p-4 border border-gray-200/60 shadow-lg">
-              <div className="flex flex-col space-y-4">
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  Home
-                </button>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/about');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  About Us
-                </button>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/partners');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  Partners
-                </button>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/contact');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  Contact
-                </button>
-                <Button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/login');
-                  }}
-                  className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-                >
-                  Login
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="min-h-screen bg-gray-50 pt-16 md:pt-20">
         {/* Hero Section */}
