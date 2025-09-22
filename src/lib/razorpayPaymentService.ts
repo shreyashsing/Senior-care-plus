@@ -90,10 +90,16 @@ export class RazorpayPaymentService {
       }
 
       console.log('✅ Payment order created successfully:', result.order)
+      console.log('🎯 Payment order created:', {
+        amount: result.order.amount,
+        currency: result.order.currency,
+        order_id: result.order.razorpay_order_id || result.order.order_id,
+        razorpay_key: result.razorpay_key
+      })
       
       return {
         id: result.order.id,
-        order_id: result.order.order_id,
+        order_id: result.order.razorpay_order_id || result.order.order_id, // Use Razorpay order ID
         amount: result.order.amount,
         currency: result.order.currency,
         status: result.order.status,
@@ -115,14 +121,21 @@ export class RazorpayPaymentService {
   ): Promise<void> {
     try {
       await this.loadRazorpayScript()
+      
+      console.log('🎯 Initializing payment with Razorpay...', {
+        key: order.razorpay_key,
+        amount: order.amount * 100,
+        currency: order.currency,
+        order_id: order.order_id
+      })
 
       const options: RazorpayOptions = {
         key: order.razorpay_key || '',
-        amount: order.amount,
+        amount: order.amount * 100, // Convert to paisa for Razorpay
         currency: order.currency,
         name: 'Senior Care Plus',
         description: `${paymentPatientData.planType} Plan Payment`,
-        order_id: order.order_id,
+        order_id: order.order_id, // This should now be the Razorpay order ID
         handler: async (response: RazorpayResponse) => {
           try {
             await this.verifyPayment(response, order.order_id)
@@ -163,6 +176,7 @@ export class RazorpayPaymentService {
       }
 
       const rzp = new window.Razorpay(options)
+      console.log('🎯 Payment initialization complete')
       rzp.open()
 
     } catch (error) {
@@ -181,7 +195,7 @@ export class RazorpayPaymentService {
         razorpay_order_id: response.razorpay_order_id,
         razorpay_payment_id: response.razorpay_payment_id,
         razorpay_signature: response.razorpay_signature,
-        order_id: orderId
+        order_id: orderId // This is the Razorpay order ID
       })
     });
 

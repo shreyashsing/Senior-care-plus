@@ -35,17 +35,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       process.env.SUPABASE_SERVICE_KEY!
     );
 
-    // Update payment order status
+    // Update payment order status - match by razorpay_order_id
     const { data, error } = await supabase
       .from('payment_orders')
       .update({
         status: 'completed',
         razorpay_payment_id,
-        razorpay_order_id,
         razorpay_signature,
         completed_at: new Date().toISOString()
       })
-      .eq('order_id', order_id)
+      .eq('razorpay_order_id', razorpay_order_id)
       .select()
       .single();
 
