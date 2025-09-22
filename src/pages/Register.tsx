@@ -481,6 +481,7 @@ const Register = () => {
         },
         // Payment success callback
         (patientIds?: string[]) => {
+          console.log('🎯🎯🎯 SUCCESS CALLBACK CALLED! 🎯🎯🎯');
           console.log('✅ Payment successful');
           console.log('✅ Created patient IDs:', patientIds);
           console.log('✅ Final plan type:', finalPlanType);

@@ -146,10 +146,17 @@ export class RazorpayPaymentService {
               console.log('🔍 Payment handler - patientData array:', JSON.stringify(paymentPatientData.patientData, null, 2));
               
               // Create patients individually since createPatient expects single patient object
-              for (const patientData of paymentPatientData.patientData) {
-                console.log('🔍 Processing individual patient:', JSON.stringify(patientData, null, 2));
-                const patientId = await createPatient(patientData)
-                patientIds.push(patientId)
+              try {
+                for (const patientData of paymentPatientData.patientData) {
+                  console.log('🔍 Processing individual patient:', JSON.stringify(patientData, null, 2));
+                  const patientId = await createPatient(patientData)
+                  console.log('✅ Patient created with ID:', patientId);
+                  patientIds.push(patientId)
+                }
+                console.log('✅ All patients created. Patient IDs:', patientIds);
+              } catch (patientError) {
+                console.error('❌ Error creating patients:', patientError);
+                throw patientError; // Re-throw to trigger error callback
               }
               
               if (patientIds.length > 0) {
@@ -165,7 +172,12 @@ export class RazorpayPaymentService {
             }
 
             console.log('🎯 Calling onSuccess with patientIds:', patientIds);
-            onSuccess?.(patientIds)
+            try {
+              onSuccess?.(patientIds)
+              console.log('✅ onSuccess callback executed successfully')
+            } catch (callbackError) {
+              console.error('❌ Error in onSuccess callback:', callbackError)
+            }
           } catch (error) {
             onError?.(error)
           }
