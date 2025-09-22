@@ -99,19 +99,6 @@ const Partners: React.FC = () => {
     setFilteredPartners(filtered)
   }
 
-  const getDiscountInfo = (services: any[]): { hasDiscounts: boolean; maxDiscount: number } => {
-    if (!Array.isArray(services)) return { hasDiscounts: false, maxDiscount: 0 }
-    
-    const discounts = services
-      .filter(service => typeof service === 'object' && service !== null && service.discount > 0)
-      .map(service => service.discount)
-    
-    return {
-      hasDiscounts: discounts.length > 0,
-      maxDiscount: discounts.length > 0 ? Math.max(...discounts) : 0
-    }
-  }
-
   if (isLoading) {
     return (
       <>
@@ -662,8 +649,6 @@ const Partners: React.FC = () => {
             {/* Table Rows */}
             <div className="divide-y divide-gray-200">
               {filteredPartners.map((partner) => {
-                const discountInfo = getDiscountInfo(partner.services)
-                
                 return (
                   <div key={partner.id} className="grid grid-cols-3 gap-4 px-6 py-4 hover:bg-gray-50 transition-colors items-start">
                     {/* Name Column */}
@@ -686,14 +671,9 @@ const Partners: React.FC = () => {
                       <div className="flex flex-wrap gap-2">
                         {partner.services.map((service, index) => (
                           <div key={index} className="flex items-center gap-1">
-                            <span className="text-sm text-gray-700 font-medium">
+                            <span className="text-sm text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-full bg-white hover:bg-gray-50 transition-colors">
                               {service.service}
                             </span>
-                            {service.discount > 0 && (
-                              <Badge variant="secondary" className="text-xs text-green-600 bg-green-50">
-                                {service.discount}% off
-                              </Badge>
-                            )}
                           </div>
                         ))}
                       </div>

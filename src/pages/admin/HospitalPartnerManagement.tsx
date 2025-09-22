@@ -432,7 +432,7 @@ const HospitalPartnerManagement: React.FC = () => {
                    partner.services.slice(0, 3).map((service, index) => (
                     <Badge key={index} variant="secondary" className="text-xs">
                       {typeof service === 'object' && service !== null ? 
-                        `${service.service} ${service.discount}%` : 
+                        service.service : 
                         String(service)
                       }
                     </Badge>
@@ -536,7 +536,7 @@ const HospitalPartnerManagement: React.FC = () => {
               {/* Services */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Services & Discounts</CardTitle>
+                  <CardTitle>Services</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -545,9 +545,6 @@ const HospitalPartnerManagement: React.FC = () => {
                         <span className="font-medium">
                           {typeof service === 'object' && service !== null ? service.service : String(service)}
                         </span>
-                        <Badge variant="secondary">
-                          {typeof service === 'object' && service !== null ? `${service.discount}% off` : '0% off'}
-                        </Badge>
                       </div>
                     ))}
                   </div>

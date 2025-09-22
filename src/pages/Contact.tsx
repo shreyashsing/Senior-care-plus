@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { 
   Mail, 
@@ -32,7 +31,6 @@ const Contact: React.FC = () => {
     name: '',
     email: '',
     phone: '',
-    subject: '',
     message: ''
   })
 
@@ -55,10 +53,6 @@ const Contact: React.FC = () => {
       errors.phone = 'Phone number is required'
     } else if (!/^\+?[\d\s\-\(\)]{10,}$/.test(formData.phone)) {
       errors.phone = 'Please enter a valid phone number'
-    }
-
-    if (!formData.subject.trim()) {
-      errors.subject = 'Subject is required'
     }
 
     if (!formData.message.trim()) {
@@ -116,7 +110,6 @@ const Contact: React.FC = () => {
         name: '',
         email: '',
         phone: '',
-        subject: '',
         message: ''
       })
     } catch (err) {
@@ -138,17 +131,6 @@ const Contact: React.FC = () => {
       setIsSubmitting(false)
     }
   }
-
-  const subjectOptions = [
-    'General Inquiry',
-    'Service Information',
-    'Billing Support',
-    'Technical Support',
-    'Partnership Opportunity',
-    'Feedback',
-    'Complaint',
-    'Other'
-  ]
 
   if (isSubmitted) {
     return (
@@ -538,7 +520,6 @@ const Contact: React.FC = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
                     <p className="text-gray-600">contact@seniorcareplus.com</p>
-                    <p className="text-gray-600">support@seniorcareplus.com</p>
                   </div>
                 </div>
 
@@ -549,8 +530,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
-                    <p className="text-gray-600">24/7 Emergency: +1 (555) 999-0000</p>
+                    <p className="text-gray-600">+91 9975567202</p>
                   </div>
                 </div>
 
@@ -562,9 +542,9 @@ const Contact: React.FC = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Office</h3>
                     <p className="text-gray-600">
-                      123 Healthcare Street<br />
-                      Medical District<br />
-                      New York, NY 10001
+                      414 Atlanta Shoppers<br />
+                      Beside Reliance Market Vesu<br />
+                      Surat 395007
                     </p>
                   </div>
                 </div>
@@ -577,9 +557,7 @@ const Contact: React.FC = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Business Hours</h3>
                     <p className="text-gray-600">
-                      Monday - Friday: 8:00 AM - 8:00 PM<br />
-                      Saturday: 9:00 AM - 5:00 PM<br />
-                      Sunday: Emergency only
+                      Mon-Fri, 9 AM - 6 PM IST
                     </p>
                   </div>
                 </div>
@@ -676,28 +654,6 @@ const Contact: React.FC = () => {
                         />
                         {formErrors.phone && (
                           <p className="text-sm text-red-600 mt-1">{formErrors.phone}</p>
-                        )}
-                      </div>
-
-                      {/* Subject */}
-                      <div>
-                        <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                          Subject *
-                        </label>
-                        <Select value={formData.subject} onValueChange={(value) => handleInputChange('subject', value)}>
-                          <SelectTrigger className={formErrors.subject ? 'border-red-500' : ''}>
-                            <SelectValue placeholder="Select a subject" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {subjectOptions.map((option) => (
-                              <SelectItem key={option} value={option}>
-                                {option}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        {formErrors.subject && (
-                          <p className="text-sm text-red-600 mt-1">{formErrors.subject}</p>
                         )}
                       </div>
                     </div>

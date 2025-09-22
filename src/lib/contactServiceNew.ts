@@ -33,7 +33,6 @@ export interface CreateContact {
   name: string
   email: string
   phone?: string
-  subject?: string
   message: string
   services?: string[]
   city?: string
