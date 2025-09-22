@@ -55,7 +55,7 @@ export function RegistrationSuccessPage() {
           </p>
           <div className="bg-emerald-100 inline-block px-6 py-2 rounded-full">
             <p className="text-emerald-800 font-semibold">
-              {planType === 'single' ? 'Single Parent' : 'Both Parents'} Plan - {duration} Month{parseInt(duration || '1') > 1 ? 's' : ''} | ₹{Number(price || 0).toLocaleString()}
+              {planType === 'single' ? 'Single Parent' : 'Both Parents'} Plan - {duration} Month{parseInt(duration || '6') > 1 ? 's' : ''} | ₹{Number(price || 0).toLocaleString()}
             </p>
           </div>
         </div>

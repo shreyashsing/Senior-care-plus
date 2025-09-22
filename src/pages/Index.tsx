@@ -397,8 +397,8 @@ const Index = () => {
                     state: { 
                       planInfo: { 
                         type: 'single', 
-                        duration: '1', 
-                        price: 3000 
+                        duration: '6', 
+                        price: 15000 
                       } 
                     } 
                   })}
@@ -1137,7 +1137,6 @@ const Index = () => {
 											<div className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-emerald-200 rounded-2xl shadow-2xl overflow-hidden z-10 animate-in slide-in-from-top-2 duration-300">
 												{[
 													{ value: '', label: 'Choose duration...' },
-													{ value: '1', label: '1 Month' },
 													{ value: '6', label: '6 Months' },
 													{ value: '12', label: '12 Months' }
 												].map((option, index) => (
@@ -1176,7 +1175,7 @@ const Index = () => {
 										</div>
 										<div className="text-center">
 											<p className="text-xs font-semibold text-emerald-600 mb-2 uppercase tracking-wider">
-												{parseInt(selectedDuration) === 1 ? 'Offer' : 'Special Offer'}
+												Special Offer
 											</p>
 											{selectedPlan === 'single' ? (
 												<div>
@@ -1184,32 +1183,29 @@ const Index = () => {
 													<p className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
 														INR {(() => {
 															const duration = parseInt(selectedDuration);
-															if (duration === 1) return '3,000';
-															if (duration === 6) return '16,500';
-															if (duration === 12) return '30,000';
-															return (3000 * duration).toLocaleString();
+															if (duration === 6) return '12,000';
+															if (duration === 12) return '20,000';
+															return '12,000'; // Default to 6 months pricing
 														})()}
 													</p>
-													{/* Original Price - Crossed Out - Only show for discounted plans */}
-													{parseInt(selectedDuration) > 1 && (
-														<p className="text-lg text-gray-500 line-through mt-1">
-															INR {(() => {
-																const duration = parseInt(selectedDuration);
-																if (duration === 6) return '18,000';
-																if (duration === 12) return '36,000';
-																return (3000 * duration).toLocaleString();
-															})()}
-														</p>
-													)}
-													{/* Savings Badge - Only show when there are savings */}
+													{/* Original Price - Crossed Out - Always show for discounted plans */}
+													<p className="text-lg text-gray-500 line-through mt-1">
+														INR {(() => {
+															const duration = parseInt(selectedDuration);
+															if (duration === 6) return '15,000';
+															if (duration === 12) return '30,000';
+															return '15,000'; // Default to 6 months original pricing
+														})()}
+													</p>
+													{/* Savings Badge - Always show since all plans have savings */}
 													{(() => {
 														const duration = parseInt(selectedDuration);
-														const savings = duration === 6 ? 1500 : duration === 12 ? 6000 : 0;
-														return savings > 0 ? (
+														const savings = duration === 6 ? 3000 : duration === 12 ? 10000 : 3000;
+														return (
 															<div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mt-2">
 																Save ₹{savings.toLocaleString()}
 															</div>
-														) : null;
+														);
 													})()}
 													{/* Free days offer removed */}
 												</div>
@@ -1219,32 +1215,29 @@ const Index = () => {
 													<p className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
 														INR {(() => {
 															const duration = parseInt(selectedDuration);
-															if (duration === 1) return '5,000';
-															if (duration === 6) return '28,000';
-															if (duration === 12) return '54,000';
-															return (5000 * duration).toLocaleString();
+															if (duration === 6) return '24,000';
+															if (duration === 12) return '40,000';
+															return '24,000'; // Default to 6 months pricing
 														})()}
 													</p>
-													{/* Original Price - Crossed Out - Only show for discounted plans */}
-													{parseInt(selectedDuration) > 1 && (
-														<p className="text-lg text-gray-500 line-through mt-1">
-															INR {(() => {
-																const duration = parseInt(selectedDuration);
-																if (duration === 6) return '30,000';
-																if (duration === 12) return '60,000';
-																return (5000 * duration).toLocaleString();
-															})()}
-														</p>
-													)}
-													{/* Savings Badge - Only show when there are savings */}
+													{/* Original Price - Crossed Out - Always show for discounted plans */}
+													<p className="text-lg text-gray-500 line-through mt-1">
+														INR {(() => {
+															const duration = parseInt(selectedDuration);
+															if (duration === 6) return '30,000';
+															if (duration === 12) return '60,000';
+															return '30,000'; // Default to 6 months original pricing
+														})()}
+													</p>
+													{/* Savings Badge - Always show since all plans have savings */}
 													{(() => {
 														const duration = parseInt(selectedDuration);
-														const savings = duration === 6 ? 2000 : duration === 12 ? 6000 : 0;
-														return savings > 0 ? (
-															<div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mt-2">
-																Save ₹{savings.toLocaleString()}
-															</div>
-														) : null;
+														const savings = duration === 6 ? 6000 : duration === 12 ? 20000 : 6000;
+														return (
+															<span className="bg-green-100 text-green-800 px-2 py-1 rounded-md text-sm font-medium">
+																Save INR {savings.toLocaleString()}
+															</span>
+														);
 													})()}
 													{/* Free days offer removed */}
 												</div>
@@ -1269,15 +1262,13 @@ const Index = () => {
 															price: (() => {
 																const duration = parseInt(selectedDuration);
 																if (selectedPlan === 'single') {
-																																	if (duration === 1) return 3000;
-																if (duration === 6) return 16500;
-																if (duration === 12) return 30000;
-																return 3000 * duration;
+																if (duration === 6) return 12000;
+																if (duration === 12) return 20000;
+																return 12000; // Default to 6 months pricing
 																} else {
-																	if (duration === 1) return 5000;
-																	if (duration === 6) return 28000;
-																	if (duration === 12) return 54000;
-																	return 5000 * duration;
+																	if (duration === 6) return 24000;
+																	if (duration === 12) return 40000;
+																	return 24000; // Default to 6 months pricing
 																}
 															})()
 														} 

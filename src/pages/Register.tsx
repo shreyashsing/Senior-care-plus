@@ -439,15 +439,13 @@ const Register = () => {
       const price = (() => {
         const duration = parseInt(finalDuration);
         if (finalPlanType === 'single') {
-          if (duration === 1) return 3000;
-          if (duration === 6) return 16500;
-          if (duration === 12) return 30000;
-          return 3000 * duration;
+          if (duration === 6) return 12000;
+          if (duration === 12) return 20000;
+          return 12000; // Default to 6 months pricing
         } else {
-          if (duration === 1) return 5000;
-          if (duration === 6) return 28000;
-          if (duration === 12) return 54000;
-          return 5000 * duration;
+          if (duration === 6) return 24000;
+          if (duration === 12) return 40000;
+          return 24000; // Default to 6 months pricing
         }
       })();
 
@@ -620,38 +618,35 @@ const Register = () => {
                         INR {currentPlanInfo.price?.toLocaleString() || (() => {
                           const duration = parseInt(currentPlanInfo.duration);
                           if (currentPlanInfo.type === 'single') {
-                            if (duration === 1) return '3,000';
-                            if (duration === 6) return '16,500';
-                            if (duration === 12) return '30,000';
-                            return (3000 * duration).toLocaleString();
+                            if (duration === 6) return '12,000';
+                            if (duration === 12) return '20,000';
+                            return '12,000'; // Default to 6 months pricing
                           } else {
-                            if (duration === 1) return '5,000';
-                            if (duration === 6) return '28,000';
-                            if (duration === 12) return '54,000';
-                            return (5000 * duration).toLocaleString();
+                            if (duration === 6) return '24,000';
+                            if (duration === 12) return '40,000';
+                            return '24,000'; // Default to 6 months pricing
                           }
                         })()}
                       </p>
                     </div>
                     <div className="text-right">
-                      {parseInt(currentPlanInfo.duration) > 1 && (
-                        <div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-                          Save ₹{(() => {
-                            const duration = parseInt(currentPlanInfo.duration);
-                            if (currentPlanInfo.type === 'single') {
-                              if (duration === 6) return '1,500';
-                              if (duration === 12) return '6,000';
-                              return '0';
-                            } else {
-                              if (duration === 6) return '2,000';
-                              if (duration === 12) return '6,000';
-                              return '0';
-                            }
-                          })()}
-                        </div>
-                      )}
+                      {/* Always show savings since we only have 6 and 12 month plans */}
+                      <div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mb-2">
+                        Save ₹{(() => {
+                          const duration = parseInt(currentPlanInfo.duration);
+                          if (currentPlanInfo.type === 'single') {
+                            if (duration === 6) return '3,000';
+                            if (duration === 12) return '10,000';
+                            return '3,000';
+                          } else {
+                            if (duration === 6) return '6,000';
+                            if (duration === 12) return '20,000';
+                            return '6,000';
+                          }
+                        })()}
+                      </div>
                       <p className="text-xs text-emerald-600">
-                        {parseInt(currentPlanInfo.duration) === 1 ? 'No discount' : 'Discounted price'}
+                        Discounted price
                       </p>
                     </div>
                   </div>
@@ -704,9 +699,8 @@ const Register = () => {
                 {selectedPlan && (
                   <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-3">Select Duration</label>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {[
-                        { value: '1', label: '1 Month' },
                         { value: '6', label: '6 Months' },
                         { value: '12', label: '12 Months' }
                       ].map((option) => (
@@ -738,38 +732,35 @@ const Register = () => {
                           INR {(() => {
                             const duration = parseInt(selectedDuration);
                             if (selectedPlan === 'single') {
-                              if (duration === 1) return '3,000';
-                              if (duration === 6) return '16,500';
-                              if (duration === 12) return '30,000';
-                              return (3000 * duration).toLocaleString();
+                              if (duration === 6) return '12,000';
+                              if (duration === 12) return '20,000';
+                              return '12,000'; // Default to 6 months pricing
                             } else {
-                              if (duration === 1) return '5,000';
-                              if (duration === 6) return '28,000';
-                              if (duration === 12) return '54,000';
-                              return (5000 * duration).toLocaleString();
+                              if (duration === 6) return '24,000';
+                              if (duration === 12) return '40,000';
+                              return '24,000'; // Default to 6 months pricing
                             }
                           })()}
                         </p>
                       </div>
                       <div className="text-right">
-                        {parseInt(selectedDuration) > 1 && (
-                          <div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-                            Save ₹{(() => {
-                              const duration = parseInt(selectedDuration);
-                              if (selectedPlan === 'single') {
-                                if (duration === 6) return '1,500';
-                                if (duration === 12) return '6,000';
-                                return '0';
-                              } else {
-                                if (duration === 6) return '2,000';
-                                if (duration === 12) return '6,000';
-                                return '0';
-                              }
-                            })()}
-                          </div>
-                        )}
+                        {/* Always show savings since we only have 6 and 12 month plans */}
+                        <div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mb-2">
+                          Save ₹{(() => {
+                            const duration = parseInt(selectedDuration);
+                            if (selectedPlan === 'single') {
+                              if (duration === 6) return '3,000';
+                              if (duration === 12) return '10,000';
+                              return '3,000';
+                            } else {
+                              if (duration === 6) return '6,000';
+                              if (duration === 12) return '20,000';
+                              return '6,000';
+                            }
+                          })()}
+                        </div>
                         <p className="text-xs text-gray-500">
-                          {parseInt(selectedDuration) === 1 ? 'No discount' : 'Discounted price'}
+                          Discounted price
                         </p>
                       </div>
                     </div>
@@ -786,15 +777,13 @@ const Register = () => {
                             price: (() => {
                               const duration = parseInt(selectedDuration);
                               if (selectedPlan === 'single') {
-                                if (duration === 1) return 3000;
-                                if (duration === 6) return 16500;
-                                if (duration === 12) return 30000;
-                                return 3000 * duration;
+                                if (duration === 6) return 12000;
+                                if (duration === 12) return 20000;
+                                return 12000; // Default to 6 months pricing
                               } else {
-                                if (duration === 1) return 5000;
-                                if (duration === 6) return 28000;
-                                if (duration === 12) return 54000;
-                                return 5000 * duration;
+                                if (duration === 6) return 24000;
+                                if (duration === 12) return 40000;
+                                return 24000; // Default to 6 months pricing
                               }
                             })()
                           };
