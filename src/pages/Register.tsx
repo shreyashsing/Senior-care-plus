@@ -12,7 +12,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { createPatient, createCarePlan } from '../lib/patientService';
-import { RazorpayService } from '../lib/razorpayService';
+import { RazorpayPaymentService } from '../lib/razorpayPaymentService';
 
 interface FormData {
   // Personal Information
@@ -459,7 +459,7 @@ const Register = () => {
       console.log('🚀 Creating payment order...');
 
       // Create payment order instead of directly creating patients
-      const paymentOrder = await RazorpayService.createOrder(
+      const paymentOrder = await RazorpayPaymentService.createOrder(
         price,
         finalPlanType,
         finalDuration,
@@ -470,7 +470,7 @@ const Register = () => {
       console.log('🎯 Initializing payment with Razorpay...');
 
       // Initialize payment with Razorpay
-      await RazorpayService.initializePayment(
+      await RazorpayPaymentService.initializePayment(
         paymentOrder,
         {
           planType: finalPlanType,
@@ -480,17 +480,17 @@ const Register = () => {
           patientData: patientDataArray
         },
         // Payment success callback
-        (response) => {
-          console.log('✅ Payment successful:', response);
+        () => {
+          console.log('✅ Payment successful');
           setIsSubmitting(false); // Reset loading state
           
           // Clear stored plan info
           sessionStorage.removeItem('selectedPlanInfo');
           
-          // Navigate to success page with registration data
+          // Navigate to success page with patient data
           navigate('/registration-success', {
             state: {
-              registrationData: response.registrationData
+              registrationData: patientDataArray
             }
           });
           

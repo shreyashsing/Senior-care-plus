@@ -37,7 +37,7 @@ import {
   TrendingUp,
   Activity
 } from 'lucide-react'
-import { ContactService, type Contact, type ContactFilters } from '@/lib/contactService'
+import { ContactService, type Contact, type ContactFilters } from '@/lib/contactServiceNew'
 import { AdminNav } from '@/components/admin/AdminNav'
 
 const ContactManagement: React.FC = () => {
@@ -65,10 +65,11 @@ const ContactManagement: React.FC = () => {
     try {
       setError(null)
       const activeFilters: ContactFilters = {
-        ...filters,
         status: statusFilter === 'all' ? undefined : (statusFilter as any),
         subject: subjectFilter === 'all' ? undefined : subjectFilter,
-        search: searchTerm.trim() || undefined
+        search: searchTerm.trim() || undefined,
+        limit: 50,
+        offset: 0
       }
       
       const data = await ContactService.getContacts(activeFilters)
@@ -167,7 +168,7 @@ const ContactManagement: React.FC = () => {
   }
 
   const getSubjectOptions = () => {
-    const subjects = Array.from(new Set(contacts.map(c => c.subject))).sort()
+    const subjects = Array.from(new Set(contacts.map(c => c.subject).filter(Boolean))).sort()
     return subjects
   }
 
@@ -202,7 +203,7 @@ const ContactManagement: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600">New Messages</p>
-                    <p className="text-2xl font-bold text-blue-600">{statistics.by_status?.new || 0}</p>
+                    <p className="text-2xl font-bold text-blue-600">{statistics.byStatus?.new || 0}</p>
                   </div>
                   <MessageSquare className="w-8 h-8 text-blue-600" />
                 </div>
@@ -214,7 +215,7 @@ const ContactManagement: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600">In Progress</p>
-                    <p className="text-2xl font-bold text-yellow-600">{statistics.by_status?.in_progress || 0}</p>
+                    <p className="text-2xl font-bold text-yellow-600">{statistics.byStatus?.in_progress || 0}</p>
                   </div>
                   <Activity className="w-8 h-8 text-yellow-600" />
                 </div>
@@ -225,8 +226,8 @@ const ContactManagement: React.FC = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Today's Contacts</p>
-                    <p className="text-2xl font-bold text-green-600">{statistics.today || 0}</p>
+                    <p className="text-sm font-medium text-gray-600">Recent (7 days)</p>
+                    <p className="text-2xl font-bold text-green-600">{statistics.recent || 0}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 text-green-600" />
                 </div>

@@ -161,22 +161,13 @@ export function AdminLogin() {
                 )}
               </Button>
             </form>
-
-            {/* Demo Credentials */}
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Demo Credentials:</h4>
-              <div className="text-xs text-gray-600 space-y-1">
-                <p><strong>Super Admin:</strong> admin / admin123</p>
-                <p><strong>Manager:</strong> manager / manager123</p>
-              </div>
-            </div>
           </CardContent>
         </Card>
 
         {/* Footer */}
         <div className="text-center mt-6 text-sm text-gray-500">
           <p>SeniorCare Plus Administration</p>
-          <p className="mt-1">© 2024 All rights reserved</p>
+          <p className="mt-1">© 2025 All rights reserved</p>
         </div>
       </div>
     </div>

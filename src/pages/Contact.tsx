@@ -19,7 +19,7 @@ import {
   Loader2
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { ContactService, type CreateContact } from '@/lib/contactService'
+import { ContactService, type CreateContact } from '@/lib/contactServiceNew'
 
 const Contact: React.FC = () => {
   const navigate = useNavigate()
