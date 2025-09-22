@@ -118,6 +118,16 @@ export const uploadDocument = async (
 // Create patient record in Supabase
 export const createPatient = async (patientData: any): Promise<string> => {
   try {
+    // Debug: Log the received patient data
+    console.log('🔍 CreatePatient received data:', JSON.stringify(patientData, null, 2));
+    console.log('🔍 Patient name field:', patientData.name);
+    console.log('🔍 Patient data keys:', Object.keys(patientData));
+    
+    // Validate required fields
+    if (!patientData.name || patientData.name.trim() === '') {
+      throw new Error('Patient name is required and cannot be empty');
+    }
+    
     // Generate unique SeniorCare ID
     const seniorCareId = await generateSeniorCareId()
     

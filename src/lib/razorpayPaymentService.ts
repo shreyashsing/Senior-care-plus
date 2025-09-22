@@ -141,10 +141,13 @@ export class RazorpayPaymentService {
             await this.verifyPayment(response, order.order_id)
             
             if (paymentPatientData.patientData?.length > 0) {
+              console.log('🔍 Payment handler - patientData array:', JSON.stringify(paymentPatientData.patientData, null, 2));
+              
               // Create patients individually since createPatient expects single patient object
               const patientIds: string[] = []
               
               for (const patientData of paymentPatientData.patientData) {
+                console.log('🔍 Processing individual patient:', JSON.stringify(patientData, null, 2));
                 const patientId = await createPatient(patientData)
                 patientIds.push(patientId)
               }
