@@ -22,6 +22,10 @@ export function RegistrationSuccessPage() {
   const navigate = useNavigate()
   const registrationData = location.state?.registrationData as RegistrationSuccessData
 
+  // Debug logging
+  console.log('🔍 RegistrationSuccessPage location.state:', location.state);
+  console.log('🔍 RegistrationSuccessPage registrationData:', registrationData);
+
   if (!registrationData) {
     // Redirect to home if no registration data
     navigate('/')

@@ -483,6 +483,25 @@ const Register = () => {
         (patientIds?: string[]) => {
           console.log('✅ Payment successful');
           console.log('✅ Created patient IDs:', patientIds);
+          console.log('✅ Final plan type:', finalPlanType);
+          console.log('✅ Final duration:', finalDuration);
+          console.log('✅ Price:', price);
+          
+          const registrationData = {
+            patients: patientDataArray.map((patient, index) => ({
+              seniorCareId: patientIds?.[index] || 'Generated',
+              name: patient.name,
+              dateOfBirth: patient.dateOfBirth,
+              sex: patient.sex,
+              phoneNumber: patient.selfCellNumber
+            })),
+            planType: finalPlanType,
+            duration: finalDuration,
+            price: price
+          };
+          
+          console.log('✅ Navigation registration data:', JSON.stringify(registrationData, null, 2));
+          
           setIsSubmitting(false); // Reset loading state
           
           // Clear stored plan info
@@ -491,18 +510,7 @@ const Register = () => {
           // Navigate to success page with patient data
           navigate('/registration-success', {
             state: {
-              registrationData: {
-                patients: patientDataArray.map((patient, index) => ({
-                  seniorCareId: patientIds?.[index] || 'Generated',
-                  name: patient.name,
-                  dateOfBirth: patient.dateOfBirth,
-                  sex: patient.sex,
-                  phoneNumber: patient.selfCellNumber
-                })),
-                planType: finalPlanType,
-                duration: finalDuration,
-                price: price
-              }
+              registrationData
             }
           });
           
