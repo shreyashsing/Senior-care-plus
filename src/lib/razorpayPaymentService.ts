@@ -164,6 +164,7 @@ export class RazorpayPaymentService {
               }
             }
 
+            console.log('🎯 Calling onSuccess with patientIds:', patientIds);
             onSuccess?.(patientIds)
           } catch (error) {
             onError?.(error)
