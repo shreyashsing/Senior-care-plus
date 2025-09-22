@@ -409,7 +409,8 @@ const Register = () => {
     if (!appliedCoupon) return originalPrice;
     const discountAmount = originalPrice * (appliedCoupon.discount / 100);
     const finalPrice = originalPrice - discountAmount;
-    return Math.max(finalPrice, 1); // Minimum 1 rupee for payment processing
+    // Round to nearest integer and ensure minimum 1 rupee for payment processing
+    return Math.max(Math.round(finalPrice), 1);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
