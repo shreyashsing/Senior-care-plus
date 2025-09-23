@@ -11,6 +11,7 @@ import AboutUs from "./pages/AboutUs";
 import Partners from "./pages/Partners";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
+import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 import { LoginPage } from "./pages/LoginPage";
 import { SignupPage } from "./pages/SignupPage";
@@ -24,6 +25,9 @@ import { PatientDetailPage } from "./pages/admin/PatientDetailPage";
 import HospitalPartnerManagement from "./pages/admin/HospitalPartnerManagement";
 import ContactManagement from "./pages/admin/ContactManagement";
 import { RequireAdminAuth } from "./components/admin/RequireAdminAuth";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CancellationRefundPolicy from "./pages/CancellationRefundPolicy";
 
 const queryClient = new QueryClient();
 
@@ -40,8 +44,12 @@ const App = () => (
               <Route path="/about" element={<AboutUs />} />
               <Route path="/partners" element={<Partners />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/pricing" element={<Pricing />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/cancellation-refund-policy" element={<CancellationRefundPolicy />} />
               <Route path="/registration-success" element={<RegistrationSuccessPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />

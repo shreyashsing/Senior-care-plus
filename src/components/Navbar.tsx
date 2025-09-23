@@ -81,6 +81,13 @@ const Navbar: React.FC<NavbarProps> = ({ isHomePage = false }) => {
             </button>
             
             <button
+              onClick={() => navigate('/pricing')}
+              className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
+            >
+              Pricing
+            </button>
+            
+            <button
               onClick={() => navigate('/contact')}
               className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
             >
@@ -88,30 +95,7 @@ const Navbar: React.FC<NavbarProps> = ({ isHomePage = false }) => {
             </button>
 
             {/* Home page specific navigation items */}
-            {isHomePage && (
-              <>
-                <a
-                  href="#how-it-works"
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection('how-it-works');
-                  }}
-                >
-                  How It Works
-                </a>
-                <a
-                  href="#pricing"
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection('pricing');
-                  }}
-                >
-                  Pricing
-                </a>
-              </>
-            )}
+          
             
             <Button
               onClick={() => navigate('/login')}
@@ -195,6 +179,16 @@ const Navbar: React.FC<NavbarProps> = ({ isHomePage = false }) => {
               <button
                 onClick={() => {
                   setShowMobileMenu(false);
+                  navigate('/pricing');
+                }}
+                className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
+              >
+                Pricing
+              </button>
+              
+              <button
+                onClick={() => {
+                  setShowMobileMenu(false);
                   navigate('/contact');
                 }}
                 className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
@@ -203,43 +197,7 @@ const Navbar: React.FC<NavbarProps> = ({ isHomePage = false }) => {
               </button>
 
               {/* Home page specific navigation items */}
-              {isHomePage && (
-                <>
-                  <a
-                    href="#our-services"
-                    className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowMobileMenu(false);
-                      scrollToSection('our-services');
-                    }}
-                  >
-                    Our Services
-                  </a>
-                  <a
-                    href="#how-it-works"
-                    className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowMobileMenu(false);
-                      scrollToSection('how-it-works');
-                    }}
-                  >
-                    How It Works
-                  </a>
-                  <a
-                    href="#pricing"
-                    className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowMobileMenu(false);
-                      scrollToSection('pricing');
-                    }}
-                  >
-                    Pricing
-                  </a>
-                </>
-              )}
+             
               
               <Button
                 onClick={() => {
