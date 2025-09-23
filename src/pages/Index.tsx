@@ -1013,24 +1013,24 @@ const Index = () => {
 													<p className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
 														INR {(() => {
 															const duration = parseInt(selectedDuration);
-															if (duration === 6) return '12,000';
-															if (duration === 12) return '20,000';
-															return '12,000'; // Default to 6 months pricing
+															if (duration === 6) return '18,000';
+															if (duration === 12) return '30,000';
+															return '18,000'; // Default to 6 months pricing
 														})()}
 													</p>
 													{/* Original Price - Crossed Out - Always show for discounted plans */}
 													<p className="text-lg text-gray-500 line-through mt-1">
 														INR {(() => {
 															const duration = parseInt(selectedDuration);
-															if (duration === 6) return '15,000';
-															if (duration === 12) return '30,000';
-															return '15,000'; // Default to 6 months original pricing
+															if (duration === 6) return '40,000';
+															if (duration === 12) return '75,000';
+															return '40,000'; // Default to 6 months original pricing
 														})()}
 													</p>
 													{/* Savings Badge - Always show since all plans have savings */}
 													{(() => {
 														const duration = parseInt(selectedDuration);
-														const savings = duration === 6 ? 3000 : duration === 12 ? 10000 : 3000;
+														const savings = duration === 6 ? 22000 : duration === 12 ? 45000 : 22000;
 														return (
 															<div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mt-2">
 																Save ₹{savings.toLocaleString()}
@@ -1045,24 +1045,24 @@ const Index = () => {
 													<p className="text-2xl md:text-3xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
 														INR {(() => {
 															const duration = parseInt(selectedDuration);
-															if (duration === 6) return '24,000';
-															if (duration === 12) return '40,000';
-															return '24,000'; // Default to 6 months pricing
+															if (duration === 6) return '30,000';
+															if (duration === 12) return '54,000';
+															return '30,000'; // Default to 6 months pricing
 														})()}
 													</p>
 													{/* Original Price - Crossed Out - Always show for discounted plans */}
 													<p className="text-lg text-gray-500 line-through mt-1">
 														INR {(() => {
 															const duration = parseInt(selectedDuration);
-															if (duration === 6) return '30,000';
-															if (duration === 12) return '60,000';
-															return '30,000'; // Default to 6 months original pricing
+															if (duration === 6) return '80,000';
+															if (duration === 12) return '1,50,000';
+															return '80,000'; // Default to 6 months original pricing
 														})()}
 													</p>
 													{/* Savings Badge - Always show since all plans have savings */}
 													{(() => {
 														const duration = parseInt(selectedDuration);
-														const savings = duration === 6 ? 6000 : duration === 12 ? 20000 : 6000;
+														const savings = duration === 6 ? 50000 : duration === 12 ? 96000 : 50000;
 														return (
 															<span className="bg-green-100 text-green-800 px-2 py-1 rounded-md text-sm font-medium">
 																Save INR {savings.toLocaleString()}

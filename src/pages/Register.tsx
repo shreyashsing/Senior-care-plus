@@ -493,13 +493,13 @@ const Register = () => {
       const originalPrice = (() => {
         const duration = parseInt(finalDuration);
         if (finalPlanType === 'single') {
-          if (duration === 6) return 12000;
-          if (duration === 12) return 20000;
-          return 12000; // Default to 6 months pricing
+          if (duration === 6) return 18000;
+          if (duration === 12) return 30000;
+          return 18000; // Default to 6 months pricing
         } else {
-          if (duration === 6) return 24000;
-          if (duration === 12) return 40000;
-          return 24000; // Default to 6 months pricing
+          if (duration === 6) return 30000;
+          if (duration === 12) return 54000;
+          return 30000; // Default to 6 months pricing
         }
       })();
 
@@ -681,13 +681,13 @@ const Register = () => {
                         INR {currentPlanInfo.price?.toLocaleString() || (() => {
                           const duration = parseInt(currentPlanInfo.duration);
                           if (currentPlanInfo.type === 'single') {
-                            if (duration === 6) return '12,000';
-                            if (duration === 12) return '20,000';
-                            return '12,000'; // Default to 6 months pricing
+                            if (duration === 6) return '18,000';
+                            if (duration === 12) return '30,000';
+                            return '18,000'; // Default to 6 months pricing
                           } else {
-                            if (duration === 6) return '24,000';
-                            if (duration === 12) return '40,000';
-                            return '24,000'; // Default to 6 months pricing
+                            if (duration === 6) return '30,000';
+                            if (duration === 12) return '54,000';
+                            return '30,000'; // Default to 6 months pricing
                           }
                         })()}
                       </p>
@@ -698,13 +698,13 @@ const Register = () => {
                         Save ₹{(() => {
                           const duration = parseInt(currentPlanInfo.duration);
                           if (currentPlanInfo.type === 'single') {
-                            if (duration === 6) return '3,000';
-                            if (duration === 12) return '10,000';
-                            return '3,000';
+                            if (duration === 6) return '22,000';
+                            if (duration === 12) return '45,000';
+                            return '22,000';
                           } else {
-                            if (duration === 6) return '6,000';
-                            if (duration === 12) return '20,000';
-                            return '6,000';
+                            if (duration === 6) return '50,000';
+                            if (duration === 12) return '96,000';
+                            return '50,000';
                           }
                         })()}
                       </div>
@@ -809,13 +809,13 @@ const Register = () => {
                           INR {(() => {
                             const duration = parseInt(selectedDuration);
                             if (selectedPlan === 'single') {
-                              if (duration === 6) return '12,000';
-                              if (duration === 12) return '20,000';
-                              return '12,000'; // Default to 6 months pricing
+                              if (duration === 6) return '18,000';
+                              if (duration === 12) return '30,000';
+                              return '18,000'; // Default to 6 months pricing
                             } else {
-                              if (duration === 6) return '24,000';
-                              if (duration === 12) return '40,000';
-                              return '24,000'; // Default to 6 months pricing
+                              if (duration === 6) return '30,000';
+                              if (duration === 12) return '54,000';
+                              return '30,000'; // Default to 6 months pricing
                             }
                           })()}
                         </p>
@@ -826,13 +826,13 @@ const Register = () => {
                           Save ₹{(() => {
                             const duration = parseInt(selectedDuration);
                             if (selectedPlan === 'single') {
-                              if (duration === 6) return '3,000';
-                              if (duration === 12) return '10,000';
-                              return '3,000';
+                              if (duration === 6) return '22,000';
+                              if (duration === 12) return '45,000';
+                              return '22,000';
                             } else {
-                              if (duration === 6) return '6,000';
-                              if (duration === 12) return '20,000';
-                              return '6,000';
+                              if (duration === 6) return '50,000';
+                              if (duration === 12) return '96,000';
+                              return '50,000';
                             }
                           })()}
                         </div>
@@ -854,13 +854,13 @@ const Register = () => {
                             price: (() => {
                               const duration = parseInt(selectedDuration);
                               if (selectedPlan === 'single') {
-                                if (duration === 6) return 12000;
-                                if (duration === 12) return 20000;
-                                return 12000; // Default to 6 months pricing
+                                if (duration === 6) return 18000;
+                                if (duration === 12) return 30000;
+                                return 18000; // Default to 6 months pricing
                               } else {
-                                if (duration === 6) return 24000;
-                                if (duration === 12) return 40000;
-                                return 24000; // Default to 6 months pricing
+                                if (duration === 6) return 30000;
+                                if (duration === 12) return 54000;
+                                return 30000; // Default to 6 months pricing
                               }
                             })()
                           };
@@ -967,13 +967,13 @@ const Register = () => {
                             ₹{(() => {
                               const duration = parseInt(selectedDuration);
                               if (selectedPlan === 'single') {
-                                if (duration === 6) return '12,000';
-                                if (duration === 12) return '20,000';
-                                return '12,000';
+                                if (duration === 6) return '40,000';
+                                if (duration === 12) return '75,000';
+                                return '40,000';
                               } else {
-                                if (duration === 6) return '24,000';
-                                if (duration === 12) return '40,000';
-                                return '24,000';
+                                if (duration === 6) return '80,000';
+                                if (duration === 12) return '1,50,000';
+                                return '80,000';
                               }
                             })()}
                           </span>
@@ -984,8 +984,8 @@ const Register = () => {
                             -₹{(() => {
                               const duration = parseInt(selectedDuration);
                               const originalPrice = selectedPlan === 'single' 
-                                ? (duration === 6 ? 12000 : duration === 12 ? 20000 : 12000)
-                                : (duration === 6 ? 24000 : duration === 12 ? 40000 : 24000);
+                                ? (duration === 6 ? 18000 : duration === 12 ? 30000 : 18000)
+                                : (duration === 6 ? 30000 : duration === 12 ? 54000 : 30000);
                               const discount = originalPrice * (appliedCoupon.discount / 100);
                               return discount.toLocaleString();
                             })()}
@@ -997,8 +997,8 @@ const Register = () => {
                             ₹{(() => {
                               const duration = parseInt(selectedDuration);
                               const originalPrice = selectedPlan === 'single' 
-                                ? (duration === 6 ? 12000 : duration === 12 ? 20000 : 12000)
-                                : (duration === 6 ? 24000 : duration === 12 ? 40000 : 24000);
+                                ? (duration === 6 ? 18000 : duration === 12 ? 30000 : 18000)
+                                : (duration === 6 ? 30000 : duration === 12 ? 54000 : 30000);
                               const finalPrice = calculateFinalPrice(originalPrice);
                               return finalPrice.toLocaleString();
                             })()}

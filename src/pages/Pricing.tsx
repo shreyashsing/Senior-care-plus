@@ -82,8 +82,8 @@ export function Pricing() {
 
   const getPricing = (plan: 'single' | 'couple', duration: 6 | 12) => {
     const prices = {
-      single: { 6: 12000, 12: 20000 },
-      couple: { 6: 24000, 12: 40000 }
+      single: { 6: 18000, 12: 30000 },
+      couple: { 6: 30000, 12: 54000 }
     }
     return prices[plan][duration]
   }
@@ -91,8 +91,8 @@ export function Pricing() {
   const getOriginalPrice = (plan: 'single' | 'couple', duration: 6 | 12) => {
     // Show higher "original" prices to demonstrate value
     const originalPrices = {
-      single: { 6: 15000, 12: 30000 },
-      couple: { 6: 30000, 12: 60000 }
+      single: { 6: 40000, 12: 75000 },
+      couple: { 6: 80000, 12: 150000 }
     }
     return originalPrices[plan][duration]
   }
@@ -361,13 +361,13 @@ export function Pricing() {
                   </tr>
                   <tr>
                     <td className="px-6 py-4 text-sm text-gray-900">6-Month Plan Price</td>
-                    <td className="px-6 py-4 text-center text-sm font-medium text-gray-900">₹12,000</td>
-                    <td className="px-6 py-4 text-center text-sm font-medium text-gray-900">₹24,000</td>
+                    <td className="px-6 py-4 text-center text-sm font-medium text-gray-900">₹18,000</td>
+                    <td className="px-6 py-4 text-center text-sm font-medium text-gray-900">₹30,000</td>
                   </tr>
                   <tr className="bg-gray-50">
                     <td className="px-6 py-4 text-sm text-gray-900">12-Month Plan Price</td>
-                    <td className="px-6 py-4 text-center text-sm font-medium text-gray-900">₹20,000</td>
-                    <td className="px-6 py-4 text-center text-sm font-medium text-gray-900">₹40,000</td>
+                    <td className="px-6 py-4 text-center text-sm font-medium text-gray-900">₹30,000</td>
+                    <td className="px-6 py-4 text-center text-sm font-medium text-gray-900">₹54,000</td>
                   </tr>
                 </tbody>
               </table>
