@@ -218,7 +218,7 @@ const CancellationRefundPolicy = () => {
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
                         <p className="text-emerald-800 font-semibold">Customer Support</p>
-                        <p className="text-emerald-700">Email: support@seniorcareplus.com</p>
+                        <p className="text-emerald-700">Email: support@seniorcareplus.in</p>
                         <p className="text-emerald-700">Phone: +91 9975567202</p>
                         <p className="text-emerald-700 text-sm mt-2">Available: Mon-Fri, 9 AM - 6 PM IST</p>
                       </div>

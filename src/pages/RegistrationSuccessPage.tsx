@@ -118,7 +118,7 @@ export function RegistrationSuccessPage() {
             </div>
             <div>
               <p className="font-semibold text-emerald-700">Email Support</p>
-              <p className="text-emerald-600">support@seniorcareplus.com</p>
+              <p className="text-emerald-600">support@seniorcareplus.in</p>
             </div>
             <div>
               <p className="font-semibold text-emerald-700">WhatsApp</p>
