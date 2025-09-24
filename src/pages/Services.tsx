@@ -134,11 +134,12 @@ const Services = () => {
     const additionalBenefits = [
       "Doctor Visits at Home",
       "Monthly Medicine Refills",
-      "Blood Investigations at Home",
+      "Blood Investigations at Home from NABL Accredited Labs",
       "Physiotherapy at Home",
       "Home Nursing/Ward Boy Service",
       "ICU Setup at Home",
       "Patient Care Equipment",
+      "OPD Services at Partner Hospitals/Clinics",
       "Short-term Geriatric Care Center Stays"
     ];
 
@@ -196,7 +197,7 @@ const Services = () => {
                   </div>
                   <div>
                     <h4 className="text-lg font-bold text-gray-900">ADDITIONAL BENEFITS</h4>
-                    <p className="text-xs text-gray-600 font-medium">PAID (heavily discounted rates)</p>
+                    <p className="text-xs text-gray-600 font-medium">PAID (discounted rates)</p>
                   </div>
                 </div>
                 <ul className="space-y-3">

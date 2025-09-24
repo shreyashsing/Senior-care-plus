@@ -66,12 +66,12 @@ const Navbar: React.FC<NavbarProps> = ({ isHomePage = false }) => {
               About Us
             </button>
             
-            <button
+            {/* <button
               onClick={() => navigate('/partners')}
               className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
             >
               Partners
-            </button>
+            </button> */}
             
             <button
               onClick={() => navigate('/services')}

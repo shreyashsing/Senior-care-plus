@@ -8,7 +8,7 @@ import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import Index from "./pages/Index";
 import Register from "./pages/Register";
 import AboutUs from "./pages/AboutUs";
-import Partners from "./pages/Partners";
+//import Partners from "./pages/Partners";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import Pricing from "./pages/Pricing";
@@ -42,7 +42,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<AboutUs />} />
-              <Route path="/partners" element={<Partners />} />
+              {/* <Route path="/partners" element={<Partners />} /> */}
               <Route path="/services" element={<Services />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/contact" element={<Contact />} />
