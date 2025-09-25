@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/button'
 import { ECard } from '../components/ECard'
 import { CheckCircle, Home, ArrowLeft } from 'lucide-react'
+import Footer from '@/components/Footer'
 
 interface RegistrationSuccessData {
   patients: Array<{
@@ -153,6 +154,7 @@ export function RegistrationSuccessPage() {
           </p>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

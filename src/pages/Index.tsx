@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Play, Plus, Check, Monitor, Home, Building2, Phone, Car, Plane, Droplets, Pill, Calendar, RefreshCw, Clock, Heart, Brain, Dumbbell, UtensilsCrossed, UserCheck, Stethoscope, Ambulance, TestTube, Truck, Shield, Users, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Play, Plus, Check, Monitor, Home, Building2, Phone, Car, Plane, Droplets, Pill, Calendar, RefreshCw, Clock, Heart, Brain, Dumbbell, UtensilsCrossed, UserCheck, Stethoscope, Ambulance, TestTube, Truck, Shield, Users, MapPin, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -838,6 +838,18 @@ const Index = () => {
 							</div>
 						</div>
 					</div>
+				</div>
+
+				{/* View More Button - Centered across full section width */}
+				<div className="flex justify-center mt-12">
+					<Link to="/services">
+						<Button 
+							className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center gap-2"
+						>
+							View More Services
+							<ChevronRight className="w-4 h-4" />
+						</Button>
+					</Link>
 				</div>
 			</div>
 		</section>

@@ -13,6 +13,7 @@ import { toast } from '@/components/ui/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { createPatient, createCarePlan } from '../lib/patientService';
 import { RazorpayPaymentService } from '../lib/razorpayPaymentService';
+import Footer from '@/components/Footer';
 
 interface FormData {
   // Personal Information
@@ -1752,6 +1753,7 @@ const Register = () => {
         </form>
       </div>
       <Toaster />
+      <Footer />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, Download, Home, Loader2 } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import { Toaster } from '@/components/ui/toaster';
+import Footer from '@/components/Footer';
 
 const PaymentSuccess: React.FC = () => {
   const navigate = useNavigate();
@@ -205,6 +206,7 @@ const PaymentSuccess: React.FC = () => {
         </Card>
       </div>
       <Toaster />
+      <Footer />
     </div>
   );
 };

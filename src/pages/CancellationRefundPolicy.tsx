@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, RefreshCw, Clock, AlertCircle, CheckCircle, XCircle, DollarSign, Calendar } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const CancellationRefundPolicy = () => {
   const navigate = useNavigate();
@@ -245,6 +246,8 @@ const CancellationRefundPolicy = () => {
           </div>
         </section>
       </div>
+      
+      <Footer />
     </>
   );
 };

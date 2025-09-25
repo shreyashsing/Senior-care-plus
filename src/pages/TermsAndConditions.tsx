@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, FileText, Shield, Clock, Users, AlertTriangle } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const TermsAndConditions = () => {
   const navigate = useNavigate();
@@ -280,6 +281,8 @@ const TermsAndConditions = () => {
           </div>
         </section>
       </div>
+      
+      <Footer />
     </>
   );
 };

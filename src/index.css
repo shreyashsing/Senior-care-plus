@@ -99,12 +99,13 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
-    font-family: 'Helvetica', 'Arial', sans-serif;
-  }
-  
-  html {
     font-family: 'Helvetica', 'Arial', sans-serif;
   }
 }

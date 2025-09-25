@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Shield, Lock, Eye, Users, Database, AlertTriangle } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const PrivacyPolicy = () => {
   const navigate = useNavigate();
@@ -316,6 +317,8 @@ const PrivacyPolicy = () => {
           </div>
         </section>
       </div>
+      
+      <Footer />
     </>
   );
 };
