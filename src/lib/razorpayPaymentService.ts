@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { createPatient, createCarePlan } from './patientService'
+import { createFamilyMembers, createCarePlan } from './multiMemberPatientService'
 
 // Types
 interface PaymentOrder {
@@ -145,29 +145,32 @@ export class RazorpayPaymentService {
             if (paymentPatientData.patientData?.length > 0) {
               console.log('🔍 Payment handler - patientData array:', JSON.stringify(paymentPatientData.patientData, null, 2));
               
-              // Create patients individually since createPatient expects single patient object
+              // Create all family members (primary + co-members) at once
               try {
-                for (const patientData of paymentPatientData.patientData) {
-                  console.log('🔍 Processing individual patient:', JSON.stringify(patientData, null, 2));
-                  const patientId = await createPatient(patientData)
-                  console.log('✅ Patient created with ID:', patientId);
-                  patientIds.push(patientId)
-                }
-                console.log('✅ All patients created. Patient IDs:', patientIds);
+                console.log('🔍 Creating family group with', paymentPatientData.patientData.length, 'members');
+                patientIds = await createFamilyMembers(paymentPatientData.patientData);
+                console.log('✅ All family members created. Patient IDs:', patientIds);
               } catch (patientError) {
-                console.error('❌ Error creating patients:', patientError);
+                console.error('❌ Error creating family members:', patientError);
                 throw patientError; // Re-throw to trigger error callback
               }
               
               if (patientIds.length > 0) {
-                // Determine plan type based on number of patients or planType
-                const planType = paymentPatientData.planType.toLowerCase().includes('couple') ? 'couple' : 'single'
+                // Extract plan details from order or payment data
+                const planType = paymentPatientData.planType; // Should be 'basic', 'advance', or 'premium'
+                const duration = '12'; // Default duration, should get from order metadata
+                const planPrice = order.amount; // Payment amount
+                
+                console.log('🔍 Creating care plan:', { planType, duration, planPrice });
                 
                 await createCarePlan(
-                  planType as 'single' | 'couple',
-                  'monthly', // Default duration, you might want to get this from order
-                  order.amount // Use the payment amount as price
-                )
+                  planType,
+                  duration,
+                  planPrice,
+                  patientIds
+                );
+                
+                console.log('✅ Care plan created and linked to all family members');
               }
             }
 

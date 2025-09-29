@@ -12,8 +12,9 @@ interface RegistrationSuccessData {
     dateOfBirth: string
     sex: string
     phoneNumber: string
+    memberType?: string
   }>
-  planType: 'single' | 'couple'
+  planType: 'basic' | 'advance' | 'premium'
   duration: string
   price: number
 }
@@ -35,10 +36,24 @@ export function RegistrationSuccessPage() {
 
   const { 
     patients = [], 
-    planType = 'single', 
+    planType = 'basic', 
     duration = '12', 
     price = 0 
   } = registrationData
+
+  // Helper function to get member label
+  const getMemberLabel = (patient: any, index: number) => {
+    if (patient.memberType === 'primary') return 'Primary Member';
+    if (patient.memberType === 'co-member') return `Co-Member ${index}`;
+    return `Member ${index + 1}`; // Fallback
+  };
+
+  // Plan name mapping
+  const planNames = {
+    'basic': 'Basic Care Plan',
+    'advance': 'Advance Care Plan', 
+    'premium': 'Premium Care Plan'
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50 py-8">
@@ -56,7 +71,7 @@ export function RegistrationSuccessPage() {
           </p>
           <div className="bg-emerald-100 inline-block px-6 py-2 rounded-full">
             <p className="text-emerald-800 font-semibold">
-              {planType === 'single' ? 'Single Parent' : 'Both Parents'} Plan - {duration} Month{parseInt(duration || '6') > 1 ? 's' : ''} | ₹{Number(price || 0).toLocaleString()}
+              {planNames[planType]} - {duration} Month{parseInt(duration || '6') > 1 ? 's' : ''} | ₹{Number(price || 0).toLocaleString()}
             </p>
           </div>
         </div>
@@ -66,15 +81,28 @@ export function RegistrationSuccessPage() {
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
             Your Healthcare E-Card{patients.length > 1 ? 's' : ''}
           </h2>
+          <p className="text-center text-gray-600 mb-6">
+            {patients.length} member{patients.length > 1 ? 's' : ''} registered under {planNames[planType]}
+          </p>
           
-          <div className={`grid gap-8 ${patients.length > 1 ? 'md:grid-cols-2' : 'justify-center'}`}>
+          <div className={`grid gap-8 ${patients.length > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'justify-center'}`}>
             {patients.map((patient, index) => (
               <div key={patient.seniorCareId} className="flex flex-col items-center">
-                {patients.length > 1 && (
-                  <h3 className="text-lg font-semibold text-gray-700 mb-4">
-                    Parent {index + 1}
+                <div className="mb-4 text-center">
+                  <h3 className="text-lg font-semibold text-gray-700">
+                    {getMemberLabel(patient, index)}
                   </h3>
-                )}
+                  {patient.memberType === 'primary' && (
+                    <span className="inline-block bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full mt-1">
+                      Plan Holder
+                    </span>
+                  )}
+                  {patient.memberType === 'co-member' && (
+                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mt-1">
+                      Family Member
+                    </span>
+                  )}
+                </div>
                 <ECard patient={patient} />
               </div>
             ))}

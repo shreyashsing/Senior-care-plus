@@ -7,7 +7,7 @@ import { PatientAuthProvider } from "./contexts/PatientAuthContext";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import ScrollToTop from "./components/ScrollToTop";
 import Index from "./pages/Index";
-import Register from "./pages/Register";
+import MultiMemberRegister from "./pages/MultiMemberRegister";
 import AboutUs from "./pages/AboutUs";
 //import Partners from "./pages/Partners";
 import Services from "./pages/Services";
@@ -28,6 +28,7 @@ import ContactManagement from "./pages/admin/ContactManagement";
 import { RequireAdminAuth } from "./components/admin/RequireAdminAuth";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Blog from "./pages/Blog";
 import CancellationRefundPolicy from "./pages/CancellationRefundPolicy";
 
 const queryClient = new QueryClient();
@@ -46,9 +47,10 @@ const App = () => (
               <Route path="/about" element={<AboutUs />} />
               {/* <Route path="/partners" element={<Partners />} /> */}
               <Route path="/services" element={<Services />} />
+              <Route path="/blog" element={<Blog />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/register" element={<MultiMemberRegister />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/cancellation-refund-policy" element={<CancellationRefundPolicy />} />
