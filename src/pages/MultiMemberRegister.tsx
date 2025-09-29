@@ -296,17 +296,12 @@ const MultiMemberRegister = () => {
   const validateMemberForm = (memberData: MemberFormData): { isValid: boolean; errors: FormErrors } => {
     const errors: FormErrors = {};
     
-    // Required fields validation
+    // Required fields validation (only essential information fields)
     if (!memberData.name.trim()) errors.name = 'Name is required';
     if (!memberData.dateOfBirth) errors.dateOfBirth = 'Date of birth is required';
     if (!memberData.sex) errors.sex = 'Sex is required';
     if (!memberData.selfCellNumber.trim()) errors.selfCellNumber = 'Mobile number is required';
-    if (!memberData.emailId.trim()) errors.emailId = 'Email is required';
     if (!memberData.emergencyContactNo.trim()) errors.emergencyContactNo = 'Emergency contact is required';
-    if (!memberData.emergencyNameAndRelation.trim()) errors.emergencyNameAndRelation = 'Emergency contact relation is required';
-    if (!memberData.houseNo.trim()) errors.houseNo = 'House number is required';
-    if (!memberData.city.trim()) errors.city = 'City is required';
-    if (!memberData.district.trim()) errors.district = 'District is required';
     if (!memberData.pinCode.trim()) errors.pinCode = 'Pin code is required';
     if (!memberData.disclaimerAccepted) errors.disclaimerAccepted = 'You must accept the disclaimer';
     
