@@ -7,7 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, FileText, AlertTriangle, Users, User, ChevronDown, ArrowRight, ArrowLeft as ArrowLeftIcon, CheckCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { ArrowLeft, FileText, AlertTriangle, Users, User, ChevronDown, ArrowRight, ArrowLeft as ArrowLeftIcon, CheckCircle, Star } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
 import { Toaster } from '@/components/ui/toaster';
@@ -99,8 +100,8 @@ const Register = () => {
   // State for current plan info (can be updated when plan is selected)
   const [currentPlanInfo, setCurrentPlanInfo] = useState(initialPlanInfo);
   
-  const [selectedPlan, setSelectedPlan] = useState<string>(initialPlanInfo?.type || '');
-  const [selectedDuration, setSelectedDuration] = useState<string>(initialPlanInfo?.duration || '');
+  const [selectedPlan, setSelectedPlan] = useState<'basic' | 'advance' | 'premium' | ''>(initialPlanInfo?.type || '');
+  const [selectedDuration, setSelectedDuration] = useState<6 | 12>(initialPlanInfo?.duration ? (parseInt(initialPlanInfo.duration) as 6 | 12) : 6);
   const [showPlanSelection, setShowPlanSelection] = useState<boolean>(!initialPlanInfo);
   const [planJustSelected, setPlanJustSelected] = useState<boolean>(false);
   
@@ -113,12 +114,26 @@ const Register = () => {
   const availableCoupons = {
     'TEST999': { discount: 99.9, description: 'Test coupon - 99.9% off' }
   };
+
+  // New pricing structure based on the provided image
+  const pricingPlans = {
+    6: {
+      basic: { price: 3000, title: "Basic" },
+      advance: { price: 6000, title: "Advance" },
+      premium: { price: 18000, title: "Premium" }
+    },
+    12: {
+      basic: { price: 5000, title: "Basic" },
+      advance: { price: 10000, title: "Advance" },
+      premium: { price: 30000, title: "Premium" }
+    }
+  };
   
   // Initialize selectedPlan and selectedDuration from initialPlanInfo if available
   useEffect(() => {
     if (initialPlanInfo) {
-      setSelectedPlan(initialPlanInfo.type);
-      setSelectedDuration(initialPlanInfo.duration);
+      setSelectedPlan(initialPlanInfo.type as 'basic' | 'advance' | 'premium');
+      setSelectedDuration(parseInt(initialPlanInfo.duration) as 6 | 12);
     }
   }, [initialPlanInfo]);
   const [expandedSections, setExpandedSections] = useState({
@@ -145,7 +160,7 @@ const Register = () => {
     // Reset plan selection state to ensure no defaults
     if (!initialPlanInfo) {
       setSelectedPlan('');
-      setSelectedDuration('');
+      setSelectedDuration(6);
       setCurrentPlanInfo(null);
       setShowPlanSelection(true);
     }
@@ -207,41 +222,25 @@ const Register = () => {
 
   // Get current form data and errors based on plan type and current parent
   const getCurrentFormData = () => {
-    if (selectedPlan === 'couple') {
-      return currentParentIndex === 0 ? parent1FormData : parent2FormData;
-    }
+    // All plans now use single form data
+    return formData;
     return formData;
   };
 
   const getCurrentErrors = () => {
-    if (selectedPlan === 'couple') {
-      return currentParentIndex === 0 ? parent1Errors : parent2Errors;
-    }
+    // All plans now use single error state
+    return errors;
     return errors;
   };
 
   const setCurrentFormData = (data: FormData) => {
-    if (selectedPlan === 'couple') {
-      if (currentParentIndex === 0) {
-        setParent1FormData(data);
-      } else {
-        setParent2FormData(data);
-      }
-    } else {
-      setFormData(data);
-    }
+    // All plans now use single form data
+    setFormData(data);
   };
 
   const setCurrentErrors = (errorData: FormErrors) => {
-    if (selectedPlan === 'couple') {
-      if (currentParentIndex === 0) {
-        setParent1Errors(errorData);
-      } else {
-        setParent2Errors(errorData);
-      }
-    } else {
-      setErrors(errorData);
-    }
+    // All plans now use single error state
+    setErrors(errorData);
   };
 
   const handleInputChange = (field: keyof FormData, value: string) => {
@@ -322,11 +321,9 @@ const Register = () => {
     if (!currentData.selfCellNumber) newErrors.selfCellNumber = 'Cell number is required';
     if (!currentData.emergencyContactNo) newErrors.emergencyContactNo = 'Emergency contact is required';
     
-    // Disclaimer is only required for Parent 2 in Both Parents plan, or for Single Parent
-    if ((selectedPlan === 'couple' && currentParentIndex === 1) || selectedPlan === 'single') {
-      if (!currentData.disclaimerAccepted) {
-        newErrors.disclaimerAccepted = 'You must accept the disclaimer to continue';
-      }
+    // Disclaimer is always required
+    if (!currentData.disclaimerAccepted) {
+      newErrors.disclaimerAccepted = 'You must accept the disclaimer to continue';
     }
     
     // Validate "Other" past condition if selected
@@ -339,19 +336,7 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleMoveToSecondParent = () => {
-    if (validateCurrentForm()) {
-      setCurrentParentIndex(1);
-      // Scroll to top of form
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handleBackToFirstParent = () => {
-    setCurrentParentIndex(0);
-    // Scroll to top of form
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // Removed couple navigation functions as they're no longer needed
 
   // Helper function to validate form data
   const validateFormData = (data: FormData, isParent2: boolean = false): boolean => {
@@ -449,60 +434,20 @@ const Register = () => {
         return;
       }
 
-      // For Both Parents, validate both forms
-      if (finalPlanType === 'couple') {
-        // Validate Parent 1 (disclaimer not required)
-        const parent1Valid = validateFormData(parent1FormData, false);
-        if (!parent1Valid) {
-          setCurrentParentIndex(0);
-          toast({
-            title: "Parent 1 Form Incomplete",
-            description: "Please complete Parent 1's information before submitting.",
-            variant: "destructive",
-          });
-          setIsSubmitting(false);
-          return;
-        }
-
-        // Validate Parent 2 (disclaimer required)
-        const parent2Valid = validateFormData(parent2FormData, true);
-        if (!parent2Valid) {
-          setCurrentParentIndex(1);
-          toast({
-            title: "Parent 2 Form Incomplete",
-            description: "Please complete Parent 2's information and accept the disclaimer before submitting.",
-            variant: "destructive",
-          });
-          setIsSubmitting(false);
-          return;
-        }
-      } else {
-        // For Single Parent, validate the single form (disclaimer required)
-        const singleValid = validateFormData(formData, true);
-        if (!singleValid) {
-          toast({
-            title: "Form Incomplete",
-            description: "Please fill in all required fields and accept the disclaimer.",
-            variant: "destructive",
-          });
-          setIsSubmitting(false);
-          return;
-        }
+      // Validate the single form (disclaimer required for all plans)
+      const singleValid = validateFormData(formData, true);
+      if (!singleValid) {
+        toast({
+          title: "Form Incomplete",
+          description: "Please fill in all required fields and accept the disclaimer.",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
       }
 
-      // Calculate price based on selected plan and duration
-      const originalPrice = (() => {
-        const duration = parseInt(finalDuration);
-        if (finalPlanType === 'single') {
-          if (duration === 6) return 18000;
-          if (duration === 12) return 30000;
-          return 18000; // Default to 6 months pricing
-        } else {
-          if (duration === 6) return 30000;
-          if (duration === 12) return 54000;
-          return 30000; // Default to 6 months pricing
-        }
-      })();
+      // Calculate price based on selected plan and duration using new pricing structure
+      const originalPrice = pricingPlans[parseInt(finalDuration) as 6 | 12][finalPlanType as 'basic' | 'advance' | 'premium']?.price || 0;
 
       // Apply coupon discount if available
       const finalPrice = calculateFinalPrice(originalPrice);
@@ -513,10 +458,8 @@ const Register = () => {
         console.log('💸 Final Price after discount:', finalPrice);
       }
 
-      // Prepare patient data array for payment
-      const patientDataArray = finalPlanType === 'couple' 
-        ? [parent1FormData, parent2FormData]
-        : [formData];
+      // Prepare patient data array for payment (all plans now use single form)
+      const patientDataArray = [formData];
 
       console.log('🚀 Creating payment order...');
 
@@ -612,17 +555,17 @@ const Register = () => {
 
   // Get member title and description
   const getMemberTitle = () => {
-    if (selectedPlan === 'couple') {
-      return `Parent ${currentParentIndex + 1} Registration`;
+    if (selectedPlan) {
+      return `${pricingPlans[selectedDuration][selectedPlan as 'basic' | 'advance' | 'premium']?.title || 'Plan'} Registration`;
     }
-    return 'Member Registration';
+    return 'Healthcare Plan Registration';
   };
 
   const getMemberDescription = () => {
-    if (selectedPlan === 'couple') {
-      return `Complete Parent ${currentParentIndex + 1}'s information below. ${currentParentIndex === 0 ? 'After filling this form, you will proceed to Parent 2 where you will need to accept the disclaimer.' : 'Review both parents\' information and accept the disclaimer to submit.'}`;
+    if (selectedPlan) {
+      return `Complete your information below for the ${pricingPlans[selectedDuration][selectedPlan as 'basic' | 'advance' | 'premium']?.title || 'selected'} plan to get started with our comprehensive senior care services.`;
     }
-    return 'Complete the form below to get started with our comprehensive senior care services.';
+    return 'Select your healthcare plan and complete the registration form to get started with our comprehensive senior care services.';
   };
 
   // Get current form data and errors for rendering
@@ -676,41 +619,18 @@ const Register = () => {
                   <div className="flex items-center justify-between pr-12">
                     <div>
                       <h3 className="font-bold text-emerald-800 text-lg">
-                        {currentPlanInfo.type === 'single' ? 'Single Parent' : 'Both Parents'} - {currentPlanInfo.duration} Month{parseInt(currentPlanInfo.duration) > 1 ? 's' : ''}
+                        {pricingPlans[parseInt(currentPlanInfo.duration) as 6 | 12][currentPlanInfo.type as 'basic' | 'advance' | 'premium']?.title || currentPlanInfo.type} Plan - {currentPlanInfo.duration} Month{parseInt(currentPlanInfo.duration) > 1 ? 's' : ''}
                       </h3>
                       <p className="text-emerald-700 font-semibold text-xl">
-                        INR {currentPlanInfo.price?.toLocaleString() || (() => {
-                          const duration = parseInt(currentPlanInfo.duration);
-                          if (currentPlanInfo.type === 'single') {
-                            if (duration === 6) return '18,000';
-                            if (duration === 12) return '30,000';
-                            return '18,000'; // Default to 6 months pricing
-                          } else {
-                            if (duration === 6) return '30,000';
-                            if (duration === 12) return '54,000';
-                            return '30,000'; // Default to 6 months pricing
-                          }
-                        })()}
+                        INR {currentPlanInfo.price?.toLocaleString() || 'N/A'}
                       </p>
                     </div>
                     <div className="text-right">
-                      {/* Always show savings since we only have 6 and 12 month plans */}
-                      <div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-                        Save ₹{(() => {
-                          const duration = parseInt(currentPlanInfo.duration);
-                          if (currentPlanInfo.type === 'single') {
-                            if (duration === 6) return '22,000';
-                            if (duration === 12) return '45,000';
-                            return '22,000';
-                          } else {
-                            if (duration === 6) return '50,000';
-                            if (duration === 12) return '96,000';
-                            return '50,000';
-                          }
-                        })()}
+                      <div className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold mb-2">
+                        Selected Plan
                       </div>
                       <p className="text-xs text-emerald-600">
-                        Discounted price
+                        Primary + 2 Co-Members
                       </p>
                     </div>
                   </div>
@@ -721,7 +641,7 @@ const Register = () => {
                     onClick={() => {
                       setShowPlanSelection(true);
                       setSelectedPlan('');
-                      setSelectedDuration('');
+                      setSelectedDuration(6);
                     }}
                     className="text-emerald-600 hover:text-emerald-700 border-emerald-300 hover:border-emerald-400"
                   >
@@ -732,114 +652,136 @@ const Register = () => {
             ) : (
               // Show plan selection interface when accessing directly or when changing plan
               <>
-                <h2 className="text-xl font-semibold text-emerald-700 mb-4">Choose Your Plan</h2>
+                <h2 className="text-xl font-semibold text-emerald-700 mb-4">Choose Your Healthcare Plan</h2>
                 <p className="text-gray-600 mb-6">Select the plan that best fits your needs</p>
                 
-                {/* Plan Type Selection */}
-                <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                  <button
-                    onClick={() => setSelectedPlan('single')}
-                    className={`flex-1 px-6 py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
-                      selectedPlan === 'single'
-                        ? 'bg-emerald-600 text-white shadow-lg transform scale-105'
-                        : 'bg-gray-100 text-gray-700 hover:bg-emerald-50 hover:border-emerald-300 border-2 border-transparent'
-                    }`}
-                  >
-                    <div className="relative z-10">
-                      <div>Single Parent</div>
-                      <div className={`text-sm font-normal mt-1 ${
-                        selectedPlan === 'single' ? 'text-emerald-100' : 'text-gray-500'
-                      }`}>
-                        +2 family member(below 60)*
-                      </div>
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => setSelectedPlan('couple')}
-                    className={`flex-1 px-6 py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
-                      selectedPlan === 'couple'
-                        ? 'bg-emerald-600 text-white shadow-lg transform scale-105'
-                        : 'bg-gray-100 text-gray-700 hover:bg-emerald-50 hover:border-emerald-300 border-2 border-transparent'
-                    }`}
-                  >
-                    <div className="relative z-10">
-                      <div>Both Parents</div>
-                      <div className={`text-sm font-normal mt-1 ${
-                        selectedPlan === 'couple' ? 'text-emerald-100' : 'text-gray-500'
-                      }`}>
-                        +4 family member(below 60)*
-                      </div>
-                    </div>
-                  </button>
+                {/* Duration Toggle */}
+                <div className="flex justify-center mb-8">
+                  <div className="bg-gray-100 p-1 rounded-lg flex">
+                    <button
+                      onClick={() => setSelectedDuration(6)}
+                      className={`px-6 py-2 rounded-md font-medium transition-all duration-300 ${
+                        selectedDuration === 6
+                          ? 'bg-white text-emerald-600 shadow-md transform scale-105'
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      6 Months
+                    </button>
+                    <button
+                      onClick={() => setSelectedDuration(12)}
+                      className={`px-6 py-2 rounded-md font-medium transition-all duration-300 ${
+                        selectedDuration === 12
+                          ? 'bg-white text-emerald-600 shadow-md transform scale-105'
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      12 Months
+                    </button>
+                  </div>
                 </div>
 
-                {/* Duration Selection */}
-                {selectedPlan && (
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-3">Select Duration</label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {[
-                        { value: '6', label: '6 Months' },
-                        { value: '12', label: '12 Months' }
-                      ].map((option) => (
-                        <button
-                          key={option.value}
-                          onClick={() => setSelectedDuration(option.value)}
-                          className={`px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
-                            selectedDuration === option.value
-                              ? 'bg-emerald-600 text-white shadow-md'
-                              : 'bg-gray-100 text-gray-700 hover:bg-emerald-50 hover:border-emerald-300 border-2 border-transparent'
-                          }`}
-                        >
-                          {option.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {/* Subtitle */}
+                <div className="text-center mb-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-1">
+                    Primary Member + 2 Co-Member
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    {selectedDuration === 6 ? 'Six month' : 'Year'} (Rs)
+                  </p>
+                </div>
 
-                {/* Plan Summary */}
-                {selectedPlan && selectedDuration && (
+                {/* Pricing Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                  {/* Basic Plan */}
+                  <Card className={`relative transition-all duration-300 hover:shadow-lg cursor-pointer ${
+                    selectedPlan === 'basic' ? 'ring-2 ring-emerald-500 shadow-lg' : ''
+                  }`}
+                    onClick={() => setSelectedPlan('basic')}
+                  >
+                    <CardHeader className="text-center pb-4">
+                      <CardTitle className="text-xl font-bold text-gray-900 mb-2">
+                        Basic
+                      </CardTitle>
+                      <div className="text-2xl font-bold text-emerald-600 mb-1">
+                        ₹{pricingPlans[selectedDuration].basic.price.toLocaleString()}/-
+                      </div>
+                      <CardDescription className="text-gray-600 text-sm">
+                        Essential healthcare support
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+
+                  {/* Advance Plan */}
+                  <Card className={`relative transition-all duration-300 hover:shadow-lg cursor-pointer ${
+                    selectedPlan === 'advance' ? 'ring-2 ring-emerald-500 shadow-lg' : 'border-emerald-200'
+                  }`}
+                    onClick={() => setSelectedPlan('advance')}
+                  >
+                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                      <Badge className="bg-emerald-600 text-white px-3 py-1 text-xs">
+                        <Star className="w-3 h-3 mr-1" />
+                        Popular
+                      </Badge>
+                    </div>
+                    <CardHeader className="text-center pb-4">
+                      <CardTitle className="text-xl font-bold text-gray-900 mb-2">
+                        Advance
+                      </CardTitle>
+                      <div className="text-2xl font-bold text-emerald-600 mb-1">
+                        ₹{pricingPlans[selectedDuration].advance.price.toLocaleString()}/-
+                      </div>
+                      <CardDescription className="text-gray-600 text-sm">
+                        Enhanced care with additional services
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+
+                  {/* Premium Plan */}
+                  <Card className={`relative transition-all duration-300 hover:shadow-lg cursor-pointer ${
+                    selectedPlan === 'premium' ? 'ring-2 ring-emerald-500 shadow-lg' : ''
+                  }`}
+                    onClick={() => setSelectedPlan('premium')}
+                  >
+                    <CardHeader className="text-center pb-4">
+                      <CardTitle className="text-xl font-bold text-gray-900 mb-2">
+                        Premium
+                      </CardTitle>
+                      <div className="text-2xl font-bold text-emerald-600 mb-1">
+                        ₹{pricingPlans[selectedDuration].premium.price.toLocaleString()}/-
+                      </div>
+                      <CardDescription className="text-gray-600 text-sm">
+                        Complete comprehensive care
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </div>
+
+                {/* Extra Discount Notice */}
+                <div className="text-center mb-6">
+                  <div className="inline-block bg-yellow-100 border border-yellow-200 rounded-lg px-4 py-2">
+                    <p className="text-yellow-800 font-medium text-sm">
+                      Extra Discount for Initial 100 members
+                    </p>
+                  </div>
+                </div>
+
+                {/* Selected Plan Summary */}
+                {selectedPlan && (
                   <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-200">
                     <div className="flex items-center justify-between">
                       <div>
                         <h3 className="font-semibold text-emerald-800">
-                          {selectedPlan === 'single' ? 'Single Parent' : 'Both Parents'} - {selectedDuration} Month{parseInt(selectedDuration) > 1 ? 's' : ''}
+                          {pricingPlans[selectedDuration][selectedPlan].title} Plan - {selectedDuration} Month{selectedDuration > 1 ? 's' : ''}
                         </h3>
                         <p className="text-emerald-600 font-medium">
-                          INR {(() => {
-                            const duration = parseInt(selectedDuration);
-                            if (selectedPlan === 'single') {
-                              if (duration === 6) return '18,000';
-                              if (duration === 12) return '30,000';
-                              return '18,000'; // Default to 6 months pricing
-                            } else {
-                              if (duration === 6) return '30,000';
-                              if (duration === 12) return '54,000';
-                              return '30,000'; // Default to 6 months pricing
-                            }
-                          })()}
+                          INR {pricingPlans[selectedDuration][selectedPlan].price.toLocaleString()}
                         </p>
                       </div>
                       <div className="text-right">
-                        {/* Always show savings since we only have 6 and 12 month plans */}
-                        <div className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-                          Save ₹{(() => {
-                            const duration = parseInt(selectedDuration);
-                            if (selectedPlan === 'single') {
-                              if (duration === 6) return '22,000';
-                              if (duration === 12) return '45,000';
-                              return '22,000';
-                            } else {
-                              if (duration === 6) return '50,000';
-                              if (duration === 12) return '96,000';
-                              return '50,000';
-                            }
-                          })()}
+                        <div className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+                          Selected
                         </div>
-                        <p className="text-xs text-gray-500">
-                          Discounted price
-                        </p>
                       </div>
                     </div>
                     
@@ -850,20 +792,9 @@ const Register = () => {
                           setShowPlanSelection(false);
                           // Update the planInfo to reflect the selected plan
                           const updatedPlanInfo = {
-                            type: selectedPlan as 'single' | 'couple',
-                            duration: selectedDuration,
-                            price: (() => {
-                              const duration = parseInt(selectedDuration);
-                              if (selectedPlan === 'single') {
-                                if (duration === 6) return 18000;
-                                if (duration === 12) return 30000;
-                                return 18000; // Default to 6 months pricing
-                              } else {
-                                if (duration === 6) return 30000;
-                                if (duration === 12) return 54000;
-                                return 30000; // Default to 6 months pricing
-                              }
-                            })()
+                            type: selectedPlan,
+                            duration: selectedDuration.toString(),
+                            price: pricingPlans[selectedDuration][selectedPlan].price
                           };
                           // Store the selected plan in sessionStorage for persistence
                           sessionStorage.setItem('selectedPlanInfo', JSON.stringify(updatedPlanInfo));
@@ -877,7 +808,7 @@ const Register = () => {
                           // Show success toast
                           toast({
                             title: "Plan Selected! ✅",
-                            description: `${selectedPlan === 'single' ? 'Single Parent' : 'Both Parents'} plan for ${selectedDuration} month${parseInt(selectedDuration) > 1 ? 's' : ''} has been selected.`,
+                            description: `${pricingPlans[selectedDuration][selectedPlan].title} plan for ${selectedDuration} month${selectedDuration > 1 ? 's' : ''} has been selected.`,
                             duration: 3000,
                           });
                           
@@ -966,16 +897,11 @@ const Register = () => {
                           <span className="text-gray-600">Original Price:</span>
                           <span className="line-through text-gray-500">
                             ₹{(() => {
-                              const duration = parseInt(selectedDuration);
-                              if (selectedPlan === 'single') {
-                                if (duration === 6) return '40,000';
-                                if (duration === 12) return '75,000';
-                                return '40,000';
-                              } else {
-                                if (duration === 6) return '80,000';
-                                if (duration === 12) return '1,50,000';
-                                return '80,000';
+                              if (selectedPlan && pricingPlans[selectedDuration]) {
+                                const originalPrice = pricingPlans[selectedDuration][selectedPlan as 'basic' | 'advance' | 'premium']?.price || 0;
+                                return originalPrice.toLocaleString();
                               }
+                              return '0';
                             })()}
                           </span>
                         </div>
@@ -983,12 +909,12 @@ const Register = () => {
                           <span className="text-green-600 font-medium">Discount ({appliedCoupon.discount}%):</span>
                           <span className="text-green-600 font-medium">
                             -₹{(() => {
-                              const duration = parseInt(selectedDuration);
-                              const originalPrice = selectedPlan === 'single' 
-                                ? (duration === 6 ? 18000 : duration === 12 ? 30000 : 18000)
-                                : (duration === 6 ? 30000 : duration === 12 ? 54000 : 30000);
-                              const discount = originalPrice * (appliedCoupon.discount / 100);
-                              return discount.toLocaleString();
+                              if (selectedPlan && pricingPlans[selectedDuration]) {
+                                const originalPrice = pricingPlans[selectedDuration][selectedPlan as 'basic' | 'advance' | 'premium']?.price || 0;
+                                const discount = originalPrice * (appliedCoupon.discount / 100);
+                                return discount.toLocaleString();
+                              }
+                              return '0';
                             })()}
                           </span>
                         </div>
@@ -996,12 +922,12 @@ const Register = () => {
                           <span className="text-gray-800">Final Price:</span>
                           <span className="text-emerald-600">
                             ₹{(() => {
-                              const duration = parseInt(selectedDuration);
-                              const originalPrice = selectedPlan === 'single' 
-                                ? (duration === 6 ? 18000 : duration === 12 ? 30000 : 18000)
-                                : (duration === 6 ? 30000 : duration === 12 ? 54000 : 30000);
-                              const finalPrice = calculateFinalPrice(originalPrice);
-                              return finalPrice.toLocaleString();
+                              if (selectedPlan && pricingPlans[selectedDuration]) {
+                                const originalPrice = pricingPlans[selectedDuration][selectedPlan as 'basic' | 'advance' | 'premium']?.price || 0;
+                                const finalPrice = calculateFinalPrice(originalPrice);
+                                return finalPrice.toLocaleString();
+                              }
+                              return '0';
                             })()}
                           </span>
                         </div>
@@ -1015,30 +941,7 @@ const Register = () => {
           </div>
         )}
 
-        {/* Parent Navigation for Both Parents */}
-        {selectedPlan === 'couple' && !showPlanSelection && (
-          <div className="mb-6">
-            <Card className="bg-emerald-50 border-emerald-200">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${currentParentIndex === 0 ? 'bg-emerald-600 text-white' : 'bg-white text-emerald-600 border border-emerald-300'}`}>
-                      <User className="w-4 h-4" />
-                      <span className="font-medium">Parent 1</span>
-                    </div>
-                    <div className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${currentParentIndex === 1 ? 'bg-emerald-600 text-white' : 'bg-white text-emerald-600 border border-emerald-300'}`}>
-                      <User className="w-4 h-4" />
-                      <span className="font-medium">Parent 2</span>
-                    </div>
-                  </div>
-                  <div className="text-sm text-emerald-700">
-                    {currentParentIndex === 0 ? 'Filling Parent 1' : 'Filling Parent 2'}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Essential Information - Mandatory Fields */}
@@ -1049,10 +952,7 @@ const Register = () => {
                 Essential Information *
               </CardTitle>
               <CardDescription>
-                {selectedPlan === 'couple' && currentParentIndex === 0 
-                  ? 'Required fields for Parent 1. Disclaimer will appear in Parent 2\'s section.'
-                  : 'Required fields to complete your registration'
-                }
+                Required fields to complete your registration
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -1609,7 +1509,7 @@ const Register = () => {
           </Card>
 
           {/* Disclaimer - Only show for Both Parents on Parent 2, or for Single Parent */}
-          {(selectedPlan !== 'couple' || currentParentIndex === 1) && (
+          {selectedPlan && (
             <Card className="border-amber-200 bg-amber-50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-amber-800">
@@ -1670,84 +1570,37 @@ const Register = () => {
           )}
 
           {/* Form Submission Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {selectedPlan === 'couple' ? (
-              // Both Parents: Show navigation buttons
-              <>
-                {currentParentIndex === 0 ? (
-                  // Parent 1: Show "Move to Second Parent" button
-                  <Button
-                    type="button"
-                    onClick={handleMoveToSecondParent}
-                    className="px-8 py-4 text-lg font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
-                  >
-                    Move to Second Parent
-                    <ArrowRight className="w-5 h-5" />
-                  </Button>
-                ) : (
-                  // Parent 2: Show "Back to First Parent" and "Submit Both Parents" buttons
-                  <>
-                    <Button
-                      type="button"
-                      onClick={handleBackToFirstParent}
-                      variant="outline"
-                      className="px-8 py-4 text-lg font-semibold rounded-xl border-emerald-600 text-emerald-600 hover:bg-emerald-50 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
-                    >
-                      <ArrowLeftIcon className="w-5 h-5" />
-                      Back to First Parent
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={!parent2FormData.disclaimerAccepted || isSubmitting}
-                      className={`px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 ${
-                        parent2FormData.disclaimerAccepted && !isSubmitting
-                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl'
-                          : 'bg-gray-400 text-gray-200 cursor-not-allowed shadow-lg'
-                      }`}
-                    >
-                      {isSubmitting ? 'Processing Payment...' : 'Submit Both Parents'}
-                    </Button>
-                    {!parent2FormData.disclaimerAccepted && (
-                      <p className="text-amber-600 text-sm mt-2 text-center">
-                        Please accept the disclaimer above to submit both parents' information
-                      </p>
-                    )}
-                  </>
-                )}
-              </>
-            ) : (
-              // Single Parent: Show regular submit button
-              <>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex-shrink-0">
-                      <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="text-blue-800 font-semibold">Payment Required</h4>
-                      <p className="text-blue-700 text-sm">Your registration will be completed after successful payment. Your e-card will be generated once payment is confirmed.</p>
-                    </div>
-                  </div>
+          <div className="flex flex-col gap-4 justify-center">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <div className="flex items-center space-x-2">
+                <div className="flex-shrink-0">
+                  <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                  </svg>
                 </div>
-                <Button
-                  type="submit"
-                  disabled={!formData.disclaimerAccepted}
-                  className={`px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 ${
-                    formData.disclaimerAccepted
-                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl'
-                      : 'bg-gray-400 text-gray-200 cursor-not-allowed shadow-lg'
-                  }`}
-                >
-                  Make Payment
-                </Button>
-                {!formData.disclaimerAccepted && (
-                  <p className="text-amber-600 text-sm mt-2 text-center">
-                    Please accept the disclaimer above to proceed with payment
-                  </p>
-                )}
-              </>
+                <div>
+                  <h4 className="text-blue-800 font-semibold">Payment Required</h4>
+                  <p className="text-blue-700 text-sm">Your registration will be completed after successful payment. Your e-card will be generated once payment is confirmed.</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <Button
+                type="submit"
+                disabled={!formData.disclaimerAccepted || isSubmitting}
+                className={`px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 ${
+                  formData.disclaimerAccepted && !isSubmitting
+                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl'
+                    : 'bg-gray-400 text-gray-200 cursor-not-allowed shadow-lg'
+                }`}
+              >
+                {isSubmitting ? 'Processing Payment...' : 'Make Payment'}
+              </Button>
+            </div>
+            {!formData.disclaimerAccepted && (
+              <p className="text-amber-600 text-sm text-center">
+                Please accept the disclaimer above to proceed with payment
+              </p>
             )}
           </div>
         </form>

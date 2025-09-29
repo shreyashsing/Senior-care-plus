@@ -4,6 +4,7 @@ import { Play, Plus, Check, Monitor, Home, Building2, Phone, Car, Plane, Droplet
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import LogoCarousel from '@/components/LogoCarousel';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -420,7 +421,7 @@ const Index = () => {
 					Regular Health Updates
                     </h3>
                     <p className="text-white/90 text-sm md:text-base leading-relaxed">
-                      Managing health and emergencies from afar can be challenging without proper support systems.
+                      Managing health and emergencies after discharge can be challenging without a proper support system
                   </p>
                 </div>
                 </div>
@@ -1134,6 +1135,9 @@ const Index = () => {
 		</section>
 
 				
+
+			{/* Logo Carousel Section */}
+			<LogoCarousel />
 
 			{/* Optional Add-on Devices Section */}
 			<section className="relative bg-gradient-to-b from-gray-50 to-white py-16 md:py-24">

@@ -376,21 +376,6 @@ const AboutUs = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              onClick={() => navigate('/register')}
-              className="bg-emerald-600 text-white hover:bg-emerald-700 px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 flex items-center shadow-lg"
-            >
-              <BookOpen className="w-5 h-5 mr-2" />
-              Book a Free Consultation
-            </Button>
-            
-            <Button 
-              onClick={() => {/* Add download brochure functionality */}}
-              className="bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 flex items-center shadow-lg"
-            >
-              <Download className="w-5 h-5 mr-2" />
-              Download Brochure
-            </Button>
             
             <Button 
               onClick={() => {/* Add call functionality */}}

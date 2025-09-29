@@ -72,7 +72,7 @@ const Services = () => {
     {
       icon: Ambulance,
       title: "Ambulance Support",
-      description: "Get immediate ambulance support with professional paramedics. Enjoy the added convenience of free pick-up from your home and a smooth transfer to the hospital with continuous monitoring on the way."
+      description: "Get ambulance support with professional paramedics as soon as possible. Enjoy the added convenience of free pick-up from your home from partner hospitals."
     }
   ];
 
@@ -80,7 +80,7 @@ const Services = () => {
     {
       icon: UserCheck,
       title: "Smooth Admission",
-      description: "Streamline your hospital admission with personalized assistance. Skip the paperwork and avoid long lines with pre-filled forms and direct insurance verification for a seamless check-in experience."
+      description: "Streamline your hospital admission with personalized assistance."
       
     },
     {
@@ -113,7 +113,7 @@ const Services = () => {
     {
       icon: Home,
       title: "Post Discharge Follow-up",
-      description: "Our post-discharge care ensures that your recovery continues smoothly with regular check-ins, medication reminders, and professional guidance to prevent complications and aid in your healing process."
+      description: "Our post-discharge care ensures that your recovery continues smoothly with regular doctor calls, medication reminders, and professional guidance to prevent complications and aid in your healing process."
     }
   ];
 
@@ -126,7 +126,7 @@ const Services = () => {
       "Doctor's Appointment Coordination",
       "Seamless Hospital Admission Support",
       "Free Ambulance Service (partner hospitals)",
-      "Add family members (<60yrs) undersame plan.",
+      "Add family members (<55yrs) undersame plan.",
       "Free Anual Health Check-up",
       "Free Eye & Dental Check-up (every 6 month)"
     ];

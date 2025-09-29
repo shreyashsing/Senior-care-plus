@@ -22,85 +22,57 @@ import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 
 export function Pricing() {
-  const [selectedPlan, setSelectedPlan] = useState<'single' | 'couple'>('single')
   const [selectedDuration, setSelectedDuration] = useState<6 | 12>(6)
 
-  const planFeatures = {
-    single: {
-      title: "1 senior citizen",
-      subtitle: "Comprehensive healthcare coordination for one parent",
-      icon: User,
-      baseFeatures: [
-        "24/7 Emergency Support",
-        "Dedicated Care Coordinator",
-        "Hospital Selection Assistance",
-        "Pre-Admission Paperwork Support",
-        "Insurance Verification",
-        "Appointment Scheduling",
-        "Medical Record Management",
-        "Discharge Planning",
-        "Follow-up Care Coordination",
-        "Medication Management Support"
-      ],
-      premiumFeatures: [
-        "Priority Emergency Response",
-        "Specialist Doctor Referrals",
-        "Second Opinion Coordination",
-        "Home Healthcare Arrangements",
-        "Ambulance Support (Free pickup)",
-        "Family Communication Updates"
-      ]
+  // New pricing structure based on the provided image
+  const pricingPlans = {
+    6: {
+      basic: { price: 3000, title: "Basic" },
+      advance: { price: 6000, title: "Advance" },
+      premium: { price: 18000, title: "Premium" }
     },
-    couple: {
-      title: "2 senior citizens",
-      subtitle: "Complete healthcare coordination for both parents",
-      icon: Users,
-      baseFeatures: [
-        "24/7 Emergency Support for Both",
-        "Dual Care Coordinators",
-        "Hospital Selection for Multiple Conditions",
-        "Coordinated Pre-Admission for Both",
-        "Insurance Verification & Claims",
-        "Synchronized Appointment Scheduling",
-        "Comprehensive Medical Records",
-        "Joint Discharge Planning",
-        "Coordinated Follow-up Care",
-        "Dual Medication Management"
-      ],
-      premiumFeatures: [
-        "Priority Emergency for Both Parents",
-        "Multiple Specialist Coordination",
-        "Coordinated Second Opinions",
-        "Home Healthcare for Both",
-        "Dual Ambulance Support",
-        "Family Meeting Coordination",
-        "Caregiver Training & Support",
-        "Health Monitoring for Both"
-      ]
+    12: {
+      basic: { price: 5000, title: "Basic" },
+      advance: { price: 10000, title: "Advance" },
+      premium: { price: 30000, title: "Premium" }
     }
   }
 
-  const getPricing = (plan: 'single' | 'couple', duration: 6 | 12) => {
-    const prices = {
-      single: { 6: 18000, 12: 30000 },
-      couple: { 6: 30000, 12: 54000 }
-    }
-    return prices[plan][duration]
-  }
-
-  const getOriginalPrice = (plan: 'single' | 'couple', duration: 6 | 12) => {
-    // Show higher "original" prices to demonstrate value
-    const originalPrices = {
-      single: { 6: 40000, 12: 75000 },
-      couple: { 6: 80000, 12: 150000 }
-    }
-    return originalPrices[plan][duration]
-  }
-
-  const getSavings = (plan: 'single' | 'couple') => {
-    const originalYearlyPrice = getOriginalPrice(plan, 12)
-    const actualYearlyPrice = getPricing(plan, 12)
-    return originalYearlyPrice - actualYearlyPrice
+  // Benefits for each plan based on the image
+  const planBenefits = {
+    basic: [
+      { feature: "Eye check up", value: "1" },
+      { feature: "Dental check up", value: "1" },
+      { feature: "Health check up", value: "35+ parameters" },
+      { feature: "Dietician Sessions", value: "0" },
+      { feature: "Physiotherapy Sessions", value: "0" },
+      { feature: "Yoga (Months)", value: "0" },
+      { feature: "Doctor on Call 24x7", value: "yes" },
+      { feature: "Wellness Sessions", value: "0" },
+      { feature: "Hospital Discounts upto 25%", value: "yes" }
+    ],
+    advance: [
+      { feature: "Eye check up", value: "3" },
+      { feature: "Dental check up", value: "3" },
+      { feature: "Health check up", value: "50+ parameters" },
+      { feature: "Dietician Sessions", value: "1" },
+      { feature: "Physiotherapy Sessions", value: "1" },
+      { feature: "Yoga (Months)", value: "0" },
+      { feature: "Doctor on Call 24x7", value: "yes" },
+      { feature: "Wellness Sessions", value: "0" },
+      { feature: "Hospital Discounts upto 25%", value: "yes" }
+    ],
+    premium: [
+      { feature: "Eye check up", value: "3" },
+      { feature: "Dental check up", value: "3" },
+      { feature: "Health check up", value: "70+ parameters" },
+      { feature: "Dietician Sessions", value: "6" },
+      { feature: "Physiotherapy Sessions", value: "7" },
+      { feature: "Yoga (Months)", value: "6" },
+      { feature: "Doctor on Call 24x7", value: "yes" },
+      { feature: "Wellness Sessions", value: "6" },
+      { feature: "Hospital Discounts upto 25%", value: "yes" }
+    ]
   }
 
   const services = [
@@ -146,152 +118,179 @@ export function Pricing() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
-        {/* Plan Type Selector */}
-        <div className="flex justify-center mb-8">
+        {/* Duration Toggle */}
+        <div className="flex justify-center mb-12">
           <div className="bg-gray-100 p-1 rounded-lg flex">
             <button
-              onClick={() => setSelectedPlan('single')}
-              className={`px-6 py-3 rounded-md font-medium transition-all ${
-                selectedPlan === 'single'
-                  ? 'bg-white text-emerald-600 shadow-sm'
+              onClick={() => setSelectedDuration(6)}
+              className={`px-8 py-3 rounded-md font-medium transition-all duration-300 ${
+                selectedDuration === 6
+                  ? 'bg-white text-emerald-600 shadow-md transform scale-105'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              Single Parent
+              6 Months
             </button>
             <button
-              onClick={() => setSelectedPlan('couple')}
-              className={`px-6 py-3 rounded-md font-medium transition-all ${
-                selectedPlan === 'couple'
-                  ? 'bg-white text-emerald-600 shadow-sm'
+              onClick={() => setSelectedDuration(12)}
+              className={`px-8 py-3 rounded-md font-medium transition-all duration-300 ${
+                selectedDuration === 12
+                  ? 'bg-white text-emerald-600 shadow-md transform scale-105'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              Both Parents
+              12 Months
             </button>
           </div>
+        </div>
+
+        {/* Subtitle */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Primary Member + 2 Co-Member
+          </h2>
+          <p className="text-gray-600">
+            {selectedDuration === 6 ? 'Six month' : 'Year'} (Rs)
+          </p>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          {/* 6 Month Plan */}
-          <Card className="relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          {/* Basic Plan */}
+          <Card className="relative transition-all duration-300 hover:shadow-lg">
             <CardHeader className="text-center pb-6">
-              <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                {React.createElement(planFeatures[selectedPlan].icon, { 
-                  className: "w-6 h-6 text-emerald-600" 
-                })}
-              </div>
-              <CardTitle className="text-2xl font-bold text-gray-900">
-                6 Months
+              <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
+                Basic
               </CardTitle>
-              <CardDescription className="text-lg text-gray-600">
-                {selectedPlan === 'single' ? '+2 family members (below 60 years)*' : '+4 family members (below 60 years)*'}
-              </CardDescription>
-              <div className="mt-4">
-                <div className="mb-2">
-                  <span className="text-2xl font-bold text-gray-400 line-through">
-                    ₹{getOriginalPrice(selectedPlan, 6).toLocaleString()}
-                  </span>
-                </div>
-                <div className="text-4xl font-bold text-gray-900">
-                  ₹{getPricing(selectedPlan, 6).toLocaleString()}
-                </div>
-                <div className="text-sm text-emerald-600 font-medium mt-1">
-                  Save ₹{(getOriginalPrice(selectedPlan, 6) - getPricing(selectedPlan, 6)).toLocaleString()}
-                </div>
+              <div className="text-4xl font-bold text-emerald-600 mb-2">
+                ₹{pricingPlans[selectedDuration].basic.price.toLocaleString()}/-
               </div>
+              <CardDescription className="text-gray-600">
+                Essential healthcare support
+              </CardDescription>
             </CardHeader>
             <CardContent className="pt-0">
-              <Button 
-                className="w-full bg-emerald-600 hover:bg-emerald-700"
-                onClick={() => setSelectedDuration(6)}
-              >
-                <Link to="/register" className="w-full">
-                  Get Started - 6 Months
-                </Link>
-              </Button>
+              <Link to="/register">
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 mb-6">
+                  Choose Basic
+                </Button>
+              </Link>
             </CardContent>
           </Card>
 
-          {/* 12 Month Plan */}
-          <Card className="relative border-emerald-200 shadow-lg">
+          {/* Advance Plan */}
+          <Card className="relative border-emerald-200 shadow-lg transition-all duration-300 hover:shadow-xl">
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
               <Badge className="bg-emerald-600 text-white px-4 py-1">
                 <Star className="w-4 h-4 mr-1" />
-                Most Popular
+                Popular
               </Badge>
             </div>
             <CardHeader className="text-center pb-6">
-              <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                {React.createElement(planFeatures[selectedPlan].icon, { 
-                  className: "w-6 h-6 text-emerald-600" 
-                })}
-              </div>
-              <CardTitle className="text-2xl font-bold text-gray-900">
-                12 Months
+              <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
+                Advance
               </CardTitle>
-              <CardDescription className="text-lg text-gray-600">
-                {selectedPlan === 'single' ? '+2 family members (below 60 years)*' : '+4 family members (below 60 years)*'}
-              </CardDescription>
-              <div className="mt-4">
-                <div className="mb-2">
-                  <span className="text-2xl font-bold text-gray-400 line-through">
-                    ₹{getOriginalPrice(selectedPlan, 12).toLocaleString()}
-                  </span>
-                </div>
-                <div className="text-4xl font-bold text-gray-900">
-                  ₹{getPricing(selectedPlan, 12).toLocaleString()}
-                </div>
-                <div className="text-sm text-emerald-600 font-medium mt-1">
-                  Save ₹{getSavings(selectedPlan).toLocaleString()} annually
-                </div>
+              <div className="text-4xl font-bold text-emerald-600 mb-2">
+                ₹{pricingPlans[selectedDuration].advance.price.toLocaleString()}/-
               </div>
+              <CardDescription className="text-gray-600">
+                Enhanced care with additional services
+              </CardDescription>
             </CardHeader>
             <CardContent className="pt-0">
-              <Button 
-                className="w-full bg-emerald-600 hover:bg-emerald-700"
-                onClick={() => setSelectedDuration(12)}
-              >
-                <Link to="/register" className="w-full">
-                  Get Started - 12 Months
-                </Link>
-              </Button>
+              <Link to="/register">
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 mb-6">
+                  Choose Advance
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          {/* Premium Plan */}
+          <Card className="relative transition-all duration-300 hover:shadow-lg">
+            <CardHeader className="text-center pb-6">
+              <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
+                Premium
+              </CardTitle>
+              <div className="text-4xl font-bold text-emerald-600 mb-2">
+                ₹{pricingPlans[selectedDuration].premium.price.toLocaleString()}/-
+              </div>
+              <CardDescription className="text-gray-600">
+                Complete comprehensive care
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <Link to="/register">
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 mb-6">
+                  Choose Premium
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
 
-        {/* Services Overview */}
+        {/* Extra Discount Notice */}
+        <div className="text-center mb-12">
+          <div className="inline-block bg-yellow-100 border border-yellow-200 rounded-lg px-6 py-3">
+            <p className="text-yellow-800 font-medium">
+              Extra Discount for Initial 100 members
+            </p>
+          </div>
+        </div>
+        {/* Benefits Comparison Table */}
         <div className="mb-16">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Complete Healthcare Journey Support
+              Benefits (in {selectedDuration} months)
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our comprehensive care coordination covers every stage of your healthcare journey
+            <p className="text-lg text-gray-600">
+              Compare what's included in each plan
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((service, index) => (
-              <Card key={index} className="text-center">
-                <CardHeader>
-                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <service.icon className="w-6 h-6 text-emerald-600" />
-                  </div>
-                  <CardTitle className="text-lg">{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {service.features.map((feature, fIndex) => (
-                      <li key={fIndex} className="text-sm text-gray-600">
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-900 uppercase tracking-wider">
+                      Features
+                    </th>
+                    <th className="px-6 py-4 text-center text-sm font-medium text-gray-900 uppercase tracking-wider">
+                      Basic
+                    </th>
+                    <th className="px-6 py-4 text-center text-sm font-medium text-gray-900 uppercase tracking-wider bg-emerald-50">
+                      Advanced
+                    </th>
+                    <th className="px-6 py-4 text-center text-sm font-medium text-gray-900 uppercase tracking-wider">
+                      Premium
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {planBenefits.basic.map((benefit, index) => (
+                    <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {benefit.feature}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                        {planBenefits.basic[index].value}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center bg-emerald-50">
+                        <span className="font-medium text-emerald-600">
+                          {planBenefits.advance[index].value}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                        <span className="font-medium text-purple-600">
+                          {planBenefits.premium[index].value}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
