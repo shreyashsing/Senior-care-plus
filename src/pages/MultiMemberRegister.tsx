@@ -498,18 +498,18 @@ const MultiMemberRegister = () => {
           patientData: patientDataArray
         },
         // Payment success callback
-        (patientIds?: string[]) => {
-          console.log('🎯 Payment successful! Patient IDs:', patientIds);
+        (patientData?: any[]) => {
+          console.log('🎯 Payment successful! Patient Data:', patientData);
           
           const registrationData = {
-            patients: patientDataArray.map((patient, index) => ({
-              seniorCareId: patientIds?.[index] || 'Generated',
+            patients: patientData?.map((patient) => ({
+              seniorCareId: patient.senior_care_id || patient.id, // Use senior_care_id if available, fallback to id
               name: patient.name,
               dateOfBirth: patient.dateOfBirth,
               sex: patient.sex,
-              phoneNumber: patient.selfCellNumber,
+              phoneNumber: patient.phoneNumber,
               memberType: patient.memberType
-            })),
+            })) || [],
             planType: finalPlanType,
             duration: finalDuration,
             price: finalPrice

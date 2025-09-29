@@ -68,7 +68,7 @@ export const uploadDocument = async (
 }
 
 // Create a single patient record with family relationship support
-export const createPatient = async (patientData: any): Promise<string> => {
+export const createPatient = async (patientData: any): Promise<any> => {
   try {
     console.log('🔍 CreatePatient received data:', JSON.stringify(patientData, null, 2));
     
@@ -210,7 +210,15 @@ export const createPatient = async (patientData: any): Promise<string> => {
     const newPatient = data[0]
     console.log('✅ Patient created successfully:', newPatient.id, newPatient.senior_care_id)
 
-    return newPatient.id
+    // Return both UUID and Senior Care ID for proper E-card generation
+    return {
+      id: newPatient.id,
+      senior_care_id: newPatient.senior_care_id,
+      name: newPatient.name,
+      dateOfBirth: newPatient.date_of_birth,
+      sex: newPatient.sex,
+      phoneNumber: newPatient.phone_number
+    }
   } catch (error) {
     console.error('❌ Error creating patient:', error)
     throw error
@@ -218,7 +226,7 @@ export const createPatient = async (patientData: any): Promise<string> => {
 }
 
 // Create multiple patients as a family group (primary + co-members)
-export const createFamilyMembers = async (membersData: any[]): Promise<string[]> => {
+export const createFamilyMembers = async (membersData: any[]): Promise<{ patientIds: string[], patientData: any[] }> => {
   try {
     console.log('🔍 Creating family group with', membersData.length, 'members');
     
@@ -230,6 +238,7 @@ export const createFamilyMembers = async (membersData: any[]): Promise<string[]>
     const familyGroupId = crypto.randomUUID();
     console.log('🔍 Generated family group ID:', familyGroupId);
 
+    const patientData: any[] = [];
     const patientIds: string[] = [];
     let primaryMemberId: string | null = null;
 
@@ -249,16 +258,20 @@ export const createFamilyMembers = async (membersData: any[]): Promise<string[]>
         planId: memberData.planId // Shared plan ID for all family members
       };
 
-      // Create the patient
-      const patientId = await createPatient(memberWithFamily);
-      patientIds.push(patientId);
+      // Create the patient - now returns complete patient data
+      const patientResult = await createPatient(memberWithFamily);
+      patientData.push({
+        ...patientResult,
+        memberType
+      });
+      patientIds.push(patientResult.id);
 
       // Store primary member ID for co-members
       if (memberType === 'primary') {
-        primaryMemberId = patientId;
+        primaryMemberId = patientResult.id;
       }
 
-      console.log(`✅ Created ${memberType} with ID:`, patientId);
+      console.log(`✅ Created ${memberType} with ID:`, patientResult.id);
     }
 
     // Now update co-members with the correct primary member ID
@@ -298,7 +311,13 @@ export const createFamilyMembers = async (membersData: any[]): Promise<string[]>
     }
 
     console.log('✅ Family group created successfully. Patient IDs:', patientIds);
-    return patientIds;
+    console.log('✅ All family members created. Patient data:', patientData);
+    
+    // Return both IDs array for backward compatibility and complete patient data for E-cards
+    return {
+      patientIds,
+      patientData
+    };
 
   } catch (error) {
     console.error('❌ Error creating family members:', error);

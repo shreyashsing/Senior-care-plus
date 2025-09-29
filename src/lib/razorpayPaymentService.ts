@@ -141,6 +141,7 @@ export class RazorpayPaymentService {
             await this.verifyPayment(response, order.order_id)
             
             let patientIds: string[] = []
+            let patientData: any[] = []
             
             if (paymentPatientData.patientData?.length > 0) {
               console.log('🔍 Payment handler - patientData array:', JSON.stringify(paymentPatientData.patientData, null, 2));
@@ -148,8 +149,11 @@ export class RazorpayPaymentService {
               // Create all family members (primary + co-members) at once
               try {
                 console.log('🔍 Creating family group with', paymentPatientData.patientData.length, 'members');
-                patientIds = await createFamilyMembers(paymentPatientData.patientData);
+                const familyResult = await createFamilyMembers(paymentPatientData.patientData);
+                patientIds = familyResult.patientIds;
+                patientData = familyResult.patientData;
                 console.log('✅ All family members created. Patient IDs:', patientIds);
+                console.log('✅ Patient data for E-cards:', patientData);
               } catch (patientError) {
                 console.error('❌ Error creating family members:', patientError);
                 throw patientError; // Re-throw to trigger error callback
@@ -174,9 +178,10 @@ export class RazorpayPaymentService {
               }
             }
 
-            console.log('🎯 Calling onSuccess with patientIds:', patientIds);
+            console.log('🎯 Calling onSuccess with patient data');
             try {
-              onSuccess?.(patientIds)
+              // Pass the complete patient data for E-card generation
+              onSuccess?.(patientData || [])
               console.log('✅ onSuccess callback executed successfully')
             } catch (callbackError) {
               console.error('❌ Error in onSuccess callback:', callbackError)
