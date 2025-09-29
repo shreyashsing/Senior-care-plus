@@ -325,8 +325,13 @@ export const createCarePlan = async (
 
     const planInfo = planMapping[planType as keyof typeof planMapping] || planMapping.basic;
 
+    // Calculate proper end date by adding months
+    const startDate = new Date();
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + parseInt(duration));
+    
     const carePlanData = {
-      plan_type: 'family', // New plan type for multi-member
+      plan_type: 'multi-member', // Changed from 'family' to match database constraint
       name: planInfo.name,
       tier: planInfo.tier,
       duration: duration,
@@ -334,7 +339,7 @@ export const createCarePlan = async (
       cost_per_month: price,
       status: 'active',
       services: ['health_monitoring', 'emergency_assistance', 'family_care', 'multi_member_support'],
-      end_date: new Date(Date.now() + (parseInt(duration) * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0]
+      end_date: endDate.toISOString().split('T')[0]
     };
 
     console.log('🔍 Care plan data:', carePlanData);
