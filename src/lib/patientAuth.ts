@@ -70,7 +70,34 @@ export const getPatientProfile = async (patientId: string) => {
       throw new Error(error.message)
     }
 
-    return data
+    // Get family members if this patient is part of a family group
+    let familyMembers = []
+    if (data.family_group_id) {
+      const { data: familyData, error: familyError } = await supabase
+        .from('patients')
+        .select(`
+          id,
+          senior_care_id,
+          name,
+          member_type,
+          date_of_birth,
+          sex,
+          phone_number,
+          email
+        `)
+        .eq('family_group_id', data.family_group_id)
+        .neq('id', patientId) // Exclude current patient
+        .order('member_type', { ascending: true }) // Primary first, then co-members
+
+      if (!familyError && familyData) {
+        familyMembers = familyData
+      }
+    }
+
+    return {
+      ...data,
+      family_members: familyMembers
+    }
   } catch (error) {
     console.error('Error fetching patient profile:', error)
     throw error

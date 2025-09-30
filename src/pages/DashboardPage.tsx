@@ -8,12 +8,19 @@ import {
   deleteMedicalReport,
   bookAppointment,
   getUpcomingAppointments,
-  cancelAppointment
+  cancelAppointment,
+  updatePatientPersonalDetails,
+  updatePatientContactDetails,
+  updatePatientAddress
 } from '../lib/patientService'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
 import { Separator } from '../components/ui/separator'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../components/ui/dialog'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
+import { Textarea } from '../components/ui/textarea'
 import { 
   User, 
   CreditCard, 
@@ -42,6 +49,9 @@ export function DashboardPage() {
   const [activeSection, setActiveSection] = useState('profile')
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [editPersonalOpen, setEditPersonalOpen] = useState(false)
+  const [editContactOpen, setEditContactOpen] = useState(false)
+  const [editAddressOpen, setEditAddressOpen] = useState(false)
 
   // Load patient profile
   useEffect(() => {
@@ -104,6 +114,12 @@ export function DashboardPage() {
       label: 'Book Appointment',
       icon: Calendar,
       description: 'Schedule Appointments'
+    },
+    {
+      id: 'family',
+      label: 'Family Members',
+      icon: User,
+      description: 'View Co-Members'
     }
   ]
 
@@ -222,11 +238,25 @@ export function DashboardPage() {
 
           {/* Content */}
           <main className="flex-1 p-6">
-            {activeSection === 'profile' && <ProfileSection patient={patient} patientProfile={patientProfile} />}
+            {activeSection === 'profile' && (
+              <ProfileSection 
+                patient={patient} 
+                patientProfile={patientProfile} 
+                toast={toast}
+                editPersonalOpen={editPersonalOpen}
+                setEditPersonalOpen={setEditPersonalOpen}
+                editContactOpen={editContactOpen}
+                setEditContactOpen={setEditContactOpen}
+                editAddressOpen={editAddressOpen}
+                setEditAddressOpen={setEditAddressOpen}
+                setPatientProfile={setPatientProfile}
+              />
+            )}
             {activeSection === 'ecard' && <ECardSection patient={patient} patientProfile={patientProfile} />}
             {activeSection === 'reports' && <ReportsSection />}
             {activeSection === 'services' && <ServicesSection />}
             {activeSection === 'appointments' && <AppointmentsSection />}
+            {activeSection === 'family' && <FamilyMembersSection patient={patient} patientProfile={patientProfile} />}
           </main>
         </div>
       </div>
@@ -235,9 +265,135 @@ export function DashboardPage() {
 }
 
 // Profile Section Component
-function ProfileSection({ patient, patientProfile }: any) {
+function ProfileSection({ 
+  patient, 
+  patientProfile, 
+  toast,
+  editPersonalOpen,
+  setEditPersonalOpen,
+  editContactOpen,
+  setEditContactOpen,
+  editAddressOpen,
+  setEditAddressOpen,
+  setPatientProfile
+}: any) {
+  // Form state for personal details
+  const [personalForm, setPersonalForm] = useState({
+    name: patient?.name || '',
+    age: patientProfile?.age || '',
+    gender: patientProfile?.gender || '',
+    blood_group: patientProfile?.blood_group || ''
+  })
+
+  // Form state for contact details
+  const [contactForm, setContactForm] = useState({
+    email: patient?.email || '',
+    phone: patientProfile?.phone || '',
+    emergency_contact: patientProfile?.emergency_contact || ''
+  })
+
+  // Form state for address
+  const [addressForm, setAddressForm] = useState({
+    house_no: patientProfile?.address?.house_no || '',
+    building_name: patientProfile?.address?.building_name || '',
+    city: patientProfile?.address?.city || '',
+    district: patientProfile?.address?.district || '',
+    pin_code: patientProfile?.address?.pin_code || ''
+  })
+
+  // Update form states when props change
+  useEffect(() => {
+    setPersonalForm({
+      name: patient?.name || '',
+      age: patientProfile?.age || '',
+      gender: patientProfile?.gender || '',
+      blood_group: patientProfile?.blood_group || ''
+    })
+    setContactForm({
+      email: patient?.email || '',
+      phone: patientProfile?.phone || '',
+      emergency_contact: patientProfile?.emergency_contact || ''
+    })
+    setAddressForm({
+      house_no: patientProfile?.address?.house_no || '',
+      building_name: patientProfile?.address?.building_name || '',
+      city: patientProfile?.address?.city || '',
+      district: patientProfile?.address?.district || '',
+      pin_code: patientProfile?.address?.pin_code || ''
+    })
+  }, [patient, patientProfile])
+
+  // Save handlers
+  const handleSavePersonal = async () => {
+    try {
+      await updatePatientPersonalDetails(patient.id, {
+        name: personalForm.name,
+        age: personalForm.age ? parseInt(personalForm.age) : undefined,
+        gender: personalForm.gender,
+        blood_group: personalForm.blood_group
+      })
+      
+      toast({
+        title: "Success",
+        description: "Personal details updated successfully.",
+      })
+      
+      // Refresh patient profile
+      setPatientProfile(await getPatientProfile(patient.id))
+      setEditPersonalOpen(false)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update personal details.",
+        variant: "destructive"
+      })
+    }
+  }
+
+  const handleSaveContact = async () => {
+    try {
+      await updatePatientContactDetails(patient.id, contactForm)
+      
+      toast({
+        title: "Success",
+        description: "Contact details updated successfully.",
+      })
+      
+      // Refresh patient profile
+      setPatientProfile(await getPatientProfile(patient.id))
+      setEditContactOpen(false)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update contact details.",
+        variant: "destructive"
+      })
+    }
+  }
+
+  const handleSaveAddress = async () => {
+    try {
+      await updatePatientAddress(patient.id, addressForm)
+      
+      toast({
+        title: "Success",
+        description: "Address updated successfully.",
+      })
+      
+      // Refresh patient profile
+      setPatientProfile(await getPatientProfile(patient.id))
+      setEditAddressOpen(false)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update address.",
+        variant: "destructive"
+      })
+    }
+  }
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Personal Details */}
         <Card>
@@ -264,10 +420,7 @@ function ProfileSection({ patient, patientProfile }: any) {
               <label className="text-sm font-medium text-gray-500">Gender</label>
               <p className="text-gray-900 capitalize">{patientProfile?.sex}</p>
             </div>
-            <Button variant="outline" className="w-full">
-              <Edit className="h-4 w-4 mr-2" />
-              Edit Personal Details
-            </Button>
+
           </CardContent>
         </Card>
 
@@ -296,7 +449,11 @@ function ProfileSection({ patient, patientProfile }: any) {
               <label className="text-sm font-medium text-gray-500">Emergency Contact Relation</label>
               <p className="text-gray-900">{patientProfile?.emergency_name_relation}</p>
             </div>
-            <Button variant="outline" className="w-full">
+            <Button 
+              variant="outline" 
+              className="w-full"
+              onClick={() => setEditContactOpen(true)}
+            >
               <Edit className="h-4 w-4 mr-2" />
               Edit Contact Details
             </Button>
@@ -314,30 +471,220 @@ function ProfileSection({ patient, patientProfile }: any) {
         </CardHeader>
         <CardContent>
           {patientProfile?.address ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-500">House/Building</label>
-                <p className="text-gray-900">{patientProfile.address.houseNo} {patientProfile.address.buildingName}</p>
+                <p className="text-gray-900">{patientProfile.address.house_no} {patientProfile.address.building_name}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">City</label>
                 <p className="text-gray-900">{patientProfile.address.city}</p>
               </div>
               <div>
+                <label className="text-sm font-medium text-gray-500">District</label>
+                <p className="text-gray-900">{patientProfile.address.district}</p>
+              </div>
+              <div>
                 <label className="text-sm font-medium text-gray-500">PIN Code</label>
-                <p className="text-gray-900">{patientProfile.address.pinCode}</p>
+                <p className="text-gray-900">{patientProfile.address.pin_code}</p>
               </div>
             </div>
           ) : (
             <p className="text-gray-500">Address information not available</p>
           )}
-          <Button variant="outline" className="mt-4">
+          <Button 
+            variant="outline" 
+            className="mt-4"
+            onClick={() => setEditAddressOpen(true)}
+          >
             <Edit className="h-4 w-4 mr-2" />
             Edit Address
           </Button>
         </CardContent>
       </Card>
     </div>
+
+    {/* Edit Personal Details Modal */}
+    <Dialog open={editPersonalOpen} onOpenChange={setEditPersonalOpen}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Personal Details</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Name
+            </Label>
+            <Input
+              id="name"
+              value={personalForm.name}
+              onChange={(e) => setPersonalForm({...personalForm, name: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="age" className="text-right">
+              Age
+            </Label>
+            <Input
+              id="age"
+              value={personalForm.age}
+              onChange={(e) => setPersonalForm({...personalForm, age: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="gender" className="text-right">
+              Gender
+            </Label>
+            <Input
+              id="gender"
+              value={personalForm.gender}
+              onChange={(e) => setPersonalForm({...personalForm, gender: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="blood_group" className="text-right">
+              Blood Group
+            </Label>
+            <Input
+              id="blood_group"
+              value={personalForm.blood_group}
+              onChange={(e) => setPersonalForm({...personalForm, blood_group: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="submit" onClick={handleSavePersonal}>
+            Save changes
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+    {/* Edit Contact Details Modal */}
+    <Dialog open={editContactOpen} onOpenChange={setEditContactOpen}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Contact Details</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="email" className="text-right">
+              Email
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              value={contactForm.email}
+              onChange={(e) => setContactForm({...contactForm, email: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="phone" className="text-right">
+              Phone
+            </Label>
+            <Input
+              id="phone"
+              value={contactForm.phone}
+              onChange={(e) => setContactForm({...contactForm, phone: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="emergency_contact" className="text-right">
+              Emergency Contact
+            </Label>
+            <Input
+              id="emergency_contact"
+              value={contactForm.emergency_contact}
+              onChange={(e) => setContactForm({...contactForm, emergency_contact: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="submit" onClick={handleSaveContact}>
+            Save changes
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+    {/* Edit Address Modal */}
+    <Dialog open={editAddressOpen} onOpenChange={setEditAddressOpen}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Address</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="house_no" className="text-right">
+              House No.
+            </Label>
+            <Input
+              id="house_no"
+              value={addressForm.house_no}
+              onChange={(e) => setAddressForm({...addressForm, house_no: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="building_name" className="text-right">
+              Building Name
+            </Label>
+            <Input
+              id="building_name"
+              value={addressForm.building_name}
+              onChange={(e) => setAddressForm({...addressForm, building_name: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="city" className="text-right">
+              City
+            </Label>
+            <Input
+              id="city"
+              value={addressForm.city}
+              onChange={(e) => setAddressForm({...addressForm, city: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="district" className="text-right">
+              District
+            </Label>
+            <Input
+              id="district"
+              value={addressForm.district}
+              onChange={(e) => setAddressForm({...addressForm, district: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="pin_code" className="text-right">
+              PIN Code
+            </Label>
+            <Input
+              id="pin_code"
+              value={addressForm.pin_code}
+              onChange={(e) => setAddressForm({...addressForm, pin_code: e.target.value})}
+              className="col-span-3"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="submit" onClick={handleSaveAddress}>
+            Save changes
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   )
 }
 
@@ -973,6 +1320,148 @@ function AppointmentsSection() {
               <p className="text-sm">Book your first appointment to get started</p>
             </div>
           )}
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+// Family Members Section Component
+function FamilyMembersSection({ patient, patientProfile }: any) {
+  const { toast } = useToast()
+
+  if (!patientProfile?.family_members || patientProfile.family_members.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-12 text-gray-500">
+          <User className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Family Members</h3>
+          <p>This account is registered as an individual plan.</p>
+          <p className="text-sm mt-2">Family plans include primary member + co-members.</p>
+        </div>
+      </div>
+    )
+  }
+
+  const getMemberTypeLabel = (memberType: string) => {
+    switch (memberType) {
+      case 'primary': return 'Primary Member'
+      case 'co-member': return 'Co-Member'
+      default: return 'Family Member'
+    }
+  }
+
+  const getMemberTypeBadge = (memberType: string) => {
+    switch (memberType) {
+      case 'primary': return 'bg-emerald-100 text-emerald-800'
+      case 'co-member': return 'bg-blue-100 text-blue-800'
+      default: return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Family Members</h2>
+          <p className="text-gray-600">View all members in your family plan</p>
+        </div>
+        <Badge variant="outline" className="text-sm">
+          {patientProfile.family_members.length + 1} Total Members
+        </Badge>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Current Patient Card */}
+        <Card className="border-emerald-200 bg-emerald-50">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg">{patient.name || patientProfile?.name}</CardTitle>
+              <Badge className="bg-emerald-600 text-white text-xs">
+                You
+              </Badge>
+            </div>
+            <Badge className={`w-fit text-xs ${getMemberTypeBadge(patientProfile?.member_type || 'primary')}`}>
+              {getMemberTypeLabel(patientProfile?.member_type || 'primary')}
+            </Badge>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm">
+            <div className="flex items-center text-gray-600">
+              <CreditCard className="h-4 w-4 mr-2" />
+              <span className="font-mono">{patient.seniorCareId}</span>
+            </div>
+            <div className="flex items-center text-gray-600">
+              <Calendar className="h-4 w-4 mr-2" />
+              <span>{patientProfile?.date_of_birth}</span>
+            </div>
+            <div className="flex items-center text-gray-600">
+              <Phone className="h-4 w-4 mr-2" />
+              <span>{patient.phone}</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Family Members Cards */}
+        {patientProfile.family_members.map((member: any) => (
+          <Card key={member.id} className="border-gray-200">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">{member.name}</CardTitle>
+              <Badge className={`w-fit text-xs ${getMemberTypeBadge(member.member_type)}`}>
+                {getMemberTypeLabel(member.member_type)}
+              </Badge>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <div className="flex items-center text-gray-600">
+                <CreditCard className="h-4 w-4 mr-2" />
+                <span className="font-mono">{member.senior_care_id}</span>
+              </div>
+              <div className="flex items-center text-gray-600">
+                <Calendar className="h-4 w-4 mr-2" />
+                <span>{member.date_of_birth}</span>
+              </div>
+              <div className="flex items-center text-gray-600">
+                <Phone className="h-4 w-4 mr-2" />
+                <span>{member.phone_number}</span>
+              </div>
+              {member.email && (
+                <div className="flex items-center text-gray-600">
+                  <Mail className="h-4 w-4 mr-2" />
+                  <span className="truncate">{member.email}</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <HandHeart className="h-5 w-5 mr-2 text-emerald-600" />
+            Family Plan Benefits
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">✅ Shared Benefits</h4>
+              <ul className="space-y-1 text-gray-600">
+                <li>• All members covered under one plan</li>
+                <li>• Shared care coordination</li>
+                <li>• Family emergency contacts</li>
+                <li>• Consolidated billing</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">📱 Individual Access</h4>
+              <ul className="space-y-1 text-gray-600">
+                <li>• Each member has unique Senior Care ID</li>
+                <li>• Individual login credentials</li>
+                <li>• Personal medical records</li>
+                <li>• Private consultation access</li>
+              </ul>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

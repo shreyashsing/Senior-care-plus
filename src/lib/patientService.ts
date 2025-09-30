@@ -422,3 +422,132 @@ export const cancelAppointment = async (appointmentId: string): Promise<void> =>
     throw error
   }
 }
+
+// Update patient profile functions
+export const updatePatientPersonalDetails = async (patientId: string, updates: {
+  name?: string
+  age?: number
+  gender?: string
+  blood_group?: string
+}) => {
+  try {
+    await ensurePatientContext(patientId)
+
+    // Update both patients table and patient_profiles table
+    const promises = []
+
+    // Update name in patients table if provided
+    if (updates.name) {
+      const { error: patientsError } = await supabase
+        .from('patients')
+        .update({ name: updates.name })
+        .eq('id', patientId)
+
+      if (patientsError) {
+        throw new Error(`Error updating patient name: ${patientsError.message}`)
+      }
+    }
+
+    // Update profile data in patient_profiles table
+    const profileUpdates: any = {}
+    if (updates.age !== undefined) profileUpdates.age = updates.age
+    if (updates.gender) profileUpdates.gender = updates.gender
+    if (updates.blood_group) profileUpdates.blood_group = updates.blood_group
+
+    if (Object.keys(profileUpdates).length > 0) {
+      const { error: profileError } = await supabase
+        .from('patient_profiles')
+        .update(profileUpdates)
+        .eq('patient_id', patientId)
+
+      if (profileError) {
+        throw new Error(`Error updating patient profile: ${profileError.message}`)
+      }
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error updating personal details:', error)
+    throw error
+  }
+}
+
+export const updatePatientContactDetails = async (patientId: string, updates: {
+  email?: string
+  phone?: string
+  emergency_contact?: string
+}) => {
+  try {
+    await ensurePatientContext(patientId)
+
+    // Update email in patients table if provided
+    if (updates.email) {
+      const { error: patientsError } = await supabase
+        .from('patients')
+        .update({ email: updates.email })
+        .eq('id', patientId)
+
+      if (patientsError) {
+        throw new Error(`Error updating patient email: ${patientsError.message}`)
+      }
+    }
+
+    // Update profile data in patient_profiles table
+    const profileUpdates: any = {}
+    if (updates.phone) profileUpdates.phone = updates.phone
+    if (updates.emergency_contact) profileUpdates.emergency_contact = updates.emergency_contact
+
+    if (Object.keys(profileUpdates).length > 0) {
+      const { error: profileError } = await supabase
+        .from('patient_profiles')
+        .update(profileUpdates)
+        .eq('patient_id', patientId)
+
+      if (profileError) {
+        throw new Error(`Error updating contact details: ${profileError.message}`)
+      }
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error updating contact details:', error)
+    throw error
+  }
+}
+
+export const updatePatientAddress = async (patientId: string, updates: {
+  house_no?: string
+  building_name?: string
+  city?: string
+  district?: string
+  pin_code?: string
+}) => {
+  try {
+    await ensurePatientContext(patientId)
+
+    // Structure the address data as a JSON object
+    const addressUpdate = {
+      address: {
+        house_no: updates.house_no,
+        building_name: updates.building_name,
+        city: updates.city,
+        district: updates.district,
+        pin_code: updates.pin_code
+      }
+    }
+
+    const { error } = await supabase
+      .from('patient_profiles')
+      .update(addressUpdate)
+      .eq('patient_id', patientId)
+
+    if (error) {
+      throw new Error(`Error updating address: ${error.message}`)
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error updating address:', error)
+    throw error
+  }
+}
