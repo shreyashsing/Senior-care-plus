@@ -165,14 +165,17 @@ export const createPatient = async (patientData: any): Promise<any> => {
         food_allergy: patientData.foodAllergy,
         other_allergy: patientData.otherAllergy,
         hospital_admission: patientData.hospitalAdmission,
+        hospital_admission_details: patientData.hospitalAdmissionDetails || null,
         surgery: patientData.surgery,
+        surgery_details: patientData.surgeryDetails || null,
         past_conditions: patientData.pastConditions,
         other_past_condition: patientData.otherPastCondition,
         current_condition: patientData.currentCondition,
         current_medication: patientData.currentMedication,
         hospital_name: patientData.hospitalName,
         doctor_name: patientData.doctorName,
-        doctor_contact: patientData.doctorContact
+        doctor_contact: patientData.doctorContact,
+        good_hospitals_nearby: patientData.goodHospitalsNearby || null
       },
       insurance_info: {
         has_insurance: patientData.hasInsurance,

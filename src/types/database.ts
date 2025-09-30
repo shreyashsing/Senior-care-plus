@@ -29,7 +29,9 @@ export interface Database {
             food_allergy: string
             other_allergy: string
             hospital_admission: string
+            hospital_admission_details: string | null
             surgery: string
+            surgery_details: string | null
             past_conditions: string[]
             other_past_condition: string
             current_condition: string
@@ -37,6 +39,7 @@ export interface Database {
             hospital_name: string
             doctor_name: string
             doctor_contact: string
+            good_hospitals_nearby: string | null
           } | null
           insurance_info: {
             has_insurance: string

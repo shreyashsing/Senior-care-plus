@@ -47,7 +47,9 @@ interface MemberFormData {
   foodAllergy: string;
   otherAllergy: string;
   hospitalAdmission: string;
+  hospitalAdmissionDetails: string; // New field for admission details
   surgery: string;
+  surgeryDetails: string; // New field for surgery details
   pastConditions: string[];
   currentCondition: string;
   currentMedication: string;
@@ -63,6 +65,7 @@ interface MemberFormData {
   doctorContact: string;
   preferredHospital: string;
   nearbyHospitals: string;
+  goodHospitalsNearby: string;
   
   // KYC Documents
   photo: File | null;
@@ -167,7 +170,9 @@ const MultiMemberRegister = () => {
       foodAllergy: '',
       otherAllergy: '',
       hospitalAdmission: '',
+      hospitalAdmissionDetails: '', // Initialize new field
       surgery: '',
+      surgeryDetails: '', // Initialize new field
       pastConditions: [],
       currentCondition: '',
       currentMedication: '',
@@ -181,6 +186,7 @@ const MultiMemberRegister = () => {
       doctorContact: '',
       preferredHospital: '',
       nearbyHospitals: '',
+      goodHospitalsNearby: '',
       photo: null,
       hasInsurance: '',
       insuranceCompany: '',
@@ -323,6 +329,16 @@ const MultiMemberRegister = () => {
     // Other past condition validation
     if (memberData.pastConditions.includes('Other') && !memberData.otherPastCondition.trim()) {
       errors.otherPastCondition = 'Please specify the other past condition';
+    }
+    
+    // Hospital admission details validation
+    if (memberData.hospitalAdmission === 'yes' && !memberData.hospitalAdmissionDetails.trim()) {
+      errors.hospitalAdmissionDetails = 'Please provide hospital admission details';
+    }
+    
+    // Surgery details validation
+    if (memberData.surgery === 'yes' && !memberData.surgeryDetails.trim()) {
+      errors.surgeryDetails = 'Please provide surgery details';
     }
     
     return {
@@ -1020,23 +1036,37 @@ const MultiMemberRegister = () => {
                               </SelectContent>
                             </Select>
                             {currentMemberData.hospitalAdmission === 'yes' && (
-                              <p className="text-sm text-amber-600 mt-1">
-                                Please submit discharge card if available
-                              </p>
-                            )}
-                            {currentMemberData.hospitalAdmission === 'yes' && (
-                              <div className="mt-3">
-                                <Label htmlFor="dischargeCard">Discharge Card</Label>
-                                <Input
-                                  id="dischargeCard"
-                                  type="file"
-                                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                                  onChange={(e) => handleFileChange('dischargeCard', e.target.files?.[0] || null)}
-                                  className="cursor-pointer"
-                                />
-                                <p className="text-xs text-gray-500 mt-1">
-                                  Accepted formats: PDF, JPG, PNG, DOC, DOCX
-                                </p>
+                              <div className="mt-3 space-y-3">
+                                <div>
+                                  <Label htmlFor="hospitalAdmissionDetails">Hospital Admission Details *</Label>
+                                  <Textarea
+                                    id="hospitalAdmissionDetails"
+                                    value={currentMemberData.hospitalAdmissionDetails}
+                                    onChange={(e) => handleInputChange('hospitalAdmissionDetails', e.target.value)}
+                                    placeholder="Please provide details about the hospital admission (reason, hospital name, dates, etc.)"
+                                    rows={3}
+                                    className={`mt-1 ${currentMemberErrors.hospitalAdmissionDetails ? 'border-red-500' : ''}`}
+                                  />
+                                  {currentMemberErrors.hospitalAdmissionDetails && (
+                                    <p className="text-red-500 text-sm mt-1">{currentMemberErrors.hospitalAdmissionDetails}</p>
+                                  )}
+                                  <p className="text-sm text-gray-600 mt-1">
+                                    Required: Please describe the admission details
+                                  </p>
+                                </div>
+                                <div>
+                                  <Label htmlFor="dischargeCard">Discharge Card (Optional)</Label>
+                                  <Input
+                                    id="dischargeCard"
+                                    type="file"
+                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                    onChange={(e) => handleFileChange('dischargeCard', e.target.files?.[0] || null)}
+                                    className="cursor-pointer"
+                                  />
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Accepted formats: PDF, JPG, PNG, DOC, DOCX
+                                  </p>
+                                </div>
                               </div>
                             )}
                           </div>
@@ -1053,18 +1083,37 @@ const MultiMemberRegister = () => {
                               </SelectContent>
                             </Select>
                             {currentMemberData.surgery === 'yes' && (
-                              <div className="mt-3">
-                                <Label htmlFor="surgeryDocuments">Surgery Documents</Label>
-                                <Input
-                                  id="surgeryDocuments"
-                                  type="file"
-                                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                                  onChange={(e) => handleFileChange('surgeryDocuments', e.target.files?.[0] || null)}
-                                  className="cursor-pointer"
-                                />
-                                <p className="text-xs text-gray-500 mt-1">
-                                  Accepted formats: PDF, JPG, PNG, DOC, DOCX
-                                </p>
+                              <div className="mt-3 space-y-3">
+                                <div>
+                                  <Label htmlFor="surgeryDetails">Surgery Details *</Label>
+                                  <Textarea
+                                    id="surgeryDetails"
+                                    value={currentMemberData.surgeryDetails}
+                                    onChange={(e) => handleInputChange('surgeryDetails', e.target.value)}
+                                    placeholder="Please provide details about the surgery (type of surgery, hospital, date, recovery status, etc.)"
+                                    rows={3}
+                                    className={`mt-1 ${currentMemberErrors.surgeryDetails ? 'border-red-500' : ''}`}
+                                  />
+                                  {currentMemberErrors.surgeryDetails && (
+                                    <p className="text-red-500 text-sm mt-1">{currentMemberErrors.surgeryDetails}</p>
+                                  )}
+                                  <p className="text-sm text-gray-600 mt-1">
+                                    Required: Please describe the surgery details
+                                  </p>
+                                </div>
+                                <div>
+                                  <Label htmlFor="surgeryDocuments">Surgery Documents (Optional)</Label>
+                                  <Input
+                                    id="surgeryDocuments"
+                                    type="file"
+                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                    onChange={(e) => handleFileChange('surgeryDocuments', e.target.files?.[0] || null)}
+                                    className="cursor-pointer"
+                                  />
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Accepted formats: PDF, JPG, PNG, DOC, DOCX
+                                  </p>
+                                </div>
                               </div>
                             )}
                           </div>
@@ -1180,6 +1229,20 @@ const MultiMemberRegister = () => {
                               onChange={(e) => handleInputChange('doctorContact', e.target.value)}
                               placeholder="Contact Number"
                             />
+                          </div>
+                          
+                          <div className="md:col-span-2">
+                            <Label htmlFor="goodHospitalsNearby">Good Hospitals Nearby</Label>
+                            <Textarea
+                              id="goodHospitalsNearby"
+                              value={currentMemberData.goodHospitalsNearby}
+                              onChange={(e) => handleInputChange('goodHospitalsNearby', e.target.value)}
+                              placeholder="List good hospitals in your area (name, location, specialties, contact details, etc.)"
+                              rows={3}
+                            />
+                            <p className="text-sm text-gray-600 mt-1">
+                              Optional: This helps us coordinate better care and emergency services in your area
+                            </p>
                           </div>
                         </div>
                       </div>
