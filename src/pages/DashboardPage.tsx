@@ -37,7 +37,8 @@ import {
   Menu,
   X,
   Trash2,
-  Clock
+  Clock,
+  Building2
 } from 'lucide-react'
 import { ECard } from '../components/ECard'
 import { useToast } from '../hooks/use-toast'
@@ -103,12 +104,7 @@ export function DashboardPage() {
       icon: FileText,
       description: 'Upload Medical Reports'
     },
-    {
-      id: 'services',
-      label: 'Request Service',
-      icon: HandHeart,
-      description: 'Request Healthcare Services'
-    },
+
     {
       id: 'appointments',
       label: 'Book Appointment',
@@ -254,7 +250,7 @@ export function DashboardPage() {
             )}
             {activeSection === 'ecard' && <ECardSection patient={patient} patientProfile={patientProfile} />}
             {activeSection === 'reports' && <ReportsSection />}
-            {activeSection === 'services' && <ServicesSection />}
+
             {activeSection === 'appointments' && <AppointmentsSection />}
             {activeSection === 'family' && <FamilyMembersSection patient={patient} patientProfile={patientProfile} />}
           </main>
@@ -962,80 +958,7 @@ function ReportsSection() {
   )
 }
 
-// Services Section Component
-function ServicesSection() {
-  const { toast } = useToast()
 
-  const services = [
-    {
-      title: "Home Healthcare",
-      description: "Nursing care, physiotherapy, and medical assistance at home",
-      icon: HandHeart
-    },
-    {
-      title: "Emergency Support",
-      description: "24/7 emergency response and ambulance services",
-      icon: Phone
-    },
-    {
-      title: "Medication Management",
-      description: "Medicine delivery and dosage reminders",
-      icon: FileText
-    },
-    {
-      title: "Wellness Programs",
-      description: "Exercise routines, diet planning, and health monitoring",
-      icon: User
-    }
-  ]
-
-  const handleServiceRequest = (serviceName: string) => {
-    toast({
-      title: "Service Request",
-      description: `Request for ${serviceName} has been submitted`,
-    })
-  }
-
-  return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Available Services</CardTitle>
-          <CardDescription>
-            Request healthcare services tailored to your needs
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {services.map((service, index) => {
-              const IconComponent = service.icon
-              return (
-                <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="flex items-start space-x-3">
-                    <div className="bg-emerald-100 p-2 rounded-lg">
-                      <IconComponent className="h-6 w-6 text-emerald-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">{service.title}</h3>
-                      <p className="text-sm text-gray-500 mt-1">{service.description}</p>
-                      <Button 
-                        size="sm" 
-                        className="mt-3"
-                        onClick={() => handleServiceRequest(service.title)}
-                      >
-                        Request Service
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
 
 // Appointments Section Component
 function AppointmentsSection() {
@@ -1044,14 +967,68 @@ function AppointmentsSection() {
   const [appointments, setAppointments] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [booking, setBooking] = useState(false)
+  const [activeTab, setActiveTab] = useState('services')
   
-  // Form state
-  const [formData, setFormData] = useState({
+  // Service form state
+  const [serviceFormData, setServiceFormData] = useState({
+    serviceCategory: '',
+    specificService: '',
+    urgency: 'normal',
+    preferredDate: '',
+    preferredTime: 'morning',
+    specialRequests: ''
+  })
+
+  // Appointment form state
+  const [appointmentFormData, setAppointmentFormData] = useState({
     serviceType: 'general_consultation',
     appointmentDate: '',
     appointmentTime: 'morning',
     patientNotes: ''
   })
+
+  // Define all services based on the screenshot
+  const serviceCategories = {
+    homecare: {
+      label: 'Homecare Services',
+      icon: HandHeart,
+      services: [
+        'Doctor visits',
+        'Diagnostics Tests',
+        'Assistance and ICU at home',
+        'Medicine Delivery'
+      ]
+    },
+    wellness: {
+      label: 'Wellness',
+      icon: User,
+      services: [
+        'Yoga',
+        'Dietician',
+        'Physiotherapy',
+        'Group Sessions',
+        'Mindfulness session'
+      ]
+    },
+    hospitalization: {
+      label: 'Hospitalization & OPD services',
+      icon: Building2,
+      services: [
+        'Seamless Admission',
+        'Ambulance service',
+        'Daily health updates',
+        '24/7 online emergency line',
+        'Discounted OPD and 2nd consultations'
+      ]
+    },
+    concierge: {
+      label: 'Concierge',
+      icon: Phone,
+      services: [
+        '24/7 online assistance'
+      ]
+    }
+  }
 
   // Load appointments on component mount
   useEffect(() => {
@@ -1077,15 +1054,73 @@ function AppointmentsSection() {
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
+  const handleServiceInputChange = (field: string, value: string) => {
+    setServiceFormData(prev => ({
+      ...prev,
+      [field]: value,
+      ...(field === 'serviceCategory' ? { specificService: '' } : {})
+    }))
+  }
+
+  const handleAppointmentInputChange = (field: string, value: string) => {
+    setAppointmentFormData(prev => ({
       ...prev,
       [field]: value
     }))
   }
 
+  const handleServiceRequest = async () => {
+    if (!serviceFormData.serviceCategory || !serviceFormData.specificService) {
+      toast({
+        title: "Missing Information",
+        description: "Please select service category and specific service",
+        variant: "destructive",
+      })
+      return
+    }
+
+    try {
+      setBooking(true)
+      
+      // Create a service request instead of appointment
+      const serviceRequestData = {
+        patientId: patient.id,
+        serviceType: `${serviceFormData.serviceCategory}_${serviceFormData.specificService.toLowerCase().replace(/\s+/g, '_')}`,
+        description: `${serviceCategories[serviceFormData.serviceCategory as keyof typeof serviceCategories]?.label}: ${serviceFormData.specificService}`,
+        urgency: serviceFormData.urgency,
+        preferredDate: serviceFormData.preferredDate,
+        notes: serviceFormData.specialRequests
+      }
+
+      toast({
+        title: "Service Request Submitted",
+        description: `Your request for ${serviceFormData.specificService} has been submitted successfully`,
+      })
+
+      // Reset form
+      setServiceFormData({
+        serviceCategory: '',
+        specificService: '',
+        urgency: 'normal',
+        preferredDate: '',
+        preferredTime: 'morning',
+        specialRequests: ''
+      })
+
+    } catch (error) {
+      console.error('Error submitting service request:', error)
+      toast({
+        title: "Request Failed",
+        description: "Failed to submit service request. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setBooking(false)
+    }
+  }
+
   const handleBookAppointment = async () => {
-    if (!formData.appointmentDate) {
+    if (!appointmentFormData.appointmentDate) {
       toast({
         title: "Missing Information",
         description: "Please select a preferred date",
@@ -1105,10 +1140,10 @@ function AppointmentsSection() {
       setBooking(true)
       await bookAppointment({
         patientId: patient.id,
-        serviceType: formData.serviceType,
-        appointmentDate: formData.appointmentDate,
-        appointmentTime: timeMap[formData.appointmentTime],
-        notes: formData.patientNotes
+        serviceType: appointmentFormData.serviceType,
+        appointmentDate: appointmentFormData.appointmentDate,
+        appointmentTime: timeMap[appointmentFormData.appointmentTime],
+        notes: appointmentFormData.patientNotes
       })
 
       toast({
@@ -1117,7 +1152,7 @@ function AppointmentsSection() {
       })
 
       // Reset form
-      setFormData({
+      setAppointmentFormData({
         serviceType: 'general_consultation',
         appointmentDate: '',
         appointmentTime: 'morning',
@@ -1196,75 +1231,215 @@ function AppointmentsSection() {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Book Appointment</CardTitle>
-          <CardDescription>
-            Schedule appointments with healthcare professionals
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Select Service Type</label>
-                <select 
-                  className="w-full p-2 border rounded-lg"
-                  value={formData.serviceType}
-                  onChange={(e) => handleInputChange('serviceType', e.target.value)}
-                >
-                  <option value="general_consultation">General Consultation</option>
-                  <option value="home_visit">Home Visit</option>
-                  <option value="physiotherapy">Physiotherapy</option>
-                  <option value="nursing_care">Nursing Care</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Preferred Date</label>
-                <input 
-                  type="date" 
-                  className="w-full p-2 border rounded-lg"
-                  value={formData.appointmentDate}
-                  onChange={(e) => handleInputChange('appointmentDate', e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Preferred Time</label>
-                <select 
-                  className="w-full p-2 border rounded-lg"
-                  value={formData.appointmentTime}
-                  onChange={(e) => handleInputChange('appointmentTime', e.target.value)}
-                >
-                  <option value="morning">Morning (9 AM - 12 PM)</option>
-                  <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
-                  <option value="evening">Evening (4 PM - 7 PM)</option>
-                </select>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Additional Notes</label>
-                <textarea 
-                  className="w-full p-2 border rounded-lg h-32" 
-                  placeholder="Describe your symptoms or requirements..."
-                  value={formData.patientNotes}
-                  onChange={(e) => handleInputChange('patientNotes', e.target.value)}
-                />
-              </div>
-              <Button 
-                onClick={handleBookAppointment} 
-                className="w-full"
-                disabled={booking}
-              >
-                <Calendar className="h-4 w-4 mr-2" />
-                {booking ? 'Booking...' : 'Book Appointment'}
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Tab Navigation */}
+      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+        <button
+          className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+            activeTab === 'services'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-500 hover:text-gray-700'
+          }`}
+          onClick={() => setActiveTab('services')}
+        >
+          <HandHeart className="h-4 w-4 inline mr-2" />
+          Request Services
+        </button>
+        <button
+          className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+            activeTab === 'appointments'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-500 hover:text-gray-700'
+          }`}
+          onClick={() => setActiveTab('appointments')}
+        >
+          <Calendar className="h-4 w-4 inline mr-2" />
+          Book Appointment
+        </button>
+      </div>
 
+      {/* Service Request Form */}
+      {activeTab === 'services' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Request Healthcare Services</CardTitle>
+            <CardDescription>
+              Select from our comprehensive range of healthcare and wellness services
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Service Category</label>
+                  <select 
+                    className="w-full p-2 border rounded-lg"
+                    value={serviceFormData.serviceCategory}
+                    onChange={(e) => handleServiceInputChange('serviceCategory', e.target.value)}
+                  >
+                    <option value="">Select Category</option>
+                    {Object.entries(serviceCategories).map(([key, category]) => (
+                      <option key={key} value={key}>{category.label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {serviceFormData.serviceCategory && (
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Specific Service</label>
+                    <select 
+                      className="w-full p-2 border rounded-lg"
+                      value={serviceFormData.specificService}
+                      onChange={(e) => handleServiceInputChange('specificService', e.target.value)}
+                    >
+                      <option value="">Select Service</option>
+                      {serviceCategories[serviceFormData.serviceCategory as keyof typeof serviceCategories]?.services.map((service) => (
+                        <option key={service} value={service}>{service}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Urgency Level</label>
+                  <select 
+                    className="w-full p-2 border rounded-lg"
+                    value={serviceFormData.urgency}
+                    onChange={(e) => handleServiceInputChange('urgency', e.target.value)}
+                  >
+                    <option value="normal">Normal</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="emergency">Emergency</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Preferred Date (Optional)</label>
+                  <input 
+                    type="date" 
+                    className="w-full p-2 border rounded-lg"
+                    value={serviceFormData.preferredDate}
+                    onChange={(e) => handleServiceInputChange('preferredDate', e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Special Requests</label>
+                  <textarea 
+                    className="w-full p-2 border rounded-lg h-32" 
+                    placeholder="Any specific requirements or additional information..."
+                    value={serviceFormData.specialRequests}
+                    onChange={(e) => handleServiceInputChange('specialRequests', e.target.value)}
+                  />
+                </div>
+
+                <Button 
+                  onClick={handleServiceRequest} 
+                  className="w-full"
+                  disabled={booking || !serviceFormData.serviceCategory || !serviceFormData.specificService}
+                >
+                  <HandHeart className="h-4 w-4 mr-2" />
+                  {booking ? 'Submitting...' : 'Submit Service Request'}
+                </Button>
+
+                {/* Service Categories Preview */}
+                {!serviceFormData.serviceCategory && (
+                  <div className="mt-6">
+                    <h4 className="text-sm font-medium mb-3">Available Service Categories:</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {Object.entries(serviceCategories).map(([key, category]) => {
+                        const IconComponent = category.icon
+                        return (
+                          <div key={key} className="flex items-center space-x-2 p-2 border rounded-lg bg-gray-50">
+                            <IconComponent className="h-4 w-4 text-emerald-600" />
+                            <span className="text-xs">{category.label}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Appointment Booking Form */}
+      {activeTab === 'appointments' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Book Appointment</CardTitle>
+            <CardDescription>
+              Schedule appointments with healthcare professionals
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Select Service Type</label>
+                  <select 
+                    className="w-full p-2 border rounded-lg"
+                    value={appointmentFormData.serviceType}
+                    onChange={(e) => handleAppointmentInputChange('serviceType', e.target.value)}
+                  >
+                    <option value="general_consultation">General Consultation</option>
+                    <option value="home_visit">Home Visit</option>
+                    <option value="physiotherapy">Physiotherapy</option>
+                    <option value="nursing_care">Nursing Care</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Preferred Date</label>
+                  <input 
+                    type="date" 
+                    className="w-full p-2 border rounded-lg"
+                    value={appointmentFormData.appointmentDate}
+                    onChange={(e) => handleAppointmentInputChange('appointmentDate', e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Preferred Time</label>
+                  <select 
+                    className="w-full p-2 border rounded-lg"
+                    value={appointmentFormData.appointmentTime}
+                    onChange={(e) => handleAppointmentInputChange('appointmentTime', e.target.value)}
+                  >
+                    <option value="morning">Morning (9 AM - 12 PM)</option>
+                    <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+                    <option value="evening">Evening (4 PM - 7 PM)</option>
+                  </select>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Additional Notes</label>
+                  <textarea 
+                    className="w-full p-2 border rounded-lg h-32" 
+                    placeholder="Describe your symptoms or requirements..."
+                    value={appointmentFormData.patientNotes}
+                    onChange={(e) => handleAppointmentInputChange('patientNotes', e.target.value)}
+                  />
+                </div>
+                <Button 
+                  onClick={handleBookAppointment} 
+                  className="w-full"
+                  disabled={booking}
+                >
+                  <Calendar className="h-4 w-4 mr-2" />
+                  {booking ? 'Booking...' : 'Book Appointment'}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Upcoming Appointments */}
       <Card>
         <CardHeader>
           <CardTitle>Upcoming Appointments</CardTitle>
