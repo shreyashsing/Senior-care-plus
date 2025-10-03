@@ -38,41 +38,75 @@ export function Pricing() {
     }
   }
 
-  // Benefits for each plan based on the image
-  const planBenefits = {
+  // Base benefits for 6-month plans - will be doubled for 12-month plans
+  const basePlanBenefits = {
     basic: [
-      { feature: "Eye check up", value: "1" },
-      { feature: "Dental check up", value: "1" },
-      { feature: "Health check up", value: "35+ parameters" },
-      { feature: "Dietician Sessions", value: "0" },
-      { feature: "Physiotherapy Sessions", value: "0" },
-      { feature: "Yoga (Months)", value: "0" },
-      { feature: "Doctor on Call 24x7", value: "yes" },
-      { feature: "Wellness Sessions", value: "0" },
-      { feature: "Hospital Discounts upto 25%", value: "yes" }
+      { feature: "Eye check up", value: 1, type: "number" },
+      { feature: "Dental check up", value: 1, type: "number" },
+      { feature: "Health check up", value: "35+ parameters", type: "text" },
+      { feature: "Dietician Sessions", value: 0, type: "number" },
+      { feature: "Physiotherapy Sessions", value: 0, type: "number" },
+      { feature: "Yoga (Months)", value: 0, type: "number" },
+      { feature: "Doctor on Call 24x7", value: "yes", type: "boolean" },
+      { feature: "Wellness Sessions", value: 0, type: "number" },
+      { feature: "Hospital Discounts upto 25%", value: "yes", type: "boolean" }
     ],
     advance: [
-      { feature: "Eye check up", value: "3" },
-      { feature: "Dental check up", value: "3" },
-      { feature: "Health check up", value: "50+ parameters" },
-      { feature: "Dietician Sessions", value: "1" },
-      { feature: "Physiotherapy Sessions", value: "1" },
-      { feature: "Yoga (Months)", value: "0" },
-      { feature: "Doctor on Call 24x7", value: "yes" },
-      { feature: "Wellness Sessions", value: "0" },
-      { feature: "Hospital Discounts upto 25%", value: "yes" }
+      { feature: "Eye check up", value: 3, type: "number" },
+      { feature: "Dental check up", value: 3, type: "number" },
+      { feature: "Health check up", value: "50+ parameters", type: "text" },
+      { feature: "Dietician Sessions", value: 1, type: "number" },
+      { feature: "Physiotherapy Sessions", value: 1, type: "number" },
+      { feature: "Yoga (Months)", value: 0, type: "number" },
+      { feature: "Doctor on Call 24x7", value: "yes", type: "boolean" },
+      { feature: "Wellness Sessions", value: 0, type: "number" },
+      { feature: "Hospital Discounts upto 25%", value: "yes", type: "boolean" }
     ],
     premium: [
-      { feature: "Eye check up", value: "3" },
-      { feature: "Dental check up", value: "3" },
-      { feature: "Health check up", value: "70+ parameters" },
-      { feature: "Dietician Sessions", value: "6" },
-      { feature: "Physiotherapy Sessions", value: "7" },
-      { feature: "Yoga (Months)", value: "6" },
-      { feature: "Doctor on Call 24x7", value: "yes" },
-      { feature: "Wellness Sessions", value: "6" },
-      { feature: "Hospital Discounts upto 25%", value: "yes" }
+      { feature: "Eye check up", value: 3, type: "number" },
+      { feature: "Dental check up", value: 3, type: "number" },
+      { feature: "Health check up", value: "70+ parameters", type: "text" },
+      { feature: "Dietician Sessions", value: 6, type: "number" },
+      { feature: "Physiotherapy Sessions", value: 7, type: "number" },
+      { feature: "Yoga (Months)", value: 6, type: "number" },
+      { feature: "Doctor on Call 24x7", value: "yes", type: "boolean" },
+      { feature: "Wellness Sessions", value: 6, type: "number" },
+      { feature: "Hospital Discounts upto 25%", value: "yes", type: "boolean" }
     ]
+  }
+
+  // Function to calculate benefits based on duration
+  const calculateBenefitValue = (benefit: any, duration: number) => {
+    if (benefit.type === "number" && duration === 12) {
+      return benefit.value * 2
+    } else if (benefit.type === "text" && duration === 12) {
+      // For text values like "35+ parameters", extract number and double it
+      const match = benefit.value.match(/(\d+)\+/)
+      if (match) {
+        const number = parseInt(match[1])
+        return `${number * 2}+ parameters`
+      }
+      return benefit.value
+    } else if (benefit.type === "boolean") {
+      return benefit.value
+    }
+    return benefit.value.toString()
+  }
+
+  // Dynamic benefits based on selected duration
+  const planBenefits = {
+    basic: basePlanBenefits.basic.map(benefit => ({
+      feature: benefit.feature,
+      value: calculateBenefitValue(benefit, selectedDuration)
+    })),
+    advance: basePlanBenefits.advance.map(benefit => ({
+      feature: benefit.feature,
+      value: calculateBenefitValue(benefit, selectedDuration)
+    })),
+    premium: basePlanBenefits.premium.map(benefit => ({
+      feature: benefit.feature,
+      value: calculateBenefitValue(benefit, selectedDuration)
+    }))
   }
 
   const services = [
