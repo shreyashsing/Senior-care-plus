@@ -172,7 +172,7 @@ const AboutUs = () => {
                   "Expert in medical strategy & operations",
                   "Dedicated to patient care excellence"
                 ],
-                image: "/2.jpg"
+                image: "/Dr. Raghvendra Gupta.jpg"
               },
               {
                 name: "Arpit Maheshwari", 
