@@ -92,7 +92,7 @@ export function ECard({ patient }: ECardProps) {
           <div className="bg-white/20 backdrop-blur-sm p-4 text-center">
             <div className="flex items-center justify-center mb-2">
               <img 
-                src="/logo.svg" 
+                src="/final_logo.svg" 
                 alt="SeniorCare Plus" 
                 className="h-8 w-auto filter brightness-0 invert"
               />

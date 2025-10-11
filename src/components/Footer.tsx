@@ -24,7 +24,7 @@ const Footer = () => {
             <div>
               <div className="mb-6">
                 <img
-                  src="/logo.svg"
+                  src="/final_logo.svg"
                   alt="Senior Care Logo"
                   className="w-16 h-16 md:w-20 md:h-20"
                 />

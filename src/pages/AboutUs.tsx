@@ -35,7 +35,7 @@ const AboutUs = () => {
             {/* Logo */}
             <div className="flex items-center">
               <img
-                src="/logo.svg"
+                src="/final_logo.svg"
                 alt="Senior Care Logo"
                 className="w-10 h-10 md:w-12 md:h-12"
               />

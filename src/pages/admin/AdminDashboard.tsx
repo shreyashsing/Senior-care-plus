@@ -219,7 +219,7 @@ export function AdminDashboard() {
       } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
         <div className="flex items-center justify-between h-16 px-6 bg-blue-600">
           <div className="flex items-center">
-            <img src="/logo.svg" alt="Logo" className="h-8 w-auto" />
+            <img src="/final_logo.svg" alt="Logo" className="h-8 w-auto" />
             <span className="ml-2 text-white font-semibold">Admin Portal</span>
           </div>
           <button

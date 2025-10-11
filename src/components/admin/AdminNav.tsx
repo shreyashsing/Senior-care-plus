@@ -61,7 +61,7 @@ export const AdminNav: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center gap-3 px-6 py-6 border-b border-gray-200">
             <img
-              src="/logo.svg"
+              src="/final_logo.svg"
               alt="Senior Care Logo"
               className="w-10 h-10"
             />
@@ -120,7 +120,7 @@ export const AdminNav: React.FC = () => {
           <div className="flex items-center justify-between px-4 py-4">
             <div className="flex items-center gap-3">
               <img
-                src="/logo.svg"
+                src="/final_logo.svg"
                 alt="Senior Care Logo"
                 className="w-8 h-8"
               />

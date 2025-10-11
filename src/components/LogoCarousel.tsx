@@ -10,9 +10,7 @@ const LogoCarousel = () => {
     '/Logos/WhatsApp Image 2025-09-28 at 03.39.29_57bffad5.jpg',
     '/Logos/WhatsApp Image 2025-09-28 at 03.39.43_ee752ef7.jpg',
     '/Logos/WhatsApp Image 2025-09-28 at 03.40.11_fe1425ef.jpg',
-    '/Logos/WhatsApp Image 2025-09-28 at 03.40.52_d6512b12.jpg',
-    '/Logos/WhatsApp Image 2025-09-28 at 03.41.12_3b4cdc32.jpg',
-    '/Logos/WhatsApp Image 2025-09-28 at 03.41.36_ad9a2061.jpg'
+    '/Logos/WhatsApp Image 2025-09-28 at 03.40.52_d6512b12.jpg'
   ];
 
   return (

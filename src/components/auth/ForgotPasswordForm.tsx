@@ -39,7 +39,7 @@ export function ForgotPasswordForm() {
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
               <img 
-                src="/logo.svg" 
+                src="/final_logo.svg" 
                 alt="Peace of Mind Concierge" 
                 className="h-12 w-auto"
               />
@@ -89,7 +89,7 @@ export function ForgotPasswordForm() {
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
             <img 
-              src="/logo.svg" 
+              src="/final_logo.svg" 
               alt="Peace of Mind Concierge" 
               className="h-12 w-auto"
             />
