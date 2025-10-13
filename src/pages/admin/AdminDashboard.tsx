@@ -968,7 +968,18 @@ function PartnersSection({ partners, onPartnerUpdate }: {
                     <div className="flex flex-wrap gap-2">
                       {partner.services.map((service, index) => (
                         <Badge key={index} variant="outline" className="text-xs">
-                          {service}
+                          {typeof service === 'object' && service !== null ? (
+                            <>
+                              {service.service}
+                              {service.discount > 0 && (
+                                <span className="ml-1 text-green-600 font-semibold">
+                                  ({service.discount}%)
+                                </span>
+                              )}
+                            </>
+                          ) : (
+                            String(service)
+                          )}
                         </Badge>
                       ))}
                     </div>

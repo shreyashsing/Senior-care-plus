@@ -542,9 +542,16 @@ const HospitalPartnerManagement: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {Array.isArray(selectedPartner.services) && selectedPartner.services.map((service, index) => (
                       <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span className="font-medium">
-                          {typeof service === 'object' && service !== null ? service.service : String(service)}
-                        </span>
+                        <div className="flex flex-col">
+                          <span className="font-medium">
+                            {typeof service === 'object' && service !== null ? service.service : String(service)}
+                          </span>
+                          {typeof service === 'object' && service !== null && service.discount > 0 && (
+                            <span className="text-sm text-green-600 font-semibold">
+                              {service.discount}% discount
+                            </span>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>

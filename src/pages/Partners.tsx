@@ -671,8 +671,17 @@ const Partners: React.FC = () => {
                       <div className="flex flex-wrap gap-2">
                         {partner.services.map((service, index) => (
                           <div key={index} className="flex items-center gap-1">
-                            <span className="text-sm text-gray-700 font-medium px-3 py-1 border border-gray-300 rounded-full bg-white hover:bg-gray-50 transition-colors">
+                            <span className={`text-sm font-medium px-3 py-1 border rounded-full transition-colors ${
+                              service.discount > 0 
+                                ? 'text-green-700 border-green-300 bg-green-50 hover:bg-green-100' 
+                                : 'text-gray-700 border-gray-300 bg-white hover:bg-gray-50'
+                            }`}>
                               {service.service}
+                              {service.discount > 0 && (
+                                <span className="ml-1 text-xs font-bold text-green-600">
+                                  {service.discount}% off
+                                </span>
+                              )}
                             </span>
                           </div>
                         ))}
