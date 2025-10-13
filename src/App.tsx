@@ -9,7 +9,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import MultiMemberRegister from "./pages/MultiMemberRegister";
 import AboutUs from "./pages/AboutUs";
-//import Partners from "./pages/Partners";
+import Partners from "./pages/Partners";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import Pricing from "./pages/Pricing";
@@ -46,7 +46,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<AboutUs />} />
-              {/* <Route path="/partners" element={<Partners />} /> */}
+               <Route path="/partners" element={<Partners />} /> 
               <Route path="/services" element={<Services />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/pricing" element={<Pricing />} />

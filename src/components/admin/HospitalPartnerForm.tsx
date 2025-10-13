@@ -204,7 +204,10 @@ const HospitalPartnerForm: React.FC<HospitalPartnerFormProps> = ({
     e.preventDefault()
     
     if (!validateForm()) {
-      setError('Please fix the errors above')
+      const errorMessage = 'Please fix the validation errors above. Required fields: Partner Name, Category, Services, Address, City, Pincode, Contact Person Name, Contact Phone, and Contact Email.'
+      setError(errorMessage)
+      setIsLoading(false) // Reset loading state when validation fails
+      console.log('Form validation failed:', fieldErrors)
       return
     }
 
@@ -231,7 +234,9 @@ const HospitalPartnerForm: React.FC<HospitalPartnerFormProps> = ({
           emergency_contact_phone: formData.emergency_contact_phone.trim() || undefined
         }
         
+        console.log('Creating hospital partner with data:', createData)
         result = await HospitalPartnerService.createHospitalPartner(createData)
+        console.log('Hospital partner created successfully:', result)
       } else {
         const updateData: UpdateHospitalPartner = {
           name: formData.name.trim(),
@@ -255,7 +260,13 @@ const HospitalPartnerForm: React.FC<HospitalPartnerFormProps> = ({
       onSuccess?.(result)
     } catch (err) {
       console.error('Error saving hospital partner:', err)
-      setError(err instanceof Error ? err.message : 'Failed to save hospital partner')
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save hospital partner'
+      setError(errorMessage)
+      console.log('Error details:', {
+        error: err,
+        formData: formData,
+        mode: mode
+      })
     } finally {
       setIsLoading(false)
     }

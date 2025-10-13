@@ -603,7 +603,7 @@ const Partners: React.FC = () => {
               </div>
               
               {/* City Filter */}
-              <div className="w-full md:w-64">
+              {/* <div className="w-full md:w-64">
                 <Select value={selectedCity} onValueChange={setSelectedCity}>
                   <SelectTrigger>
                     <Filter className="w-4 h-4 mr-2" />
@@ -618,7 +618,7 @@ const Partners: React.FC = () => {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
             </div>
           </CardContent>
         </Card>

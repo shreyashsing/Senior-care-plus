@@ -246,14 +246,20 @@ export class HospitalPartnerService {
   // Create new hospital partner
   static async createHospitalPartner(partnerData: CreateHospitalPartner): Promise<HospitalPartner> {
     try {
+      console.log('HospitalPartnerService: Creating partner with data:', partnerData)
+      
+      const insertData = {
+        ...partnerData,
+        services: JSON.stringify(partnerData.services),
+        pincodes_served: partnerData.pincodes_served, // Send as array directly
+        status: 'active'
+      }
+      
+      console.log('HospitalPartnerService: Insert data:', insertData)
+      
       const { data, error } = await supabase
         .from('hospital_partners')
-        .insert({
-          ...partnerData,
-          services: JSON.stringify(partnerData.services),
-          pincodes_served: partnerData.pincodes_served, // Send as array directly
-          status: 'active'
-        })
+        .insert(insertData)
         .select()
         .single()
 
