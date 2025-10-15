@@ -25,7 +25,7 @@ VITE_SUPABASE_ANON_KEY=your-actual-anon-key-here
 
 # Keep these as they are
 VITE_NODE_ENV=development
-VITE_APP_NAME=Senior Care Plus
+VITE_APP_NAME=SeniorCare+
 VITE_APP_URL=http://localhost:5173
 ```
 

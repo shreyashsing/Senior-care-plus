@@ -133,7 +133,7 @@ export class RazorpayPaymentService {
         key: order.razorpay_key || '',
         amount: order.amount * 100, // Convert to paisa for Razorpay
         currency: order.currency,
-        name: 'Senior Care Plus',
+        name: 'SeniorCare+',
         description: `${paymentPatientData.planType} Plan Payment`,
         order_id: order.order_id, // This should now be the Razorpay order ID
         handler: async (response: RazorpayResponse) => {

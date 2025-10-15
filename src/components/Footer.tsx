@@ -30,7 +30,7 @@ const Footer = () => {
                 />
               </div>
               <h3 className="text-2xl md:text-3xl font-bold mb-4 text-white">
-                Senior Care Plus
+                SeniorCare+
               </h3>
               <p className="text-gray-300 text-lg leading-relaxed mb-6 max-w-md">
                 Providing trusted senior care services that bring peace of mind to families,
@@ -116,7 +116,7 @@ const Footer = () => {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               {/* Copyright */}
               <div className="text-gray-400 text-sm">
-                © 2025 Senior Care Plus. All rights reserved.
+                © 2025 SeniorCare+. All rights reserved.
               </div>
 
               {/* Legal Links */}

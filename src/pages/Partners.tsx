@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { HospitalPartnerService } from '@/lib/hospitalPartnerService'
+import Navbar from '@/components/Navbar'
 
 // Simplified partner interface for public display
 interface PublicPartner {
@@ -35,7 +36,6 @@ const Partners: React.FC = () => {
   const [uniqueCities, setUniqueCities] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   // Load partners on component mount
   useEffect(() => {
@@ -102,151 +102,7 @@ const Partners: React.FC = () => {
   if (isLoading) {
     return (
       <>
-        {/* Semi-transparent Navbar */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20 transition-all duration-300">
-          <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-            <div className="flex items-center justify-between h-16 md:h-20">
-              {/* Logo */}
-              <div className="flex items-center">
-                <img
-                  src="/final_logo.svg"
-                  alt="Senior Care Logo"
-                  className="w-10 h-10 md:w-12 md:h-12"
-                />
-              </div>
-
-              {/* Desktop Menu */}
-              <div className="hidden md:flex items-center space-x-8">
-                <button
-                  onClick={() => navigate('/')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  Home
-                </button>
-                <button
-                  onClick={() => navigate('/about')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  About Us
-                </button>
-                <button
-                  onClick={() => navigate('/partners')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  Partners
-                </button>
-                <button
-                  onClick={() => navigate('/#services')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  Services
-                </button>
-                <button
-                  onClick={() => navigate('/#how-it-works')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  How It Works
-                </button>
-                <button
-                  onClick={() => navigate('/#pricing')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  Pricing
-                </button>
-                <Button
-                  onClick={() => navigate('/login')}
-                  className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-                >
-                  Login
-                </Button>
-              </div>
-
-              {/* Mobile Menu Button */}
-              <div className="md:hidden">
-                <button
-                  onClick={() => setShowMobileMenu(!showMobileMenu)}
-                  className="text-white hover:text-emerald-400 transition-colors duration-300"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Mobile Menu */}
-            {showMobileMenu && (
-              <div className="md:hidden bg-white/90 backdrop-blur-md rounded-lg mt-2 p-4 border border-gray-200/60 shadow-lg">
-                <div className="flex flex-col space-y-4">
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    Home
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/about');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    About Us
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/partners');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    Partners
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/#services');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    Services
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/#how-it-works');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    How It Works
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/#pricing');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    Pricing
-                  </button>
-                  <Button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/login');
-                    }}
-                    className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-                  >
-                    Login
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-        </nav>
-
+        <Navbar />
         <div className="min-h-screen bg-gray-50 pt-16 md:pt-20">
           <div className="container mx-auto px-4 py-8">
             <div className="flex items-center justify-center h-64">
@@ -264,151 +120,7 @@ const Partners: React.FC = () => {
   if (error) {
     return (
       <>
-        {/* Semi-transparent Navbar */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20 transition-all duration-300">
-          <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-            <div className="flex items-center justify-between h-16 md:h-20">
-              {/* Logo */}
-              <div className="flex items-center">
-                <img
-                  src="/final_logo.svg"
-                  alt="Senior Care Logo"
-                  className="w-10 h-10 md:w-12 md:h-12"
-                />
-              </div>
-
-              {/* Desktop Menu */}
-              <div className="hidden md:flex items-center space-x-8">
-                <button
-                  onClick={() => navigate('/')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  Home
-                </button>
-                <button
-                  onClick={() => navigate('/about')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  About Us
-                </button>
-                <button
-                  onClick={() => navigate('/partners')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  Partners
-                </button>
-                <button
-                  onClick={() => navigate('/#services')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  Services
-                </button>
-                <button
-                  onClick={() => navigate('/#how-it-works')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  How It Works
-                </button>
-                <button
-                  onClick={() => navigate('/#pricing')}
-                  className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-                >
-                  Pricing
-                </button>
-                <Button
-                  onClick={() => navigate('/login')}
-                  className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-                >
-                  Login
-                </Button>
-              </div>
-
-              {/* Mobile Menu Button */}
-              <div className="md:hidden">
-                <button
-                  onClick={() => setShowMobileMenu(!showMobileMenu)}
-                  className="text-white hover:text-emerald-400 transition-colors duration-300"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Mobile Menu */}
-            {showMobileMenu && (
-              <div className="md:hidden bg-white/90 backdrop-blur-md rounded-lg mt-2 p-4 border border-gray-200/60 shadow-lg">
-                <div className="flex flex-col space-y-4">
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    Home
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/about');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    About Us
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/partners');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    Partners
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/#services');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    Services
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/#how-it-works');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    How It Works
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/#pricing');
-                    }}
-                    className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                  >
-                    Pricing
-                  </button>
-                  <Button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      navigate('/login');
-                    }}
-                    className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-                  >
-                    Login
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-        </nav>
-
+        <Navbar />
         <div className="min-h-screen bg-gray-50 pt-16 md:pt-20">
           <div className="container mx-auto px-4 py-8">
             <div className="text-center">
@@ -424,150 +136,7 @@ const Partners: React.FC = () => {
 
   return (
     <>
-      {/* Semi-transparent Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo */}
-            <div className="flex items-center">
-              <img
-                src="/final_logo.svg"
-                alt="Senior Care Logo"
-                className="w-10 h-10 md:w-12 md:h-12"
-              />
-            </div>
-
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-8">
-              <button
-                onClick={() => navigate('/')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                Home
-              </button>
-              <button
-                onClick={() => navigate('/about')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                About Us
-              </button>
-              <button
-                onClick={() => navigate('/partners')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                Partners
-              </button>
-              <button
-                onClick={() => navigate('/#services')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                Services
-              </button>
-              <button
-                onClick={() => navigate('/#how-it-works')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                How It Works
-              </button>
-              <button
-                onClick={() => navigate('/#pricing')}
-                className="text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium text-shadow-sm shadow-white/80"
-              >
-                Pricing
-              </button>
-              <Button
-                onClick={() => navigate('/login')}
-                className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-              >
-                Login
-              </Button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="text-white hover:text-emerald-400 transition-colors duration-300"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile Menu */}
-          {showMobileMenu && (
-            <div className="md:hidden bg-white/90 backdrop-blur-md rounded-lg mt-2 p-4 border border-gray-200/60 shadow-lg">
-              <div className="flex flex-col space-y-4">
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  Home
-                </button>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/about');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  About Us
-                </button>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/partners');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  Partners
-                </button>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/#services');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  Services
-                </button>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/#how-it-works');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  How It Works
-                </button>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/#pricing');
-                  }}
-                  className="text-left text-gray-800 hover:text-emerald-600 transition-colors duration-300 font-medium"
-                >
-                  Pricing
-                </button>
-                <Button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    navigate('/login');
-                  }}
-                  className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-                >
-                  Login
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="min-h-screen bg-gray-50 pt-16 md:pt-20">
       {/* Hero Section */}
@@ -677,11 +246,6 @@ const Partners: React.FC = () => {
                                 : 'text-gray-700 border-gray-300 bg-white hover:bg-gray-50'
                             }`}>
                               {service.service}
-                              {service.discount > 0 && (
-                                <span className="ml-1 text-xs font-bold text-green-600">
-                                  {service.discount}% off
-                                </span>
-                              )}
                             </span>
                           </div>
                         ))}
@@ -719,7 +283,7 @@ const Partners: React.FC = () => {
                   />
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold mb-4 text-white">
-                  Senior Care Plus
+                  SeniorCare+
                 </h3>
                 <p className="text-gray-300 text-lg leading-relaxed mb-6 max-w-md">
                   Providing trusted senior care services that bring peace of mind to families, 
@@ -771,7 +335,7 @@ const Partners: React.FC = () => {
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                 {/* Copyright */}
                 <div className="text-gray-400 text-sm">
-                  © 2025 Senior Care Plus. All rights reserved.
+                  © 2025 SeniorCare+. All rights reserved.
                 </div>
                 
                 {/* Additional Links */}

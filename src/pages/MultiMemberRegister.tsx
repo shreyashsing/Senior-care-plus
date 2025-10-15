@@ -1365,7 +1365,7 @@ const MultiMemberRegister = () => {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-amber-800">
                       <AlertTriangle className="w-5 h-5" />
-                      Disclaimer – Senior Care Plus
+                      Disclaimer – SeniorCare+
                     </CardTitle>
                     <CardDescription className="text-amber-700">
                       Please read and acknowledge the following terms and conditions
@@ -1375,7 +1375,7 @@ const MultiMemberRegister = () => {
                     <div className="bg-white p-4 rounded-lg border border-amber-200 mb-4 max-h-64 overflow-y-auto">
                       <div className="space-y-3 text-sm text-gray-700">
                         <p>
-                          Senior Care Plus provides wellness, home care, hospital support, and emergency coordination services with the goal of improving accessibility and convenience for seniors. Please note the following:
+                          SeniorCare+ provides wellness, home care, hospital support, and emergency coordination services with the goal of improving accessibility and convenience for seniors. Please note the following:
                         </p>
                         
                         <div className="space-y-2">
@@ -1396,7 +1396,7 @@ const MultiMemberRegister = () => {
                           
                           <p className="font-semibold">4. Hospital & Home Care Services</p>
                           <p className="pl-4">
-                            Hospital admission support, doctor visits, ICU/home setups, and ambulance services are provided in coordination with partner hospitals, healthcare professionals, and service providers. Senior Care Plus is not directly responsible for the medical outcomes or quality of care provided by these partners.
+                            Hospital admission support, doctor visits, ICU/home setups, and ambulance services are provided in coordination with partner hospitals, healthcare professionals, and service providers. SeniorCare+ is not directly responsible for the medical outcomes or quality of care provided by these partners.
                           </p>
                         </div>
                       </div>

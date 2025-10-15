@@ -115,7 +115,7 @@ const PaymentSuccess: React.FC = () => {
               Payment Successful!
             </CardTitle>
             <CardDescription className="text-lg text-gray-600">
-              Welcome to Senior Care Plus! Your registration is complete.
+              Welcome to SeniorCare+! Your registration is complete.
             </CardDescription>
           </CardHeader>
 
