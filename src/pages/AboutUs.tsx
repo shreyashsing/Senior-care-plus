@@ -441,7 +441,7 @@ const AboutUs = () => {
                 className="bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 flex items-center shadow-lg"
             >
               <Phone className="w-5 h-5 mr-2" />
-                Call +91 99700 50091
+                Call +91 9975567202
             </Button>
           </div>
         </div>
