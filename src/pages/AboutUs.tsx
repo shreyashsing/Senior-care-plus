@@ -404,7 +404,7 @@ const AboutUs = () => {
                   <Mail className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Email</h3>
-                <p className="text-gray-700 text-lg">raghvendragupta592@gmail.com</p>
+                <p className="text-gray-700 text-lg">contact@seniorcareplus.in</p>
               </Card>
           </div>
         </div>
