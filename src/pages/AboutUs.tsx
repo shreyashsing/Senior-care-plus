@@ -396,7 +396,7 @@ const AboutUs = () => {
                   <Phone className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Phone</h3>
-                <p className="text-gray-700 text-lg">+91 99700 50091</p>
+                <p className="text-gray-700 text-lg">+91 9975567202</p>
               </Card>
               
               <Card className="p-8 text-center hover:shadow-lg transition-all duration-300 border-0 bg-gradient-to-br from-emerald-50 to-green-50">
@@ -437,7 +437,7 @@ const AboutUs = () => {
               </Button>
             
             <Button 
-                onClick={() => window.open('tel:+919970050091', '_self')}
+                onClick={() => window.open('tel:+919975567202', '_self')}
                 className="bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 flex items-center shadow-lg"
             >
               <Phone className="w-5 h-5 mr-2" />
