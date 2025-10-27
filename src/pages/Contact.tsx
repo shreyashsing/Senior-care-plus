@@ -19,7 +19,6 @@ import {
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { ContactService, type CreateContact } from '@/lib/contactServiceNew'
-import { trackFormSubmission, trackButtonClick } from '@/lib/analytics'
 import Navbar from '@/components/Navbar'
 
 const Contact: React.FC = () => {
@@ -103,9 +102,6 @@ const Contact: React.FC = () => {
       console.log('💾 Creating contact...')
       const result = await ContactService.createContact(formData)
       console.log('✅ Contact created successfully:', result)
-      
-      // Track successful form submission
-      trackFormSubmission('Contact Form')
       
       setIsSubmitted(true)
       
@@ -463,7 +459,6 @@ const Contact: React.FC = () => {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      onClick={() => trackButtonClick('Contact Submit')}
                       className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white py-3"
                     >
                       {isSubmitting ? (

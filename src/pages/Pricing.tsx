@@ -49,7 +49,7 @@ export function Pricing() {
       { feature: "Yoga (Months)", value: 0, type: "number" },
       { feature: "Doctor on Call 24x7", value: "yes", type: "boolean" },
       { feature: "Wellness Sessions", value: 0, type: "number" },
-      { feature: "Hospital Discounts upto 25%", value: "yes", type: "boolean" }
+      { feature: "Discounted OPD services", value: "yes", type: "boolean" }
     ],
     advance: [
       { feature: "Eye check up", value: 3, type: "number" },
@@ -60,7 +60,7 @@ export function Pricing() {
       { feature: "Yoga (Months)", value: 0, type: "number" },
       { feature: "Doctor on Call 24x7", value: "yes", type: "boolean" },
       { feature: "Wellness Sessions", value: 0, type: "number" },
-      { feature: "Hospital Discounts upto 25%", value: "yes", type: "boolean" }
+      { feature: "Discounted OPD services", value: "yes", type: "boolean" }
     ],
     premium: [
       { feature: "Eye check up", value: 3, type: "number" },
@@ -71,7 +71,7 @@ export function Pricing() {
       { feature: "Yoga (Months)", value: 6, type: "number" },
       { feature: "Doctor on Call 24x7", value: "yes", type: "boolean" },
       { feature: "Wellness Sessions", value: 6, type: "number" },
-      { feature: "Hospital Discounts upto 25%", value: "yes", type: "boolean" }
+      { feature: "Discounted OPD services", value: "yes", type: "boolean" }
     ]
   }
 
@@ -294,7 +294,7 @@ export function Pricing() {
                       Basic
                     </th>
                     <th className="px-6 py-4 text-center text-sm font-medium text-gray-900 uppercase tracking-wider bg-emerald-50">
-                      Advanced
+                      Advance
                     </th>
                     <th className="px-6 py-4 text-center text-sm font-medium text-gray-900 uppercase tracking-wider">
                       Premium
