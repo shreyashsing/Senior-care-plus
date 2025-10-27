@@ -79,7 +79,7 @@ const AboutUs = () => {
                   {/* Content Section */}
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">Dr. Raghvendra Gupta</h3>
-                    <p className="text-emerald-700 font-semibold mb-6">Founder & Chief Medical Officer</p>
+                    <p className="text-emerald-700 font-semibold mb-6">Founder & Chief Executive Officer</p>
                     
                     <p className="text-lg text-gray-700 leading-relaxed">
                       Dr. Raghvendra Gupta, with nearly 30 years of rich experience in healthcare—including a decade in corporate medical services in the oil & gas sector—has led emergency medical care on a pan-India scale. Having witnessed first-hand the growing concern of children staying away from their aging parents, he founded SeniorCare+ to provide reliable medical support for senior citizens and ease the constant anxiety of their loved ones.
